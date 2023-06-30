@@ -1,0 +1,22 @@
+server.port: 8098
+
+spring.datasource:
+  url: jdbc:sqlite:data.db
+spring:
+#  sql.init.mode: always
+spring.jpa:
+  #  defer-datasource-initialization: true
+  database-platform: org.hibernate.community.dialect.SQLiteDialect
+  hibernate.ddl-auto: validate
+
+notion:
+  url: https://api.notion.com
+  path: /
+  timesheetDb: ${NOTION_DB}
+  secret: ${NOTION_SECRET}
+
+logging:
+  level:
+    es.e1sordo.worknote.clients:
+      NotionClient: DEBUG # Feign logging only responds to the DEBUG level
+    root: INFO
