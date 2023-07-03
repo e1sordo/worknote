@@ -1,7 +1,7 @@
 server.port: 8098
 
 spring.datasource:
-  url: jdbc:sqlite:data.db
+  url: jdbc:sqlite:../data.db
 spring:
 #  sql.init.mode: always
 spring.jpa:

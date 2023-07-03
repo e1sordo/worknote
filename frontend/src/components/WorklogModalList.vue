@@ -15,10 +15,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <div>
-                                <span class="candidate-list-images" style="font-size: 42px;">
-                                    {{ taskTypeIcons.get(worklog.task.type) }}
-                                </span>
+                            <div class="candidate-list-images">
+                                <span>{{ taskTypeIcons.get(worklog.task.type) }}</span>
                             </div>
                             <div class="flex-1 ms-3">
                                 <h5 class="font-size-16 mb-1">
@@ -56,7 +54,8 @@
                             </p>
                         </div>
                         <div class="d-flex gap-2 pt-4" v-if="!worklog.synced">
-                            <button @click="submitSync(worklog)" type="button" class="btn btn-primary btn-sm w-100">
+                            <button @click="submitSync(worklog)" type="button" class="btn btn-primary btn-sm w-100"
+                                :disabled="worklodUnderSyncNow == worklog.id">
                                 <i class="bi bi-arrow-repeat me-1"></i>
                                 <span>Синхронизировать с Jira</span>
                             </button>
@@ -70,10 +69,10 @@
 
 <script>
 import { formatTime, taskTypeIcons } from '@/constants';
-import { defineComponent } from 'vue';
-import api from "../api/backend-api";
-import * as moment from 'moment';
+import moment from 'moment';
 import 'moment-timezone';
+import { defineComponent, ref } from 'vue';
+import api from "../api/backend-api";
 import clientApi from "../api/client-api";
 
 export default defineComponent({
@@ -96,6 +95,8 @@ export default defineComponent({
                 .then(() => this.$emit('deleteWorklog', worklog));
         },
         submitSync(worklog) {
+            this.worklodUnderSyncNow = worklog.id;
+
             const issueId = `${worklog.task.code}-${worklog.task.id}`;
 
             // Получаем текущую дату в формате "yyyy-MM-dd"
@@ -111,11 +112,13 @@ export default defineComponent({
                 .then(response => response.data.id)
                 .then(jiraWorklogId => api.updateWorklogSync(worklog.id, jiraWorklogId)
                     .then(response => this.$emit('worklogSynced', response.data)))
-                .catch(error => console.error(error));
+                .catch(error => console.error(error))
+                .finally(() => this.worklodUnderSyncNow = 0);
         }
     },
     setup() {
-        return { formatTime, taskTypeIcons };
+        const worklodUnderSyncNow = ref(0);
+        return { worklodUnderSyncNow, formatTime, taskTypeIcons };
     }
 });
 </script>
@@ -211,5 +214,18 @@ a {
 
 .font-size-14 {
     font-size: 15px;
+}
+
+.candidate-list-images {
+    border-radius: 50%;
+    background-color: #94c29c;
+    text-align: center;
+}
+
+.candidate-list-images span {
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    display: block;
 }
 </style>

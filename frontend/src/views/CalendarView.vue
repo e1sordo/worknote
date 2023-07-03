@@ -16,7 +16,7 @@
 <script lang="ts">
 import CalendarDay from '@/components/CalendarDay.vue';
 import FullDayModal from '@/components/FullDayModal.vue';
-import * as moment from 'moment';
+import moment from 'moment';
 import { defineComponent, ref } from 'vue';
 import api, { DayInfo, Worklog } from "../api/backend-api";
 

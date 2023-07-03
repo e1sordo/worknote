@@ -38,24 +38,11 @@
 </template>
   
 <script lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, SetupContext } from 'vue';
 import api from "../api/backend-api";
 
 export default {
     name: 'WorklogForm',
-    methods: {
-        async submitCreate() {
-            const response = await api.createWorklog(
-                this.date, this.timeValue, this.numberValue, this.textValue, this.autocompleteValue);
-            this.$emit('createWorklog', response.data);
-            this.textValue = '';
-            this.timeValue = '';
-            this.numberValue = 0;
-            this.selectedValue = '';
-            this.autocompleteValue = '';
-            this.autocompleteSuggestions = [];
-        }
-    },
     props: {
         date: {
             type: Date,
@@ -63,7 +50,7 @@ export default {
             default: () => (new Date())
         }
     },
-    setup() {
+    setup(props: { date: Date }, context: SetupContext) {
         const textValue = ref('');
         const numberValue = ref();
         const timeValue = ref('');
@@ -96,6 +83,19 @@ export default {
             showAutocomplete.value = false;
         };
 
+        const submitCreate = () => {
+            api.createWorklog(props.date, timeValue.value, numberValue.value, textValue.value, autocompleteValue.value)
+                .then(response => {
+                    context.emit('createWorklog', response.data);
+                    textValue.value = '';
+                    timeValue.value = '';
+                    numberValue.value = 0;
+                    selectedValue.value = '';
+                    autocompleteValue.value = '';
+                    autocompleteSuggestions.value = [];
+                });
+        };
+
         const formattedTimeValue = computed(() => {
             if (timeValue.value) {
                 const [hours, minutes] = timeValue.value.split(':');
@@ -113,6 +113,7 @@ export default {
             selectedValue,
             autocompleteSuggestions,
             selectAutocompleteSuggestion,
+            submitCreate,
             formattedTimeValue
         };
     }
