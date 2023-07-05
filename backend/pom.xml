@@ -20,7 +20,6 @@
         <!-- backend dependencies -->
         <rest-assured.version>5.3.0</rest-assured.version>
         <postgresql.version>42.6.0</postgresql.version>
-        <openfeign.version>4.0.3</openfeign.version>
         <!-- <groovy.version>3.0.16</groovy.version>-->
     </properties>
 
@@ -103,22 +102,16 @@
         </dependency>
                 -->
 
-<!--        &lt;!&ndash; Secure backend API &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!-- Secure backend API -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>${openfeign.version}</version>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

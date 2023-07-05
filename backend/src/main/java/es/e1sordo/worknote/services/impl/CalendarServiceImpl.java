@@ -43,7 +43,7 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public List<DayDto> getDays(final LocalDate from, final LocalDate to) {
         final Map<LocalDate, DayEntity> days = dayRepository.findByDateBetween(from, to).stream()
-                .collect(toMap(DayEntity::getDate, identity()));
+                .collect(toMap(DayEntity::getDate, identity(), (d1, d2) -> d1));
 
         final Map<LocalDate, List<WorklogEntity>> worklogs = worklogRepository.findByDateBetween(from, to).stream()
                 .collect(groupingBy(WorklogEntity::getDate));

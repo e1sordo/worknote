@@ -1,19 +1,16 @@
 server.port: 8098
 
-spring.datasource:
-  url: jdbc:sqlite:../data.db
 spring:
-#  sql.init.mode: always
-spring.jpa:
-  #  defer-datasource-initialization: true
-  database-platform: org.hibernate.community.dialect.SQLiteDialect
-  hibernate.ddl-auto: validate
-
-notion:
-  url: https://api.notion.com
-  path: /
-  timesheetDb: ${NOTION_DB}
-  secret: ${NOTION_SECRET}
+  datasource.url: jdbc:sqlite:${DB_PATH}
+  #  sql.init.mode: always
+  jpa:
+    #  defer-datasource-initialization: true
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate.ddl-auto: validate
+  security:
+    user:
+      name: ${USER_NAME}
+      password: ${USER_SECRET}
 
 logging:
   level:
