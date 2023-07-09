@@ -20,7 +20,7 @@
             <progress-bar v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
                 :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" />
 
-            <div v-if="dayInfo.summary" class="alert alert-warning mb-1">
+            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-warning mb-1">
                 {{ dayInfo.summary }}
             </div>
 

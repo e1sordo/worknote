@@ -9,7 +9,7 @@
                 </h5>
                 <span class="d-inline-block" tabindex="0">
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
-                    <small>{{ taskTypeIcons.get(worklog.task.type) }}</small>
+                    <small>{{ taskTypeMeta[worklog.task.type].icon }}</small>
                 </span>
             </div>
             <div class="worklog-description">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { formatTime, taskTypeIcons } from '@/constants';
+import { formatTime, taskTypeMeta } from '@/constants';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -34,7 +34,7 @@ export default defineComponent({
         }
     },
     setup() {
-        return { formatTime, taskTypeIcons }
+        return { formatTime, taskTypeMeta }
     }
 });
 </script>

@@ -1,15 +1,19 @@
 <template>
     <div class="container">
         <div class="row">
-            <div v-for="worklog in data" :key="worklog.id" class="col-sm-6 col-lg-4 my-2">
+            <div v-for="worklog in data" :key="worklog.id" class="col-sm-6 col-lg-4 my-3">
                 <div class="card" :class="{ 'border-warning': !worklog.synced }">
                     <div class="card-header text-start d-flex align-items-center">
                         <div class="d-flex align-items-center w-100">
-                            <div class="candidate-list-images">
-                                <span>{{ taskTypeIcons.get(worklog.task.type) }}</span>
+                            <div class="candidate-list-images"
+                                :style="{ backgroundColor: taskTypeMeta[worklog.task.type].bgColor }">
+                                <span>{{ taskTypeMeta[worklog.task.type].icon }}</span>
                             </div>
                             <div class="flex-1 ms-3">
-                                <span class="badge badge-soft-success mb-0">
+                                <span class="badge mb-0" :style="{
+                                    backgroundColor: taskTypeMeta[worklog.task.type].bgColor,
+                                    color: taskTypeMeta[worklog.task.type].textColor
+                                }">
                                     {{ worklog.task.code }}-{{ worklog.task.id }}
                                 </span>
                                 <h5 class="max-lines font-size-16 mb-1" :title="worklog.task.title">
@@ -70,7 +74,7 @@
 </template>
 
 <script>
-import { formatTime, taskTypeIcons } from '@/constants';
+import { formatTime, taskTypeMeta } from '@/constants';
 import moment from 'moment';
 import 'moment-timezone';
 import { defineComponent, ref } from 'vue';
@@ -120,7 +124,7 @@ export default defineComponent({
     },
     setup() {
         const worklodUnderSyncNow = ref(0);
-        return { worklodUnderSyncNow, formatTime, taskTypeIcons };
+        return { worklodUnderSyncNow, formatTime, taskTypeMeta };
     }
 });
 </script>
@@ -214,7 +218,8 @@ a {
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    border-radius: 0.15rem;
+    border-radius: 0.5rem;
+    opacity: 0.85;
 }
 
 .max-lines {
@@ -243,7 +248,7 @@ a {
 
 .candidate-list-images {
     border-radius: 12px;
-    background-color: #94c29c;
+    /* background-color: #94c29c; */
     text-align: center;
 }
 

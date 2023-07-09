@@ -1,36 +1,30 @@
 <template>
     <div class="container">
         <form @submit.prevent>
-            <div class="row mb-3 text-start">
-                <label for="autocomplete-input" class="col-sm-2 col-form-label">Задача в Jira</label>
-                <div class="col-sm-10">
-                    <input type="text" id="autocomplete-input" v-model="autocompleteValue" class="form-control"
-                        autocomplete="off" @keydown.esc="showAutocomplete = false">
-                    <div v-if="showAutocomplete" class="autocomplete-dropdown">
-                        <ul>
-                            <li v-for="suggestion in autocompleteSuggestions" :key="suggestion"
-                                @click="selectAutocompleteSuggestion(suggestion)">
-                                {{ suggestion }}
-                            </li>
-                        </ul>
-                    </div>
+            <div class="mb-3 text-start">
+                <input type="text" id="autocomplete-input" v-model="autocompleteValue" class="form-control w-100"
+                    autocomplete="off" @keydown.esc="showAutocomplete = false"
+                    placeholder="Начните описывать задачу (её номер, название, тип)">
+                <div v-if="showAutocomplete" class="autocomplete-dropdown">
+                    <ul>
+                        <li v-for="suggestion in autocompleteSuggestions" :key="suggestion"
+                            @click="selectAutocompleteSuggestion(suggestion)">
+                            {{ suggestion }}
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-5 mb-3">
-                    <input type="text" id="text-input" placeholder="Что было сделано" v-model="textValue"
-                        class="form-control">
-                </div>
-                <div class="col-sm-2 mb-3">
-                    <input type="time" id="time-input" v-model="timeValue" step="900" class="form-control">
-                </div>
-                <div class="col-sm-3 mb-3">
-                    <input type="number" id="number-input" placeholder="Затрачено минут" v-model.number="numberValue"
-                        class="form-control">
-                </div>
-                <div class="col-sm-2 mb-3">
-                    <button type="button" @click="submitCreate" class="btn btn-primary w-100">Добавить</button>
-                </div>
+            <div class="d-flex justify-content-between align-items-center w-100 mb-3">
+                <input type="text" id="text-input" placeholder="Что было сделано" v-model="textValue"
+                    class="form-control w-50">
+
+                <input type="time" id="time-input" v-model="timeValue" step="900" class="form-control">
+
+                <input type="text" id="spent-input" placeholder="Затрачено" v-model="spentValue"
+                    class="form-control spent-input"
+                    title="Формат '2ч 45м'. Допускается вводить числа: если меньше 5 -- это часы, если больше -- минуты">
+
+                <button type="button" @click="submitCreate" class="btn btn-primary w-25">Добавить</button>
             </div>
 
         </form>
@@ -39,7 +33,8 @@
   
 <script lang="ts">
 import { computed, ref, watch, SetupContext } from 'vue';
-import api from "../api/backend-api";
+import api from "@/api/backend-api";
+import { convertTimeToMinutes } from '@/constants';
 
 export default {
     name: 'WorklogForm',
@@ -52,8 +47,8 @@ export default {
     },
     setup(props: { date: string }, context: SetupContext) {
         const textValue = ref('');
-        const numberValue = ref();
         const timeValue = ref('');
+        const spentValue = ref('');
         const autocompleteValue = ref('');
         const selectedValue = ref('');
         const showAutocomplete = ref(false);
@@ -84,12 +79,12 @@ export default {
         };
 
         const submitCreate = () => {
-            api.createWorklog(props.date, timeValue.value, numberValue.value, textValue.value, autocompleteValue.value)
+            api.createWorklog(props.date, timeValue.value, convertTimeToMinutes(spentValue.value), textValue.value, autocompleteValue.value)
                 .then(response => {
                     context.emit('createWorklog', response.data);
                     textValue.value = '';
                     timeValue.value = '';
-                    numberValue.value = 0;
+                    spentValue.value = '';
                     selectedValue.value = '';
                     autocompleteValue.value = '';
                     autocompleteSuggestions.value = [];
@@ -106,8 +101,8 @@ export default {
 
         return {
             textValue,
-            numberValue,
             timeValue,
+            spentValue,
             autocompleteValue,
             showAutocomplete,
             selectedValue,
@@ -146,5 +141,13 @@ export default {
 
 .autocomplete-dropdown li:hover {
     background-color: #f4f4f4;
+}
+
+.form-control {
+    width: auto;
+}
+
+.spent-input {
+    width: 12%;
 }
 </style>
