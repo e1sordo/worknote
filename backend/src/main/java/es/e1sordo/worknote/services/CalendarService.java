@@ -11,4 +11,6 @@ public interface CalendarService {
     List<DayDto> getDays(LocalDate from, LocalDate to);
 
     DayDto getDay(LocalDate date);
+
+    void updateDaySummary(LocalDate date, String newText);
 }

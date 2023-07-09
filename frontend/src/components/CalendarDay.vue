@@ -1,6 +1,6 @@
 <template>
-    <div class="day-core flex flex-col h-full z-10 overflow-hidden"
-        v-bind:class="{ 'day-today': day.isToday, 'weekday': dayInfo.nonWorkingDay }" type="button"
+    <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden"
+        :class="{ 'day-today': day.isToday, 'weekday': dayInfo.nonWorkingDay }" type="button"
         @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header">
@@ -13,12 +13,16 @@
         </div>
 
         <div class="flex-grow overflow-y-auto overflow-x-auto text-xs leading-tight rounded-sm p-1 mt-0 mb-1">
-            <p v-if="dayInfo.additionalInfo"><small>{{ dayInfo.additionalInfo }}</small></p>
+            <div v-if="dayInfo.additionalInfo" class="alert alert-success" role="alert">
+                {{ dayInfo.additionalInfo }}
+            </div>
 
             <progress-bar v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
                 :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" />
 
-            <h5>{{ dayInfo.summary }}</h5>
+            <div v-if="dayInfo.summary" class="alert alert-warning mb-1">
+                {{ dayInfo.summary }}
+            </div>
 
             <worklog-list :data="sortedWorklogs" />
         </div>

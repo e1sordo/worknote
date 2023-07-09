@@ -8,16 +8,17 @@
     </p>
 
     <!-- часть будет отвечать за общее время из целевого по дню, часть -- за то, что уже было синх-но с джирой и т/д -->
-    <div class="progress my-2" style="height: 6px;">
+    <div class="progress my-2" :style="{ height: big ? '16px' : '6px' }">
         <!-- <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
             aria-valuemax="100"></div> -->
         <div class="progress-bar bg-success" role="progressbar" :style="{ width: syncPercent + '%' }"
             :aria-valuenow="syncPercent" aria-valuemin="0" aria-valuemax="100">
         </div>
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
-            :style="{ width: loggedPercent + '%' }" :aria-valuenow="loggedPercent" aria-valuemin="0" aria-valuemax="100">
+        <div v-if="syncPercent < 100" class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+            role="progressbar" :style="{ width: loggedPercent + '%' }" :aria-valuenow="loggedPercent" aria-valuemin="0"
+            aria-valuemax="100">
         </div>
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+        <div v-if="syncPercent < 100" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
             :style="{ width: toLogPercent + '%' }" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100">
         </div>
         <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
@@ -28,14 +29,15 @@
 
 <script>
 import { formatTime } from '@/constants';
-import { defineComponent, watch, reactive } from 'vue';
+import { defineComponent, reactive, watchEffect } from 'vue';
 
 export default defineComponent({
     name: 'ProgressBar',
     props: {
         synchronized: Number,
         loggedHereOnly: Number,
-        total: { type: Number, required: true }
+        total: { type: Number, required: true },
+        big: { type: Boolean, default: false }
     },
     setup(props) {
         const state = reactive({
@@ -62,7 +64,7 @@ export default defineComponent({
             state.helpText = `Осталось внести ${formatTime(state.minutesRemain)}`;
         };
 
-        watch(() => {
+        watchEffect(() => {
             calculatePercentages();
         });
 

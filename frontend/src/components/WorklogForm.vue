@@ -45,12 +45,12 @@ export default {
     name: 'WorklogForm',
     props: {
         date: {
-            type: Date,
+            type: String,
             required: true,
-            default: () => (new Date())
+            default: () => ('')
         }
     },
-    setup(props: { date: Date }, context: SetupContext) {
+    setup(props: { date: string }, context: SetupContext) {
         const textValue = ref('');
         const numberValue = ref();
         const timeValue = ref('');

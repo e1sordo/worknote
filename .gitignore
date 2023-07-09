@@ -3,6 +3,7 @@
 # data
 *.db
 *.sql
+backups
 
 # Gradle
 .gradle

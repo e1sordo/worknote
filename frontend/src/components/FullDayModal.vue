@@ -6,17 +6,31 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">{{ humanDate(dayInfo.date) }}</h5>
                     <span ref="editableText" contenteditable="true" @keydown.enter="saveText" @blur="saveText"
-                        @keydown="handleKeyDown" class="mx-2 px-1 w-50 text-start">
+                        @keydown="handleKeyDown" class="day-summary mx-2 px-1 w-50 text-start"
+                        placeholder="Безымянный день">
                         {{ dayInfo.summary }}
                     </span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
                     <p v-if="dayInfo.nonWorkingDay" class="text-muted mb-0 mt-2">
                         Выходной. {{ dayInfo.additionalInfo }}
                     </p>
+
                     <worklog-form :date="dayInfo.date" @createWorklog="addWorklog" />
+
                     <hr />
+
+                    <div v-if="!dayInfo.nonWorkingDay">
+                        <div style="padding: 0px 10px">
+                            <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
+                                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" />
+                        </div>
+
+                        <hr />
+                    </div>
+
                     <worklog-modal-list :date="dayInfo.date" :data="sortedWorklogs" @deleteWorklog="removeWorklog"
                         @worklogSynced="syncWorklog" />
                 </div>
@@ -35,12 +49,14 @@
 <script>
 import WorklogForm from '@/components/WorklogForm.vue';
 import WorklogModalList from '@/components/WorklogModalList.vue';
+import ProgressBar from '@/components/ProgressBar.vue';
 import { defineComponent } from 'vue';
+import api from "../api/backend-api";
 
 export default defineComponent({
     name: 'FullDayModal',
     components: {
-        WorklogModalList, WorklogForm
+        WorklogModalList, WorklogForm, ProgressBar
     },
     methods: {
         humanDate(date) {
@@ -67,6 +83,11 @@ export default defineComponent({
         },
         saveText() {
             this.text = this.$refs.editableText.innerText;
+            api.updateDaySummary(this.dayInfo.date, this.text)
+                .then(response => {
+                    this.$emit('updateDaySummary', this.dayInfo.date, this.text);
+                    console.log("Day summary was updated. Response status: " + response.status)
+                });
         },
         addWorklog(worklog) {
             this.$emit('createWorklog', this.dayInfo.date, worklog);
@@ -102,9 +123,29 @@ export default defineComponent({
             } catch (error) {
                 return {};
             }
+        },
+        durationOfSynced() {
+            return [...this.dayInfo.worklogs]
+                .filter(wl => wl.synced)
+                .map(wl => wl.durationInMinutes)
+                .reduce((prev, next) => prev + next, 0)
+        },
+        durationOfLoggedOnly() {
+            return [...this.dayInfo.worklogs]
+                .filter(wl => !wl.synced)
+                .map(wl => wl.durationInMinutes)
+                .reduce((prev, next) => prev + next, 0)
         }
     },
 });
 </script>
 
-<style></style>
+<style>
+.day-summary:empty:before{
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+  color: rgba(0, 0, 0, 0.172);
+  font-style: italic;
+}
+</style>

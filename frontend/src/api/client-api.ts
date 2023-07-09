@@ -3,7 +3,8 @@ import axios, { AxiosResponse } from 'axios';
 const jiraSettignsKey = "settings:jira";
 
 const savedSettings = localStorage.getItem(jiraSettignsKey);
-const { proxyUrl, serverUrl, username, password } = savedSettings && JSON.parse(savedSettings);
+const { proxyUrl, serverUrl, username, password } = savedSettings && JSON.parse(savedSettings)
+    || { proxyUrl: "", serverUrl: "", username: "", password: "" };
 
 const axiosJiraApi = axios.create({
     baseURL: proxyUrl,
@@ -11,12 +12,6 @@ const axiosJiraApi = axios.create({
     headers: { 'Content-Type': 'application/json', 'X-Jira-Url': serverUrl },
     auth: { username, password }
 });
-
-interface User {
-    id: number;
-    firstName: string;
-    lastName: string;
-}
 
 interface CreateWorklogRequest {
     timeSpentSeconds: number;

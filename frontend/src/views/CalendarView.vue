@@ -1,12 +1,13 @@
 <template>
   <div v-if="Object.keys(daysMap).length !== 0">
     <full-day-modal :dayInfo="activeDayInfo" @createWorklog="addWorklog" @deleteWorklog="removeWorklog"
-      @worklogSynced="syncWorklog" />
+      @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" />
 
     <v-calendar class="custom-calendar max-w-full" :masks="masks" expanded :max-date="endOfWeek" trim-weeks
       disable-page-swipe is-expanded view="weekly" :rows="5" locale="ru">
       <template v-slot:day-content="{ day }">
-        <calendar-day :day="day" :dayInfo="daysMap[day.id]" @selectActiveDay="handleActiveDaySelect" />
+        <calendar-day v-if="daysMap[day.id]" :day="day" :dayInfo="daysMap[day.id]"
+          @selectActiveDay="handleActiveDaySelect" />
       </template>
     </v-calendar>
   </div>
@@ -87,6 +88,10 @@ export default defineComponent({
       const dayInfo = this.daysMap[date];
       var foundIndex = dayInfo.worklogs.findIndex(item => item.id == worklog.id);
       dayInfo.worklogs[foundIndex] = worklog;
+    },
+    setNewDaySummary(date: string, newSummary: string) {
+      const dayInfo = this.daysMap[date];
+      dayInfo.summary = newSummary;
     }
   }
 });
@@ -126,6 +131,11 @@ export default defineComponent({
     padding: 0;
     margin-top: 0;
     height: 60px;
+  }
+
+  & .vc-title {
+    background-color: rgb(215, 235, 250);
+    color: rgb(57, 111, 159);
   }
 
   & .vc-weeks {
@@ -170,8 +180,7 @@ export default defineComponent({
   }
 
   & .day-today {
-    background-color: #f7e8ea;
-    height: 100%;
+    background-color: #f7e8ea !important;
   }
 
   & .day-core {

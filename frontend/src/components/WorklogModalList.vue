@@ -1,9 +1,22 @@
 <template>
     <div class="container">
         <div class="row">
-            <div v-for="worklog in data" :key="worklog.id" class="col-sm-6 col-lg-4">
-                <div class="card">
-                    <div class="card-body text-start">
+            <div v-for="worklog in data" :key="worklog.id" class="col-sm-6 col-lg-4 my-2">
+                <div class="card" :class="{ 'border-warning': !worklog.synced }">
+                    <div class="card-header text-start d-flex align-items-center">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="candidate-list-images">
+                                <span>{{ taskTypeIcons.get(worklog.task.type) }}</span>
+                            </div>
+                            <div class="flex-1 ms-3">
+                                <span class="badge badge-soft-success mb-0">
+                                    {{ worklog.task.code }}-{{ worklog.task.id }}
+                                </span>
+                                <h5 class="max-lines font-size-16 mb-1" :title="worklog.task.title">
+                                    <a class="text-dark">{{ worklog.task.title }}</a>
+                                </h5>
+                            </div>
+                        </div>
                         <div class="dropdown float-end">
                             <a class="text-muted dropdown-toggle font-size-16" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true">
@@ -14,19 +27,8 @@
                                 <a class="dropdown-item" @click="submitDelete(worklog)">Delete</a>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <div class="candidate-list-images">
-                                <span>{{ taskTypeIcons.get(worklog.task.type) }}</span>
-                            </div>
-                            <div class="flex-1 ms-3">
-                                <h5 class="font-size-16 mb-1">
-                                    <a class="text-dark">{{ worklog.task.title }}</a>
-                                </h5>
-                                <span class="badge badge-soft-success mb-0">
-                                    {{ worklog.task.code }}-{{ worklog.task.id }}
-                                </span>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="card-body text-start">
                         <div class="row pt-1 fs-6">
                             <p class="col-sm-4 mb-0 mt-2 font-size-14">
                                 <i class="bi bi-clock pe-2 text-primary"></i>
@@ -34,7 +36,7 @@
                             </p>
                             <p class="col-sm-8 mb-0 mt-2 font-size-14">
                                 <i class="bi bi-hourglass-split pe-2 text-primary"></i>
-                                {{ worklog.durationInMinutes }} минут ({{ formatTime(worklog.durationInMinutes) }})
+                                {{ formatTime(worklog.durationInMinutes) }}
                             </p>
                             <p v-if="worklog.synced" class="mb-0 mt-2 font-size-14">
                                 <i class="bi bi-patch-check text-success pe-2"></i>
@@ -140,10 +142,17 @@ export default defineComponent({
     background-clip: border-box;
     border: 1px solid #eff0f2;
     border-radius: 1rem;
+    margin-bottom: 0;
+    height: 100%;
+}
+
+.card-header {
+    height: 82px;
 }
 
 .card-body {
     padding: 16px var(--bs-card-spacer-x);
+    padding-top: 0;
 }
 
 .avatar-md {
@@ -173,12 +182,12 @@ export default defineComponent({
     width: 100%;
 }
 
-.bg-soft-primary {
-    background-color: rgba(59, 118, 225, .25) !important;
-}
-
 a {
     text-decoration: none !important;
+}
+
+.bg-soft-primary {
+    background-color: rgba(59, 118, 225, .25) !important;
 }
 
 .badge-soft-danger {
@@ -205,7 +214,23 @@ a {
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    border-radius: 0.75rem;
+    border-radius: 0.15rem;
+}
+
+.max-lines {
+    /* display: block;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    height: 2.8em;
+    line-height: 1.4em; */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 4px;
+    padding-top: 4px;
 }
 
 .font-size-16 {
@@ -217,7 +242,7 @@ a {
 }
 
 .candidate-list-images {
-    border-radius: 50%;
+    border-radius: 12px;
     background-color: #94c29c;
     text-align: center;
 }

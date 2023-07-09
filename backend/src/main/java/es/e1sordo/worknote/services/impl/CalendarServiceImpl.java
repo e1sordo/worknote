@@ -9,6 +9,7 @@ import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.CalendarService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -23,6 +24,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
@@ -83,6 +85,15 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public DayDto getDay(final LocalDate date) {
         return getDays(date, date.plusDays(1)).get(0);
+    }
+
+    @Override
+    public void updateDaySummary(final LocalDate date, final String newText) {
+        dayRepository.findById(date).ifPresent(day -> {
+            log.info("Try to update day {} summary from '{}' to '{}'", date, day.getSummary(), newText);
+            day.setSummary(newText);
+            dayRepository.save(day);
+        });
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {

@@ -1,9 +1,13 @@
 package es.e1sordo.worknote.controllers;
 
 import es.e1sordo.worknote.dto.DayDto;
+import es.e1sordo.worknote.dto.UpdateDaySummaryDto;
 import es.e1sordo.worknote.services.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,5 +30,10 @@ public class CalendarController {
     @GetMapping("/day")
     public DayDto getDay(@RequestParam LocalDate date) {
         return calendarService.getDay(date);
+    }
+
+    @PatchMapping("/day/{date}/summary")
+    public void updateDaySummary(@PathVariable LocalDate date, @RequestBody UpdateDaySummaryDto request) {
+        calendarService.updateDaySummary(date, request.newText());
     }
 }

@@ -48,10 +48,13 @@ export default {
     day(date: Date): Promise<AxiosResponse<DayInfo>> {
         return axiosApi.get(`/calendar/day?date=${date}`);
     },
+    updateDaySummary(date: string, newText: string): Promise<AxiosResponse<void>> {
+        return axiosApi.patch(`/calendar/day/${date}/summary`, { newText });
+    },
     tasks(query: string): Promise<AxiosResponse<Task[]>> {
         return axiosApi.get(`/tasks?query=${query}`);
     },
-    createWorklog(date: Date, time: string, minutes: number, summary: string, task: string): Promise<AxiosResponse<Worklog>> {
+    createWorklog(date: string, time: string, minutes: number, summary: string, task: string): Promise<AxiosResponse<Worklog>> {
         return axiosApi.post(`/worklogs`, {
             date: date,
             startTime: time,
