@@ -18,7 +18,8 @@
             role="progressbar" :style="{ width: loggedPercent + '%' }" :aria-valuenow="loggedPercent" aria-valuemin="0"
             aria-valuemax="100">
         </div>
-        <div v-if="syncPercent < 100" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+        <div v-if="isPast && syncPercent < 100"
+            class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
             :style="{ width: toLogPercent + '%' }" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100">
         </div>
         <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
@@ -37,7 +38,8 @@ export default defineComponent({
         synchronized: Number,
         loggedHereOnly: Number,
         total: { type: Number, required: true },
-        big: { type: Boolean, default: false }
+        big: { type: Boolean, default: false },
+        isPast: Boolean
     },
     setup(props) {
         const state = reactive({

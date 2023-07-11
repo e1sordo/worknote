@@ -25,7 +25,8 @@
                     <div v-if="!dayInfo.nonWorkingDay">
                         <div style="padding: 0px 10px">
                             <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
-                                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" />
+                                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
+                                :isPast="new Date(dayInfo.date) < new Date()" />
                         </div>
 
                         <hr />
@@ -141,11 +142,12 @@ export default defineComponent({
 </script>
 
 <style>
-.day-summary:empty:before{
-  content: attr(placeholder);
-  pointer-events: none;
-  display: block; /* For Firefox */
-  color: rgba(0, 0, 0, 0.172);
-  font-style: italic;
+.day-summary:empty:before {
+    content: attr(placeholder);
+    pointer-events: none;
+    display: block;
+    /* For Firefox */
+    color: rgba(0, 0, 0, 0.172);
+    font-style: italic;
 }
 </style>

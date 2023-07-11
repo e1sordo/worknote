@@ -180,7 +180,7 @@ export default defineComponent({
   }
 
   & .day-today {
-    background-color: #f7e8ea !important;
+    background-color: #f7e8ef61 !important;
   }
 
   & .day-core {
