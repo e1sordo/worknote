@@ -14,7 +14,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center w-100 mb-3">
+            <div class="d-flex justify-content-between align-items-center w-100">
                 <input type="text" id="text-input" placeholder="Что было сделано" v-model="textValue"
                     class="form-control w-50">
 
@@ -24,7 +24,7 @@
                     class="form-control spent-input"
                     title="Формат '2ч 45м'. Допускается вводить числа: если меньше 5 -- это часы, если больше -- минуты">
 
-                <button type="button" @click="submitCreate" class="btn btn-primary w-25">Добавить</button>
+                <button type="button" @click="submitCreate" class="btn btn-primary w-25">Добавить Worklog</button>
             </div>
 
         </form>
@@ -59,7 +59,7 @@ export default {
                 showAutocomplete.value = false;
             } else {
                 try {
-                    const response = await api.tasks(newValue);
+                    const response = await api.searchTasks(newValue);
                     autocompleteSuggestions.value = response.data.map(task => `(${task.code}-${task.id}) ${task.title}`);
 
                     if (autocompleteSuggestions.value.length > 0) {

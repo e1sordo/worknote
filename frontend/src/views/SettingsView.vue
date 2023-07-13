@@ -29,14 +29,14 @@
 
     <div class="m-4 text-start">
       <h2>Настройки задач</h2>
-      <task-list/>
+      <task-table/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TaskList from '@/components/TaskList.vue'
+import TaskTable from '@/components/TaskTable.vue'
 
 // interface State {
 //   msg: string;
@@ -47,9 +47,9 @@ import TaskList from '@/components/TaskList.vue'
 const jiraSettignsKey = "settings:jira";
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'SettingsView',
   components: {
-    TaskList
+    TaskTable
   },
 
   // data: (): State => {

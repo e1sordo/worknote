@@ -1,10 +1,10 @@
 <template>
     <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden"
-        :class="{ 'day-today': day.isToday, 'weekday': dayInfo.nonWorkingDay }" type="button"
+        :class="{ 'day-today': day.isToday, 'weekday': dayInfo.nonWorkingDay, 'opacity-25': !isPastDay }" type="button"
         @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header">
-            <span class="day-label text-sm text-gray-700">
+            <span class="day-label text-sm" :class="{ 'text-muted': !isPastDay }">
                 {{ day.day }}
             </span>
             <span v-if="dayInfo.sequenceNumber === 'number'">
@@ -17,9 +17,8 @@
                 {{ dayInfo.additionalInfo }}
             </div>
 
-            <progress-bar v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
-                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
-                :isPast="new Date(dayInfo.date) < new Date()" />
+            <progress-bar v-if="isPastDay && dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
+                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" :isPast="isPastDay" />
 
             <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-warning mb-1">
                 {{ dayInfo.summary }}
@@ -68,6 +67,9 @@ export default defineComponent({
                 .filter(wl => !wl.synced)
                 .map(wl => wl.durationInMinutes)
                 .reduce((prev, next) => prev + next, 0)
+        },
+        isPastDay() {
+            return new Date(this.dayInfo.date) < new Date()
         }
     },
     methods: {

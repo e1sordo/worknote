@@ -34,11 +34,11 @@
                     </div>
                     <div class="card-body text-start">
                         <div class="row pt-1 fs-6">
-                            <p class="col-sm-4 mb-0 mt-2 font-size-14">
+                            <p class="col-sm-5 mb-0 mt-2 font-size-14">
                                 <i class="bi bi-clock pe-2 text-primary"></i>
                                 {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
                             </p>
-                            <p class="col-sm-8 mb-0 mt-2 font-size-14">
+                            <p class="col-sm-7 mb-0 mt-2 font-size-14">
                                 <i class="bi bi-hourglass-split pe-2 text-primary"></i>
                                 {{ formatTime(worklog.durationInMinutes) }}
                             </p>
@@ -50,13 +50,10 @@
                                 <i class="bi bi-patch-exclamation text-danger pe-2"></i>
                                 Не синхронизировано!
                             </p>
-                            <p v-if="worklog.summary" class="mb-0 mt-2 font-size-14">
-                                <i class="bi bi-chat-left-text pe-2 text-primary"></i>
-                                {{ worklog.summary }}
-                            </p>
-                            <p v-else class="mb-0 mt-2 font-size-14">
-                                <i class="bi bi-chat-left pe-2 text-primary"></i>
-                                <em class="text-muted">Не заполнено</em>
+                            <p class="mb-0 mt-2 font-size-14">
+                                <i class="bi pe-2 text-primary"
+                                    :class="{ 'bi-chat-left-text': worklog.summary, 'bi-chat-left': !worklog.summary }"></i>
+                                {{ worklog.summary }} <em v-if="!worklog.summary" class="text-muted">Не заполнено</em>
                             </p>
                         </div>
                         <div class="d-flex gap-2 pt-4" v-if="!worklog.synced">

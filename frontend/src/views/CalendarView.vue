@@ -77,9 +77,6 @@ export default defineComponent({
       const dayInfo = this.daysMap[date];
       dayInfo.worklogs = [...dayInfo.worklogs, worklog];
     },
-    removeWorklog2(date: string, id: number) {
-      this.daysMap[date].worklogs.filter(worklog => worklog.id !== id);
-    },
     removeWorklog(date: string, id: number) {
       const dayInfo = this.daysMap[date];
       dayInfo.worklogs = dayInfo.worklogs.filter(worklog => worklog.id !== id);
@@ -127,15 +124,16 @@ export default defineComponent({
   }
 
   & .vc-header {
-    background-color: #f9f8ff;
+    background-color: var(--weekday-bg);
     padding: 0;
     margin-top: 0;
     height: 60px;
   }
 
   & .vc-title {
-    background-color: rgb(215, 235, 250);
-    color: rgb(57, 111, 159);
+    background-color: var(--weekday-bg);
+    color: rgb(53, 74, 92);
+    text-transform: capitalize;
   }
 
   & .vc-weeks {

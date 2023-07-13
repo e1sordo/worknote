@@ -11,43 +11,43 @@ interface TaskTypeMetaItem {
 
 export const taskTypeMeta: TaskTypeMeta = {
     DEVELOPMENT: {
-        description: '',
+        description: 'Разработка',
         icon: '👨🏻‍💻',
         bgColor: 'rgb(223, 96, 104)',
         textColor: 'rgb(255, 223, 223)'
     },
     PROCESS_MAINTENANCE: {
-        description: '',
+        description: 'Обслуживание процесса',
         icon: '🎙️',
         bgColor: 'rgb(96, 174, 223)',
-        textColor: 'rgb(223, 240, 255)'
+        textColor: 'rgb(250, 253, 255)'
     },
     TRAINING_AND_DEVELOPMENT: {
-        description: '',
+        description: 'Обучение и развитие',
         icon: '🏋️‍♀️',
         bgColor: 'rgb(101, 223, 96)',
         textColor: '#ffffff'
     },
     CLUBS_AND_EVENTS: {
-        description: '',
+        description: 'Клубы и мероприятия',
         icon: '🎭',
         bgColor: 'rgb(188, 96, 223)',
         textColor: '#ffffff'
     },
     ORGANIZING_ACTIVITIES: {
-        description: '',
+        description: 'Орг. деятельность',
         icon: '🥇',
         bgColor: 'rgb(188, 96, 223)',
         textColor: '#ffffff'
     },
     INTERVIEWS: {
-        description: '',
+        description: 'Собеседования',
         icon: '🤝',
         bgColor: 'rgb(188, 96, 223)',
         textColor: '#ffffff'
     },
     ABSENCES: {
-        description: '',
+        description: 'Отсутствия',
         icon: '🤒',
         bgColor: 'rgb(61, 42, 42)',
         textColor: '#ffffff'
@@ -73,25 +73,25 @@ export function formatTime(minutes: number): string {
 
 export function convertTimeToMinutes(timeString: string): number {
     const trimmedString = timeString.trim();
-  
+
     if (trimmedString.includes("ч") || trimmedString.includes("м")) {
-      // Пример строки: "2ч 15м"
-      const [hours, minutes] = trimmedString.split(/[чм ]+/);
-  
-      const hoursValue = parseInt(hours, 10);
-      const minutesValue = parseInt(minutes, 10);
-  
-      return hoursValue * 60 + minutesValue;
+        // Пример строки: "2ч 15м"
+        const [hours, minutes] = trimmedString.split(/[чм ]+/);
+
+        const hoursValue = parseInt(hours, 10);
+        const minutesValue = parseInt(minutes, 10);
+
+        return hoursValue * 60 + minutesValue;
     } else if (!isNaN(parseInt(trimmedString, 10))) {
-      // Пример строки: "30"
-      const numericValue = parseInt(trimmedString, 10);
-  
-      if (numericValue < 5) {
-        return numericValue * 60; // Часы
-      } else {
-        return numericValue; // Минуты
-      }
+        // Пример строки: "30"
+        const numericValue = parseInt(trimmedString, 10);
+
+        if (numericValue < 5) {
+            return numericValue * 60; // Часы
+        } else {
+            return numericValue; // Минуты
+        }
     }
-  
+
     throw new Error("Некорректный формат строки времени");
-  }
+}

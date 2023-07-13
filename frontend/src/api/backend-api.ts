@@ -24,11 +24,17 @@ export interface DayInfo {
 }
 
 export interface Task {
+    entityId: number;
     id: number;
     code: string;
     shortCode: string;
     type: string;
     title: string;
+    examples: string;
+}
+
+export interface TaskWithUsage extends Task {
+    latestWorklogDateTime: string;
 }
 
 export interface Worklog {
@@ -51,8 +57,14 @@ export default {
     updateDaySummary(date: string, newText: string): Promise<AxiosResponse<void>> {
         return axiosApi.patch(`/calendar/day/${date}/summary`, { newText });
     },
-    tasks(query: string): Promise<AxiosResponse<Task[]>> {
-        return axiosApi.get(`/tasks?query=${query}`);
+    searchTasks(query: string): Promise<AxiosResponse<Task[]>> {
+        return axiosApi.get(`/tasks/search?query=${query}`);
+    },
+    tasks(): Promise<AxiosResponse<TaskWithUsage[]>> {
+        return axiosApi.get('/tasks');
+    },
+    upsertTask(body: Task): Promise<AxiosResponse<Task>> {
+        return axiosApi.post('/tasks', body);
     },
     createWorklog(date: string, time: string, minutes: number, summary: string, task: string): Promise<AxiosResponse<Worklog>> {
         return axiosApi.post(`/worklogs`, {

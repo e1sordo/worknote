@@ -19,28 +19,16 @@
                     </p>
 
                     <worklog-form :date="dayInfo.date" @createWorklog="addWorklog" />
-
-                    <hr />
-
-                    <div v-if="!dayInfo.nonWorkingDay">
-                        <div style="padding: 0px 10px">
-                            <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
-                                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
-                                :isPast="new Date(dayInfo.date) < new Date()" />
-                        </div>
-
-                        <hr />
+                </div>
+                <div class="modal-footer">
+                    <div v-if="!dayInfo.nonWorkingDay" class="w-100 container">
+                        <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
+                            :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
+                            :isPast="new Date(dayInfo.date) < new Date()" />
                     </div>
 
                     <worklog-modal-list :date="dayInfo.date" :data="sortedWorklogs" @deleteWorklog="removeWorklog"
                         @worklogSynced="syncWorklog" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary">
-                        <i class="bi bi-arrow-repeat me-1"></i>
-                        Синхронизировать все
-                    </button>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import es.e1sordo.worknote.dto.DayDto;
 import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.WorklogDto;
 import es.e1sordo.worknote.models.DayEntity;
+import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
@@ -97,17 +98,19 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {
+        final JiraTaskEntity task = entity.getTask();
         return new WorklogDto(
                 entity.getId(),
                 entity.getStartTime(),
                 entity.getDurationInMinutes(),
                 entity.getSummary(),
                 new TaskDto(
-                        entity.getTask().getJiraId(),
-                        entity.getTask().getProject().getCode(),
-                        entity.getTask().getProject().getShortCode(),
-                        entity.getTask().getType(),
-                        entity.getTask().getTitle()
+                        task.getId(),
+                        task.getJiraId(),
+                        task.getProject().getCode(),
+                        task.getProject().getShortCode(),
+                        task.getType(),
+                        task.getTitle()
                 ),
                 entity.getJiraId(),
                 entity.isSynced()

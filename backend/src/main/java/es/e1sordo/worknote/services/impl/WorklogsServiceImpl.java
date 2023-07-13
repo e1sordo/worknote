@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,21 +89,23 @@ public class WorklogsServiceImpl implements WorklogsService {
 
         return taskRepository.findByJiraIdAndProject(jiraTaskId, project)
                 .orElseGet(() -> taskRepository.save(
-                        new JiraTaskEntity(null, jiraTaskId, project, JiraTaskType.DEVELOPMENT, taskTitle, null)));
+                        new JiraTaskEntity(null, jiraTaskId, project, JiraTaskType.DEVELOPMENT, taskTitle, null, List.of())));
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {
+        final JiraTaskEntity task = entity.getTask();
         return new WorklogDto(
                 entity.getId(),
                 entity.getStartTime(),
                 entity.getDurationInMinutes(),
                 entity.getSummary(),
                 new TaskDto(
-                        entity.getTask().getJiraId(),
-                        entity.getTask().getProject().getCode(),
-                        entity.getTask().getProject().getShortCode(),
-                        entity.getTask().getType(),
-                        entity.getTask().getTitle()
+                        task.getId(),
+                        task.getJiraId(),
+                        task.getProject().getCode(),
+                        task.getProject().getShortCode(),
+                        task.getType(),
+                        task.getTitle()
                 ),
                 entity.getJiraId(),
                 entity.isSynced()

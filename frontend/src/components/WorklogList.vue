@@ -2,15 +2,15 @@
     <div class="list-group worklogs-compact-list">
         <a v-for="worklog in data" :key="worklog.id" class="worklogs-group-item list-group-item-action"
             data-bs-toggle="tooltip" :title="worklog.task.title">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">
-                    <small><i v-if="!worklog.synced" class="bi bi-patch-question-fill"></i></small>
-                    {{ formatTime(worklog.durationInMinutes) }}
-                </h5>
+            <div class="d-flex mb-1 w-100 align-items-center justify-content-between">
                 <span class="d-inline-block" tabindex="0">
+                    <small>{{ taskTypeMeta[worklog.task.type].icon }} </small>
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
-                    <small>{{ taskTypeMeta[worklog.task.type].icon }}</small>
                 </span>
+                <h6 class="mb-0">
+                    <small><i v-if="!worklog.synced" class="bi bi-patch-question-fill text-danger"></i></small>
+                    {{ formatTime(worklog.durationInMinutes) }}
+                </h6>
             </div>
             <div class="worklog-description">
                 <mark>{{ worklog.startTime.split(':').slice(0, 2).join(':') }}</mark> {{ worklog.summary }}
