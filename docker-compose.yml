@@ -1,0 +1,11 @@
+version: '3'
+services:
+  worknote:
+    image: vlavik007/worknote:latest
+    container_name: worknote
+    env_file:
+      - .env
+    ports:
+      - "8098:8098"
+    volumes:
+      - ./:/app

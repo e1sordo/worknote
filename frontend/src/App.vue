@@ -3,7 +3,8 @@
   <nav>
     <router-link to="/">Главная</router-link> |
     <router-link to="/overview">Аналитика</router-link> |
-    <router-link to="/settings">Настройки</router-link>
+    <router-link to="/settings">Настройки</router-link> |
+    <a href="/logout" class="link-secondary">Выйти</a>
   </nav>
   <router-view />
 </template>
