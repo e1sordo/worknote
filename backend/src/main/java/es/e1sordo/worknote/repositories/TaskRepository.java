@@ -27,4 +27,14 @@ public interface TaskRepository extends ListCrudRepository<JiraTaskEntity, Long>
     List<Object[]> findTasksWithLatestWorklogs();
 
     List<JiraTaskEntity> findByWorklogsEmpty();
+
+    @Query("""
+            SELECT t, SUM(w.durationInMinutes) AS totalDuration, COUNT(w) AS worklogsCount
+            FROM JiraTaskEntity t
+            JOIN t.worklogs w
+            GROUP BY t
+            ORDER BY totalDuration DESC
+            LIMIT 15
+            """)
+    List<Object[]> findTop15TasksWithTotalDuration();
 }

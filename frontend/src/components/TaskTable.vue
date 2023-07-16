@@ -40,7 +40,7 @@
 import TaskForm from '@/components/TaskForm.vue';
 import { taskTypeMeta } from '@/constants';
 import { defineComponent } from 'vue';
-import api, { Task, TaskWithUsage } from "../api/backend-api";
+import api, { Task, TaskWithUsage } from "@/api/backend-api";
 
 export default defineComponent({
     name: 'TaskTable',

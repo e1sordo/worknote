@@ -47,6 +47,17 @@ export interface Worklog {
     synced: boolean;
 }
 
+export interface TimeDistributionOverviewDto {
+    data: TimeDistributionDto[];
+}
+
+export interface TimeDistributionDto {
+    byTypes: {
+        [key: string]: number;
+    };
+    periodEnd: string;
+}
+
 export default {
     weeks(): Promise<AxiosResponse<DayInfo[]>> {
         return axiosApi.get(`/calendar/weeks`);
@@ -81,6 +92,12 @@ export default {
     deleteWorklog(id: number): Promise<AxiosResponse<void>> {
         return axiosApi.delete(`/worklogs/${id}`);
     },
+
+    getTimeDistributionByTypeOfTasksPerWeeks(): Promise<AxiosResponse<TimeDistributionOverviewDto>> {
+        return axiosApi.get(`/analytics/time-distribution`);
+    },
+
+
     getUser(userId: number): Promise<AxiosResponse<User>> {
         return axiosApi.get(`/user/` + userId);
     },
