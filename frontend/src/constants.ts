@@ -36,7 +36,7 @@ export const taskTypeMeta: TaskTypeMeta = {
     },
     ORGANIZING_ACTIVITIES: {
         description: 'Орг. деятельность',
-        icon: '🥇',
+        icon: '🪪',
         bgColor: 'rgb(188, 96, 223)',
         textColor: '#ffffff'
     },
@@ -74,19 +74,14 @@ export function formatTime(minutes: number): string {
 export function convertTimeToMinutes(timeString: string): number {
     const trimmedString = timeString.trim();
 
-    if (trimmedString.includes("ч") || trimmedString.includes("м")) {
-        // Пример строки: "2ч 15м"
-        const [hours, minutes] = trimmedString.split(/[чм ]+/);
+    const hoursMatch = trimmedString.match(/(\d+)\s*[чh]/);
+    const minutesMatch = trimmedString.match(/(\d+)\s*[мm]/);
 
-        const hoursValue = parseInt(hours, 10);
-        const minutesValue = parseInt(minutes, 10);
-
-        return hoursValue * 60 + minutesValue;
+    if (hoursMatch || minutesMatch) {
+        return (hoursMatch && (60 * parseInt(hoursMatch[1], 10)) || 0) + (minutesMatch && parseInt(minutesMatch[1], 10) || 0);
     } else if (!isNaN(parseInt(trimmedString, 10))) {
-        // Пример строки: "30"
         const numericValue = parseInt(trimmedString, 10);
-
-        if (numericValue < 5) {
+        if (numericValue < 9) {
             return numericValue * 60; // Часы
         } else {
             return numericValue; // Минуты

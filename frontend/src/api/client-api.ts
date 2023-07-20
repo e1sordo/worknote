@@ -8,7 +8,6 @@ const { proxyUrl, serverUrl, username, password } = savedSettings && JSON.parse(
 
 const axiosJiraApi = axios.create({
     baseURL: proxyUrl,
-    timeout: 3000,
     headers: { 'Content-Type': 'application/json', 'X-Jira-Url': serverUrl },
     auth: { username, password }
 });

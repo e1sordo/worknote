@@ -1,5 +1,5 @@
 <template>
-  <div spellcheck="false" class="brand" contenteditable="true">WorkNote</div>
+  <div spellcheck="false" class="brand" contenteditable="true">&lt;WorkNote&gt;</div>
   <nav>
     <router-link to="/">Главная</router-link> |
     <router-link to="/overview">Аналитика</router-link> |

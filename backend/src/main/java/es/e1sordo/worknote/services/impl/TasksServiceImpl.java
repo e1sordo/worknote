@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class TasksServiceImpl implements TasksService {
     public List<TaskDto> getAllByQuery(final String query) {
         log.info("Find tasks by query: {}", query);
 
-        return repository.findAll()
+        return repository.findByClosedFalse()
                 .stream()
                 .filter(entity -> (entity.getTitle() + entity.getJiraId() + entity.getExamples()).toLowerCase()
                         .contains(query.toLowerCase()))
@@ -62,6 +63,8 @@ public class TasksServiceImpl implements TasksService {
         repository.findByWorklogsEmpty()
                 .forEach(jiraTask -> result.add(mapToDtoWithUsage(jiraTask, null)));
 
+        result.sort(Comparator.comparing(TaskWithUsageDto::closed));
+
         return result;
     }
 
@@ -81,12 +84,13 @@ public class TasksServiceImpl implements TasksService {
             taskEntity.setTitle(request.title());
             taskEntity.setType(request.type());
             taskEntity.setExamples(request.examples());
+            taskEntity.setClosed(request.closed());
             return mapToDto(repository.save(taskEntity));
         }
 
         log.info("Task was not found, so try to create. Title: {}", request.title());
         return mapToDto(repository.save(new JiraTaskEntity(
-                null, request.id(), project, request.type(), request.title(), request.examples(), null
+                null, request.id(), project, request.type(), false, request.title(), request.examples(), null
         )));
     }
 
@@ -97,7 +101,8 @@ public class TasksServiceImpl implements TasksService {
                 entity.getProject().getCode(),
                 entity.getProject().getShortCode(),
                 entity.getType(),
-                entity.getTitle()
+                entity.getTitle(),
+                entity.isClosed()
         );
     }
 
@@ -109,6 +114,7 @@ public class TasksServiceImpl implements TasksService {
                 entity.getType(),
                 entity.getTitle(),
                 entity.getExamples(),
+                entity.isClosed(),
                 latestWorklogTime
         );
     }

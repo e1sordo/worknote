@@ -31,6 +31,7 @@ export interface Task {
     type: string;
     title: string;
     examples: string;
+    closed: boolean;
 }
 
 export interface TaskWithUsage extends Task {

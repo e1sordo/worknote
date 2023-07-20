@@ -28,6 +28,8 @@ public interface TaskRepository extends ListCrudRepository<JiraTaskEntity, Long>
 
     List<JiraTaskEntity> findByWorklogsEmpty();
 
+    List<JiraTaskEntity> findByClosedFalse();
+
     @Query("""
             SELECT t, SUM(w.durationInMinutes) AS totalDuration, COUNT(w) AS worklogsCount
             FROM JiraTaskEntity t

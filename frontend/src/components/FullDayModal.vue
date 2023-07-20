@@ -138,4 +138,8 @@ export default defineComponent({
     color: rgba(0, 0, 0, 0.172);
     font-style: italic;
 }
+
+.modal-title:first-letter {
+    text-transform: capitalize;
+}
 </style>

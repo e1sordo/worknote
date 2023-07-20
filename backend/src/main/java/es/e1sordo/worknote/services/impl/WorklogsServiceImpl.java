@@ -89,7 +89,7 @@ public class WorklogsServiceImpl implements WorklogsService {
 
         return taskRepository.findByJiraIdAndProject(jiraTaskId, project)
                 .orElseGet(() -> taskRepository.save(
-                        new JiraTaskEntity(null, jiraTaskId, project, JiraTaskType.DEVELOPMENT, taskTitle, null, List.of())));
+                        new JiraTaskEntity(null, jiraTaskId, project, JiraTaskType.DEVELOPMENT, false, taskTitle, null, List.of())));
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {
@@ -105,7 +105,8 @@ public class WorklogsServiceImpl implements WorklogsService {
                         task.getProject().getCode(),
                         task.getProject().getShortCode(),
                         task.getType(),
-                        task.getTitle()
+                        task.getTitle(),
+                        task.isClosed()
                 ),
                 entity.getJiraId(),
                 entity.isSynced()

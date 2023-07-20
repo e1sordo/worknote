@@ -6,7 +6,7 @@ spring:
   jpa:
     #  defer-datasource-initialization: true
     database-platform: org.hibernate.community.dialect.SQLiteDialect
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: update
   security:
     user:
       name: ${USER_NAME}

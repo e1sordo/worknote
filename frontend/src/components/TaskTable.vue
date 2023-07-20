@@ -9,7 +9,6 @@
                     <th scope="row">ID</th>
                     <th>Название</th>
                     <th>Была в работе</th>
-                    <!-- <th>Действия</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -17,14 +16,18 @@
                     <th scope="row">{{ task.code }}</th>
                     <th scope="row">{{ task.id }}</th>
                     <td>
-                        {{ taskTypeMeta[task.type].icon }} {{ task.title }}
-                        <button type="button" class="btn btn-light btn-sm" @click="editTask(task)">Edit</button>
+                        {{ taskTypeMeta[task.type].icon }}
+                        <del v-if="task.closed" class="text-muted">{{ task.title }}</del>
+                        <strong v-else>{{ task.title }}</strong>
+                        <button type="button" class="btn btn-light btn-sm mx-2" @click="editTask(task)">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-light btn-sm" @click="openCloseTask(task)">
+                            <span v-if="task.closed">Open</span>
+                            <span v-else>Close</span>
+                        </button>
                     </td>
                     <td>{{ task.latestWorklogDateTime }}</td>
-                    <!-- <td>
-                        <button @click="editTask(task.id)">Редактировать</button>
-                        <button @click="deleteTask(task.id)">Удалить</button>
-                    </td> -->
                 </tr>
             </tbody>
         </table>
@@ -83,6 +86,11 @@ export default defineComponent({
         editTask(task: Task) {
             console.log("Edit task ", task.id);
             this.editedTask = { ...task };
+        },
+        openCloseTask(task: Task) {
+            console.log("Open/close task ", task.id);
+            task.closed = !task.closed;
+            this.upsertTask(task);
         },
         upsertTask(taskForm: Task) {
             api.upsertTask(taskForm).then(response => {

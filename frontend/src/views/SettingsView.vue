@@ -1,6 +1,13 @@
 <template>
   <div class="home">
     <div class="m-4 text-start">
+      <h2>Настройки задач</h2>
+      <task-table/>
+    </div>
+
+    <hr/>
+
+    <div class="m-4 text-start">
       <h2>Настройки Jira</h2>
       <form @submit.prevent="saveJiraSettings">
         <div class="row">
@@ -23,13 +30,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
       </form>
-    </div>
-
-    <hr/>
-
-    <div class="m-4 text-start">
-      <h2>Настройки задач</h2>
-      <task-table/>
     </div>
   </div>
 </template>

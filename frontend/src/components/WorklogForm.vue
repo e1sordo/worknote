@@ -1,15 +1,16 @@
 <template>
     <div class="container">
         <form @submit.prevent>
-            <div class="mb-3 text-start">
+            <div class="mb-3 text-start position-relative">
                 <input type="text" id="autocomplete-input" v-model="autocompleteValue" class="form-control w-100"
                     autocomplete="off" @keydown.esc="showAutocomplete = false"
                     placeholder="Начните описывать задачу (её номер, название, тип)">
                 <div v-if="showAutocomplete" class="autocomplete-dropdown">
                     <ul>
-                        <li v-for="suggestion in autocompleteSuggestions" :key="suggestion"
+                        <li v-for="suggestion in autocompleteSuggestions" :key="suggestion.entityId"
                             @click="selectAutocompleteSuggestion(suggestion)">
-                            {{ suggestion }}
+                            <span class="badge bg-primary">{{ suggestion.code }}-{{ suggestion.id }}</span>
+                            {{ suggestion.title }}
                         </li>
                     </ul>
                 </div>
@@ -32,9 +33,16 @@
 </template>
   
 <script lang="ts">
-import { computed, ref, watch, SetupContext } from 'vue';
 import api from "@/api/backend-api";
 import { convertTimeToMinutes } from '@/constants';
+import { SetupContext, computed, ref, watch } from 'vue';
+
+interface TaskSuggestion {
+    entityId: number;
+    code: string;
+    id: number;
+    title: string;
+}
 
 export default {
     name: 'WorklogForm',
@@ -52,7 +60,7 @@ export default {
         const autocompleteValue = ref('');
         const selectedValue = ref('');
         const showAutocomplete = ref(false);
-        const autocompleteSuggestions = ref<string[]>([]);
+        const autocompleteSuggestions = ref<TaskSuggestion[]>([]);
 
         watch(autocompleteValue, async (newValue) => {
             if (selectedValue.value == autocompleteValue.value) {
@@ -60,7 +68,14 @@ export default {
             } else {
                 try {
                     const response = await api.searchTasks(newValue);
-                    autocompleteSuggestions.value = response.data.map(task => `(${task.code}-${task.id}) ${task.title}`);
+                    autocompleteSuggestions.value = response.data.map(task => {
+                        return {
+                            entityId: task.entityId,
+                            code: task.code,
+                            id: task.id,
+                            title: task.title
+                        }
+                    });
 
                     if (autocompleteSuggestions.value.length > 0) {
                         showAutocomplete.value = true;
@@ -72,23 +87,28 @@ export default {
             }
         });
 
-        const selectAutocompleteSuggestion = (suggestion: string) => {
-            autocompleteValue.value = suggestion;
-            selectedValue.value = suggestion;
+        const selectAutocompleteSuggestion = (suggestion: TaskSuggestion) => {
+            const textSuggestion = `(${suggestion.code}-${suggestion.id}) ${suggestion.title}`
+            autocompleteValue.value = textSuggestion;
+            selectedValue.value = textSuggestion;
             showAutocomplete.value = false;
         };
 
         const submitCreate = () => {
-            api.createWorklog(props.date, timeValue.value, convertTimeToMinutes(spentValue.value), textValue.value, autocompleteValue.value)
-                .then(response => {
-                    context.emit('createWorklog', response.data);
-                    textValue.value = '';
-                    timeValue.value = '';
-                    spentValue.value = '';
-                    selectedValue.value = '';
-                    autocompleteValue.value = '';
-                    autocompleteSuggestions.value = [];
-                });
+            try {
+                api.createWorklog(props.date, timeValue.value, convertTimeToMinutes(spentValue.value), textValue.value, autocompleteValue.value)
+                    .then(response => {
+                        context.emit('createWorklog', response.data);
+                        textValue.value = '';
+                        timeValue.value = '';
+                        spentValue.value = '';
+                        selectedValue.value = '';
+                        autocompleteValue.value = '';
+                        autocompleteSuggestions.value = [];
+                    });
+            } catch (ex) {
+                spentValue.value = '';
+            }
         };
 
         const formattedTimeValue = computed(() => {
@@ -123,7 +143,7 @@ export default {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 4px;
-    width: 80%;
+    width: 100%;
     max-height: 200px;
     overflow-y: auto;
 }
@@ -136,7 +156,7 @@ export default {
 
 .autocomplete-dropdown li {
     cursor: pointer;
-    padding: 2px 4px;
+    padding: 6px;
 }
 
 .autocomplete-dropdown li:hover {

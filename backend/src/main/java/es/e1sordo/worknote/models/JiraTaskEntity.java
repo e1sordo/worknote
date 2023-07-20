@@ -1,5 +1,6 @@
 package es.e1sordo.worknote.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,6 +42,9 @@ public class JiraTaskEntity {
 
     @Enumerated(value = EnumType.STRING)
     private JiraTaskType type;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean closed;
 
     private String title;
     private String examples;

@@ -7,5 +7,6 @@ public record TaskDto(long entityId,
                       String code,
                       String shortCode,
                       JiraTaskType type,
-                      String title) {
+                      String title,
+                      boolean closed) {
 }

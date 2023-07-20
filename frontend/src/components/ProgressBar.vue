@@ -1,29 +1,29 @@
 <template>
-    <p v-if="minutesRemain > 0" class="text-primary"><small>{{ helpText }}</small></p>
-    <p v-if="minutesRemain == 0 && synchronized != total" class="text-primary">
+    <p v-if="minutesRemain > 0" class="text-primary">
+        <small>{{ helpText }}</small>
+    </p>
+    <p v-if="minutesRemain == 0 && synchronized != total && exeedPercent == 0" class="text-primary">
         <small>Нужно синхронизировать</small>
     </p>
-    <p v-if="minutesRemain < 0" class="text-danger">
+    <p v-if="exeedPercent > 0" class="text-danger">
         <small>Внесено больше, чем нужно</small>
     </p>
 
-    <!-- часть будет отвечать за общее время из целевого по дню, часть -- за то, что уже было синх-но с джирой и т/д -->
     <div class="progress my-2" :style="{ height: big ? '16px' : '6px' }">
-        <!-- <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0"
-            aria-valuemax="100"></div> -->
-        <div class="progress-bar bg-success" role="progressbar" :style="{ width: syncPercent + '%' }"
-            :aria-valuenow="syncPercent" aria-valuemin="0" aria-valuemax="100">
+        <div :aria-valuenow="syncedPercent" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-success"
+            :style="{ width: syncedPercent + '%' }" role="progressbar">
         </div>
-        <div v-if="syncPercent < 100" class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
-            role="progressbar" :style="{ width: loggedPercent + '%' }" :aria-valuenow="loggedPercent" aria-valuemin="0"
-            aria-valuemax="100">
+        <div :aria-valuenow="loggedPercent" aria-valuemin="0" aria-valuemax="100"
+            class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
+            :style="{ width: loggedPercent + '%' }">
         </div>
-        <div v-if="isPast && syncPercent < 100"
+        <div v-if="isPast && syncedPercent < 100" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100"
+            class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
+            :style="{ width: toLogPercent + '%' }">
+        </div>
+        <div :aria-valuenow="exeedPercent" aria-valuemin="0" aria-valuemax="100"
             class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
-            :style="{ width: toLogPercent + '%' }" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100">
-        </div>
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
-            :style="{ width: exeedPercent + '%' }" :aria-valuenow="exeedPercent" aria-valuemin="0" aria-valuemax="100">
+            :style="{ width: exeedPercent + '%' }">
         </div>
     </div>
 </template>
@@ -43,9 +43,9 @@ export default defineComponent({
     },
     setup(props) {
         const state = reactive({
-            realSync: 0,
+            realSynced: 0,
             realLogged: 0,
-            syncPercent: 0,
+            syncedPercent: 0,
             loggedPercent: 0,
             toLogPercent: 0,
             exeedPercent: 0,
@@ -54,15 +54,23 @@ export default defineComponent({
         });
 
         const calculatePercentages = () => {
-            state.realSync = props.synchronized || 0;
+            state.realSynced = props.synchronized || 0;
             state.realLogged = props.loggedHereOnly || 0;
 
-            state.syncPercent = Math.round(state.realSync / props.total * 100);
-            state.loggedPercent = Math.round(state.realLogged / props.total * 100);
-            state.toLogPercent = 100 - state.syncPercent - state.loggedPercent;
-            state.exeedPercent = -state.toLogPercent;
+            const remainMinutes = props.total - state.realSynced - state.realLogged;
+            if (remainMinutes < 0) {
+                state.toLogPercent = 0;
+                state.exeedPercent = Math.ceil(-remainMinutes / props.total * 100);
+            } else {
+                state.toLogPercent = Math.ceil(remainMinutes / props.total * 100);
+                state.exeedPercent = 0;
+            }
 
-            state.minutesRemain = props.total - state.realSync - state.realLogged
+            state.minutesRemain = Math.max(0, remainMinutes);
+
+            state.syncedPercent = Math.ceil(state.realSynced / props.total * 100);
+            state.loggedPercent = Math.ceil(state.realLogged / props.total * 100);
+
             state.helpText = `Осталось внести ${formatTime(state.minutesRemain)}`;
         };
 
@@ -76,5 +84,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style></style>

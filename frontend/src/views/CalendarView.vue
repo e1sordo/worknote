@@ -1,5 +1,5 @@
 <template>
-  <div v-if="Object.keys(daysMap).length !== 0">
+  <div v-if="Object.keys(daysMap).length !== 0" class="mb-5">
     <full-day-modal :dayInfo="activeDayInfo" @createWorklog="addWorklog" @deleteWorklog="removeWorklog"
       @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" />
 
@@ -11,7 +11,6 @@
       </template>
     </v-calendar>
   </div>
-  <div style="width: 100%; height: 320px;" />
 </template>
 
 <script lang="ts">
@@ -19,19 +18,7 @@ import CalendarDay from '@/components/CalendarDay.vue';
 import FullDayModal from '@/components/FullDayModal.vue';
 import moment from 'moment';
 import { defineComponent, ref } from 'vue';
-import api, { DayInfo, Worklog } from "../api/backend-api";
-
-// interface CalendarItemArgument {
-//   key: number;
-//   dates: Date;
-//   class: string;
-//   // sequenceNumber: number;
-//   // workingMinutes: number;
-//   // summary: string;
-//   // worklogs: Worklog[];
-//   // nonWorkingDay: boolean;
-//   // additionalInfo: string;
-// }
+import api, { DayInfo, Worklog } from "@/api/backend-api";
 
 interface Foo {
   [key: string]: DayInfo;
@@ -60,7 +47,8 @@ export default defineComponent({
         //   dates: day,
         //   class: 'bg-indigo-500 text-whitee'
         // });
-      });
+      })
+      .then(() => this.setOrderStyle());
   },
   setup() {
     const activeDayInfo = ref();
@@ -89,6 +77,19 @@ export default defineComponent({
     setNewDaySummary(date: string, newSummary: string) {
       const dayInfo = this.daysMap[date];
       dayInfo.summary = newSummary;
+    },
+    setOrderStyle() {
+      const parentClass = 'vc-pane-layout';
+      const parentElement = document.querySelector(`.${parentClass}`);
+
+      if (parentElement) {
+        const childElements = Array.from(parentElement.children);
+        const reversedChildElements = childElements.reverse();
+
+        reversedChildElements.forEach((child, index) => {
+          child.setAttribute('style', `order: ${index + 1};`);
+        });
+      }
     }
   }
 });
@@ -125,7 +126,7 @@ export default defineComponent({
 
   & .vc-header {
     background-color: var(--weekday-bg);
-    padding: 0;
+    padding: 0 20px;
     margin-top: 0;
     height: 60px;
   }
@@ -134,6 +135,7 @@ export default defineComponent({
     background-color: var(--weekday-bg);
     color: rgb(53, 74, 92);
     text-transform: capitalize;
+    opacity: 0.8;
   }
 
   & .vc-weeks {
