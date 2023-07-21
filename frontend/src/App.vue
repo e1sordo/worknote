@@ -19,7 +19,7 @@
 }
 
 .brand {
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 54px;
   font-weight: 800;
   outline: none;

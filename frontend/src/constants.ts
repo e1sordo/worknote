@@ -36,7 +36,7 @@ export const taskTypeMeta: TaskTypeMeta = {
     },
     ORGANIZING_ACTIVITIES: {
         description: 'Орг. деятельность',
-        icon: '🪪',
+        icon: '🖨',
         bgColor: 'rgb(188, 96, 223)',
         textColor: '#ffffff'
     },

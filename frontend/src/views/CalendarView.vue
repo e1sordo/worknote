@@ -1,4 +1,9 @@
 <template>
+  <div class="position-absolute" style="top: 50px; right: 20px;">
+    <button @click="handleClick" type="button" class="btn btn-outline-secondary btn-sm mb-2">
+      Weekends
+    </button>
+  </div>
   <div v-if="Object.keys(daysMap).length !== 0" class="mb-5">
     <full-day-modal :dayInfo="activeDayInfo" @createWorklog="addWorklog" @deleteWorklog="removeWorklog"
       @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" />
@@ -14,11 +19,11 @@
 </template>
 
 <script lang="ts">
+import api, { DayInfo, Worklog } from "@/api/backend-api";
 import CalendarDay from '@/components/CalendarDay.vue';
 import FullDayModal from '@/components/FullDayModal.vue';
 import moment from 'moment';
 import { defineComponent, ref } from 'vue';
-import api, { DayInfo, Worklog } from "@/api/backend-api";
 
 interface Foo {
   [key: string]: DayInfo;
@@ -48,7 +53,13 @@ export default defineComponent({
         //   class: 'bg-indigo-500 text-whitee'
         // });
       })
-      .then(() => this.setOrderStyle());
+      .then(() => {
+        if (this.getWeekendsFlagFromStorage() === false) {
+          this.toggleWeekends();
+        }
+        this.setDayStyles();
+        this.setOrderStyle();
+      });
   },
   setup() {
     const activeDayInfo = ref();
@@ -90,6 +101,34 @@ export default defineComponent({
           child.setAttribute('style', `order: ${index + 1};`);
         });
       }
+    },
+    setDayStyles() {
+      const vcDayElements = document.querySelectorAll('.vc-day');
+      vcDayElements.forEach((element) => {
+        element.classList.add('shadow', 'mx-2', 'my-2', 'bg-body', 'rounded');
+      });
+    },
+    handleClick() {
+      this.saveWeekedsFlagToStorage(!this.getWeekendsFlagFromStorage());
+      this.toggleWeekends();
+    },
+    toggleWeekends() {
+      const vcWeekElements = document.querySelectorAll('.vc-week');
+      vcWeekElements.forEach((element) => {
+        element.classList.toggle('hidden-weekends');
+      });
+
+      const vcWeekdaysElements = document.querySelectorAll('.vc-weekdays');
+      vcWeekdaysElements.forEach((element) => {
+        element.classList.toggle('hidden-weekends');
+      });
+    },
+    getWeekendsFlagFromStorage() {
+      const savedValue = localStorage.getItem('showWeekends');
+      return savedValue === 'true';
+    },
+    saveWeekedsFlagToStorage(value: Boolean) {
+      localStorage.setItem('showWeekends', value.toString());
     }
   }
 });
@@ -120,20 +159,19 @@ export default defineComponent({
   border-radius: 0;
   width: 100%;
 
-  & .vc-pane {
-    background-color: var(--weekday-bg);
+  & .vc-bordered {
+    border: 0;
   }
 
   & .vc-header {
-    background-color: var(--weekday-bg);
     padding: 0 20px;
     margin-top: 0;
     height: 60px;
   }
 
   & .vc-title {
-    background-color: var(--weekday-bg);
     color: rgb(53, 74, 92);
+    background: moccasin;
     text-transform: capitalize;
     opacity: 0.8;
   }
@@ -143,9 +181,6 @@ export default defineComponent({
   }
 
   & .vc-weekday {
-    background-color: var(--weekday-bg);
-    border-bottom: var(--weekday-border);
-    border-top: var(--weekday-border);
     padding: 5px 0;
   }
 
@@ -164,15 +199,7 @@ export default defineComponent({
     text-align: left;
     min-height: var(--day-height);
     min-width: var(--day-width);
-    background-color: white;
-
-    &:not(.on-bottom) {
-      border-bottom: var(--day-border);
-    }
-
-    &:not(.on-right) {
-      border-right: var(--day-border);
-    }
+    overflow: hidden;
   }
 
   & .vc-day-dots {
@@ -180,7 +207,7 @@ export default defineComponent({
   }
 
   & .day-today {
-    background-color: #f7e8ef61 !important;
+    background-color: rgb(255, 250, 252);
   }
 
   & .day-core {
@@ -189,7 +216,17 @@ export default defineComponent({
   }
 
   & .weekday {
-    background-color: #f5f5f5;
+    background-image: linear-gradient(135deg, #ffffff 25%, #fafafa 25%, #fafafa 50%, #ffffff 50%, #ffffff 75%, #fafafa 75%, #fafafa 100%);
+    background-size: 40px 40px;
   }
+}
+
+.hidden-weekends {
+  grid-template-columns: repeat(5, 1fr) !important;
+  grid-auto-flow: dense;
+}
+
+.hidden-weekends>*:nth-child(n+6) {
+  display: none;
 }
 </style>
