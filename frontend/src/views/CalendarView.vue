@@ -149,7 +149,14 @@ export default defineComponent({
   display: none;
 }
 
+[data-bs-theme=dark] {
+  --bs-highlight-bg: rgb(107, 114, 10);
+  // --text-body: --text-body-light;
+}
+
 .custom-calendar.vc-container {
+  --vc-bg: rgba(255, 255, 255, 0);
+  --vc-border: rgba(255, 255, 255, 0);
   --day-border: 1px solid #d3dbe3;
   --day-border-highlight: 1px solid #b8c2cc;
   --day-width: 90px;
@@ -171,7 +178,7 @@ export default defineComponent({
 
   & .vc-title {
     color: rgb(53, 74, 92);
-    background: moccasin;
+    background: rgba(255, 228, 181, 0.75);
     text-transform: capitalize;
     opacity: 0.8;
   }
@@ -202,6 +209,12 @@ export default defineComponent({
     overflow: hidden;
   }
 
+  @media (prefers-color-scheme: dark) {
+    .vc-day {
+      background-color: rgb(16, 26, 34) !important;
+    }
+  }
+
   & .vc-day-dots {
     margin-bottom: 5px;
   }
@@ -216,7 +229,7 @@ export default defineComponent({
   }
 
   & .weekday {
-    background-image: linear-gradient(135deg, #ffffff 25%, #fafafa 25%, #fafafa 50%, #ffffff 50%, #ffffff 75%, #fafafa 75%, #fafafa 100%);
+    background-image: linear-gradient(135deg, #ffffff50 25%, #f3f3f350 25%, #f3f3f350 50%, #ffffff50 50%, #ffffff50 75%, #f3f3f350 75%, #f3f3f350 100%);
     background-size: 40px 40px;
   }
 }

@@ -1,3 +1,5 @@
+listenForThemeChanges();
+
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VCalendar from 'v-calendar';
@@ -13,4 +15,6 @@ createApp(App)
     .use(VueApexCharts)
     .mount('#app')
 
-import "bootstrap/dist/js/bootstrap.js";
+import "bootstrap/dist/js/bootstrap.js"; 
+import { listenForThemeChanges } from '@/theme';
+

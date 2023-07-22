@@ -4,7 +4,7 @@
         @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header">
-            <span class="day-label text-sm" :class="{ 'text-muted': !isPastDay, 'text-danger': day.isToday }">
+            <span class="day-label text-dark" :class="{ 'text-muted': !isPastDay, 'text-danger': day.isToday }">
                 {{ day.day }}
             </span>
             <span v-if="dayInfo.sequenceNumber === 'number'">
