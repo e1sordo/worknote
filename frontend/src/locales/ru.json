@@ -1,0 +1,106 @@
+{
+    "navbar": {
+        "home": "Главная",
+        "overview": "Аналитика",
+        "settings": "Настройки",
+        "logout": "Выйти"
+    },
+    "calendar": {
+        "toggleWeekends": "Выходные",
+        "placeholder": {
+            "worklogSummary": "Не заполнено",
+            "daySummary": "Безымянный день"
+        }
+    },
+    "time": {
+        "shortHour": "ч",
+        "shortMinute": "м"
+    },
+    "worklog": {
+        "modalItem": {
+            "notSynced": "Не синхронизировано!",
+            "syncButton": "Синхронизировать с Jira",
+            "summaryPlaceholder": "Не заполнено"
+        },
+        "form": {
+            "task": {
+                "placeholder": "Начните описывать задачу (её номер, название, тип)"
+            },
+            "summary": {
+                "placeholder": "Что было сделано"
+            },
+            "spent": {
+                "placeholder": "Затрачено",
+                "title": "Формат '2ч 45м'. Допускается вводить числа: если меньше 10 - это часы, если больше - минуты"
+            }
+        },
+        "submitButton": "Добавить Worklog",
+        "progress": {
+            "needToSync": "Нужно синхронизировать",
+            "exceeding": "Внесено больше, чем нужно",
+            "remainToLog": "Осталось внести {time}"
+        }
+    },
+    "analytics": {
+        "timeAllocation": "Распределение времени",
+        "mostTimeConsumingTasks": "Самые времязатратные задачи"
+    },
+    "settings": {
+        "tasks": {
+            "title": "Управление задачами",
+            "form": {
+                "type": {
+                    "label": "Тип",
+                    "placeholder": "Выберите активность"
+                },
+                "projectCode": {
+                    "label": "Проект",
+                    "placeholder": "Код проекта"
+                },
+                "id": {
+                    "label": "ID"
+                },
+                "title": {
+                    "label": "Название",
+                    "placeholder": "Название задачи"
+                },
+                "examples": {
+                    "label": "Примеры",
+                    "placeholder": "Введите ключевые слова, примеры списаний, относящихся к этой задаче"
+                }
+            },
+            "createButton": "Создать",
+            "updateButton": "Обновить"
+        },
+        "language": {
+            "title": "Настройки языка"
+        },
+        "jira": {
+            "title": "Подключение к Jira",
+            "form": {
+                "proxyUrl": {
+                    "label": "URL рабочего прокси"
+                },
+                "serverUrl": {
+                    "label": "URL сервера Jira"
+                },
+                "login": {
+                    "label": "Логин"
+                },
+                "password": {
+                    "label": "Пароль"
+                }
+            },
+            "submitButton": "Сохранить"
+        }
+    },
+    "taskTypes": {
+        "DEVELOPMENT": "Разработка",
+        "PROCESS_MAINTENANCE": "Обслуживание процесса",
+        "TRAINING_AND_DEVELOPMENT": "Обучение и развитие",
+        "CLUBS_AND_EVENTS": "Клубы и мероприятия",
+        "ORGANIZING_ACTIVITIES": "Орг. деятельность",
+        "INTERVIEWS": "Собеседования",
+        "ABSENCES": "Отсутствия"
+    }
+}

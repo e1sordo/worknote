@@ -1,0 +1,106 @@
+{
+    "navbar": {
+        "home": "Home",
+        "overview": "Overview",
+        "settings": "Settings",
+        "logout": "Log out"
+    },
+    "calendar": {
+        "toggleWeekends": "Weekends",
+        "placeholder": {
+            "worklogSummary": "Not filled in",
+            "daySummary": "Nameless day"
+        }
+    },
+    "time": {
+        "shortHour": "h",
+        "shortMinute": "m"
+    },
+    "worklog": {
+        "modalItem": {
+            "notSynced": "Out of sync!",
+            "syncButton": "Synchronize with Jira",
+            "summaryPlaceholder": "Not filled in"
+        },
+        "form": {
+            "task": {
+                "placeholder": "Start describing the task (its key, title, type)"
+            },
+            "summary": {
+                "placeholder": "What was done"
+            },
+            "spent": {
+                "placeholder": "Spent",
+                "title": "Format '2h 45m'. It is allowed to enter numbers: if less than 10, it is hours and minutes - if more."
+            }
+        },
+        "submitButton": "Add Worklog",
+        "progress": {
+            "needToSync": "All that remains is to synchronize",
+            "exceeding": "Charged more time than necessary",
+            "remainToLog": "{time} left to log"
+        }
+    },
+    "analytics": {
+        "timeAllocation": "Time allocation",
+        "mostTimeConsumingTasks": "The most time-consuming tasks"
+    },
+    "settings": {
+        "tasks": {
+            "title": "Task management",
+            "form": {
+                "type": {
+                    "label": "Type",
+                    "placeholder": "Choose activity"
+                },
+                "projectCode": {
+                    "label": "Project",
+                    "placeholder": "Project code"
+                },
+                "id": {
+                    "label": "ID"
+                },
+                "title": {
+                    "label": "Name",
+                    "placeholder": "Task name"
+                },
+                "examples": {
+                    "label": "Examples",
+                    "placeholder": "Add keywords, examples of worklog summaries related to this task"
+                }
+            },
+            "createButton": "Create",
+            "updateButton": "Update"
+        },
+        "language": {
+            "title": "Language preferences"
+        },
+        "jira": {
+            "title": "Jira connection",
+            "form": {
+                "proxyUrl": {
+                    "label": "Corporate proxy URL"
+                },
+                "serverUrl": {
+                    "label": "Server URL"
+                },
+                "login": {
+                    "label": "Username"
+                },
+                "password": {
+                    "label": "Password"
+                }
+            },
+            "submitButton": "Save"
+        }
+    },
+    "taskTypes": {
+        "DEVELOPMENT": "Development",
+        "PROCESS_MAINTENANCE": "Process maintenance",
+        "TRAINING_AND_DEVELOPMENT": "Training and development",
+        "CLUBS_AND_EVENTS": "Clubs and events",
+        "ORGANIZING_ACTIVITIES": "Organizing activities",
+        "INTERVIEWS": "Interviews",
+        "ABSENCES": "Absences"
+    }
+}

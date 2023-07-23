@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "babel-plugin-transform-require-context": "^0.1.1"
+  }
+}

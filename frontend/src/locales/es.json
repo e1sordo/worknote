@@ -1,0 +1,106 @@
+{
+    "navbar": {
+        "home": "Inicio",
+        "overview": "Análisis",
+        "settings": "Configuración",
+        "logout": "Cerrar sesión"
+    },
+    "calendar": {
+        "toggleWeekends": "Fines de semana",
+        "placeholder": {
+            "worklogSummary": "No completado",
+            "daySummary": "Día sin nombre"
+        }
+    },
+    "time": {
+        "shortHour": "h",
+        "shortMinute": "m"
+    },
+    "worklog": {
+        "modalItem": {
+            "notSynced": "¡No sincronizado!",
+            "syncButton": "Sincronizar con Jira",
+            "summaryPlaceholder": "No completado"
+        },
+        "form": {
+            "task": {
+                "placeholder": "Comience a describir la tarea (número, título, tipo)"
+            },
+            "summary": {
+                "placeholder": "¿Qué se ha hecho?"
+            },
+            "spent": {
+                "placeholder": "Tiempo invertido",
+                "title": "Formato '2h 45m'. Se pueden ingresar números: si es menor de 10, es en horas; si es mayor, son minutos"
+            }
+        },
+        "submitButton": "Agregar Worklog",
+        "progress": {
+            "needToSync": "Necesita sincronización",
+            "exceeding": "Excedido",
+            "remainToLog": "Queda por registrar {time}"
+        }
+    },
+    "analytics": {
+        "timeAllocation": "Asignación de tiempo",
+        "mostTimeConsumingTasks": "Tareas que consumen más tiempo"
+    },
+    "settings": {
+        "tasks": {
+            "title": "Gestión de tareas",
+            "form": {
+                "type": {
+                    "label": "Tipo",
+                    "placeholder": "Seleccione una actividad"
+                },
+                "projectCode": {
+                    "label": "Proyecto",
+                    "placeholder": "Código de proyecto"
+                },
+                "id": {
+                    "label": "ID"
+                },
+                "title": {
+                    "label": "Nombre",
+                    "placeholder": "Nombre de la tarea"
+                },
+                "examples": {
+                    "label": "Ejemplos",
+                    "placeholder": "Ingrese palabras clave y ejemplos relacionados con esta tarea"
+                }
+            },
+            "createButton": "Crear",
+            "updateButton": "Actualizar"
+        },
+        "language": {
+            "title": "Configuración de idioma"
+        },
+        "jira": {
+            "title": "Conexión a Jira",
+            "form": {
+                "proxyUrl": {
+                    "label": "URL del proxy de trabajo"
+                },
+                "serverUrl": {
+                    "label": "URL del servidor Jira"
+                },
+                "login": {
+                    "label": "Inicio de sesión"
+                },
+                "password": {
+                    "label": "Contraseña"
+                }
+            },
+            "submitButton": "Guardar"
+        }
+    },
+    "taskTypes": {
+        "DEVELOPMENT": "Desarrollo",
+        "PROCESS_MAINTENANCE": "Mantenimiento de procesos",
+        "TRAINING_AND_DEVELOPMENT": "Formación y desarrollo",
+        "CLUBS_AND_EVENTS": "Clubes y eventos",
+        "ORGANIZING_ACTIVITIES": "Actividades de organización",
+        "INTERVIEWS": "Entrevistas",
+        "ABSENCES": "Ausencias"
+    }
+}
