@@ -2,35 +2,36 @@
     <form @submit.prevent="$emit('on-submit', form)">
         <div class="row">
             <div class="col-sm-3 mb-3">
-                <label for="type" class="form-label">Тип</label>
+                <label for="type" class="form-label">{{ $t("settings.tasks.form.type.label") }}</label>
                 <select id="type" v-model="form.type" class="form-select">
-                    <option value="" disabled>Выберите активность</option>
+                    <option value="" disabled>{{ $t("settings.tasks.form.type.placeholder") }}</option>
                     <option v-for="(metaItem, key) in taskTypeMeta" :key="key" :value="key">
-                        {{ metaItem.icon }} {{ metaItem.description }}
+                        {{ metaItem.icon }} {{ $t("taskTypes." + key ) }}
                     </option>
                 </select>
             </div>
             <div class="col-sm-2 mb-3">
-                <label for="code" class="form-label">Проект</label>
-                <input id="code" v-model="form.code" type="text" class="form-control" required placeholder="Код проекта" />
+                <label for="code" class="form-label">{{ $t("settings.tasks.form.projectCode.label") }}</label>
+                <input id="code" v-model="form.code" type="text" class="form-control" required
+                    :placeholder="$t('settings.tasks.form.projectCode.placeholder')" />
             </div>
             <div class="col-sm-1 mb-3">
-                <label for="id" class="form-label">ID</label>
+                <label for="id" class="form-label">{{ $t("settings.tasks.form.id.label") }}</label>
                 <input id="id" v-model="form.id" type="text" class="form-control" required />
             </div>
             <div class="col-sm-6 mb-3">
-                <label for="title" class="form-label">Название</label>
+                <label for="title" class="form-label">{{ $t("settings.tasks.form.title.label") }}</label>
                 <input id="title" v-model="form.title" type="text" class="form-control" required
-                    placeholder="Название задачи" />
+                    :placeholder="$t('settings.tasks.form.title.placeholder')" />
             </div>
             <div class="col-sm-12 mb-3">
-                <label for="examples" class="form-label">Примеры</label>
+                <label for="examples" class="form-label">{{ $t("settings.tasks.form.examples.label") }}</label>
                 <textarea id="examples" v-model="form.examples" class="form-control" rows="3"
-                    placeholder="Введите ключевые слова, примеры списаний, относящихся к этой задаче"></textarea>
+                :placeholder="$t('settings.tasks.form.examples.placeholder')"></textarea>
             </div>
         </div>
         <button class="btn btn-primary" type="submit">
-            {{ editing ? 'Обновить' : 'Создать' }}
+            {{ editing ? $t('settings.tasks.updateButton') : $t('settings.tasks.createButton') }}
         </button>
     </form>
 </template>

@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <div class="m-4 text-start">
-      <h2>Распределение времени</h2>
+      <h2>{{ $t("analytics.timeAllocation") }}</h2>
       <apexchart width="100%" height="400" type="bar" :options="chart1Options" :series="chart1Series"></apexchart>
     </div>
     <div class="m-4 text-start">
-      <h2>Самые времязатратные задачи</h2>
+      <h2>{{ $t("analytics.mostTimeConsumingTasks") }}</h2>
       <apexchart width="100%" height="400" type="bar" :options="chart2.options" :series="chart2.series"></apexchart>
     </div>
   </div>

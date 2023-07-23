@@ -14,4 +14,16 @@ module.exports = defineConfig({
   // see https://cli.vuejs.org/config/
   outputDir: 'target/dist',
   assetsDir: 'static',
+
+  pluginOptions: {
+    i18n: {
+      locale: "en",
+      fallbackLocale: "en",
+      localeDir: "locales",
+      enableLegacy: false,
+      runtimeOnly: false,
+      compositionOnly: false,
+      fullInstall: true,
+    },
+  }
 })

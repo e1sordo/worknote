@@ -48,19 +48,22 @@
                             </p>
                             <p v-else class="text-danger mb-0 mt-2 font-size-14">
                                 <i class="bi bi-patch-exclamation text-danger pe-2"></i>
-                                Не синхронизировано!
+                                {{ $t('worklog.modalItem.notSynced') }}
                             </p>
                             <p class="mb-0 mt-2 font-size-14">
                                 <i class="bi pe-2 text-primary"
                                     :class="{ 'bi-chat-left-text': worklog.summary, 'bi-chat-left': !worklog.summary }"></i>
-                                {{ worklog.summary }} <em v-if="!worklog.summary" class="text-muted">Не заполнено</em>
+                                {{ worklog.summary }}
+                                <em v-if="!worklog.summary" class="text-muted">
+                                    {{ $t('worklog.modalItem.summaryPlaceholder') }}
+                                </em>
                             </p>
                         </div>
                         <div class="d-flex gap-2 pt-4" v-if="!worklog.synced">
                             <button @click="submitSync(worklog)" type="button" class="btn btn-primary btn-sm w-100"
                                 :disabled="worklodUnderSyncNow == worklog.id">
                                 <i class="bi bi-arrow-repeat me-1"></i>
-                                <span>Синхронизировать с Jira</span>
+                                <span>{{ $t('worklog.modalItem.syncButton') }}</span>
                             </button>
                         </div>
                     </div>

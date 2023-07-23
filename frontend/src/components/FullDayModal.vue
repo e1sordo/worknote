@@ -7,7 +7,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">{{ humanDate(dayInfo.date) }}</h5>
                     <span ref="editableText" contenteditable="true" @keydown.enter="saveText" @blur="saveText"
                         @keydown="handleKeyDown" class="day-summary mx-2 px-1 w-50 text-start"
-                        placeholder="Безымянный день">
+                        :placeholder="$t('calendar.placeholder.daySummary')">
                         {{ dayInfo.summary }}
                     </span>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -36,11 +36,11 @@
 </template>
 
 <script>
+import api from "@/api/backend-api";
+import ProgressBar from '@/components/ProgressBar.vue';
 import WorklogForm from '@/components/WorklogForm.vue';
 import WorklogModalList from '@/components/WorklogModalList.vue';
-import ProgressBar from '@/components/ProgressBar.vue';
 import { defineComponent } from 'vue';
-import api from "../api/backend-api";
 
 export default defineComponent({
     name: 'FullDayModal',
@@ -60,7 +60,8 @@ export default defineComponent({
                 day: 'numeric',
             };
 
-            const formatter = new Intl.DateTimeFormat('ru-RU', options);
+            const locale = this.$i18n.locale;
+            const formatter = new Intl.DateTimeFormat(locale, options);
             return formatter.format(new Date(date));
         },
         handleKeyDown(event) {

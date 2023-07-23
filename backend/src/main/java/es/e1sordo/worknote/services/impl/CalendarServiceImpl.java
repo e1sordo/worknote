@@ -35,7 +35,13 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<DayDto> getWeekdays(final LocalDate from, final int weeks) {
-        final var endOfWeekExclusively = from.with(DayOfWeek.SUNDAY).plusDays(1);
+        final var endOfCurrentWeek = from.with(DayOfWeek.SUNDAY);
+        var endOfWeekExclusively = endOfCurrentWeek.plusDays(1);
+
+        if (endOfCurrentWeek.equals(from)) {
+            endOfWeekExclusively = endOfWeekExclusively.plusWeeks(1);
+        }
+
         final var begin = from.minusWeeks(weeks).with(DayOfWeek.MONDAY);
 
         // todo sync holidays to next month if needed (using syncTimesheetRepo)

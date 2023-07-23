@@ -4,7 +4,7 @@
             <div class="mb-3 text-start position-relative">
                 <input type="text" id="autocomplete-input" v-model="autocompleteValue" class="form-control w-100"
                     autocomplete="off" @keydown.esc="showAutocomplete = false"
-                    placeholder="Начните описывать задачу (её номер, название, тип)">
+                    :placeholder="$t('worklog.form.task.placeholder')">
                 <div v-if="showAutocomplete" class="autocomplete-dropdown">
                     <ul>
                         <li v-for="suggestion in autocompleteSuggestions" :key="suggestion.entityId"
@@ -16,16 +16,17 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between align-items-center w-100">
-                <input type="text" id="text-input" placeholder="Что было сделано" v-model="textValue"
-                    class="form-control w-50">
+                <input type="text" id="text-input" v-model="textValue" class="form-control w-50"
+                    :placeholder="$t('worklog.form.summary.placeholder')">
 
                 <input type="time" id="time-input" v-model="timeValue" step="900" class="form-control">
 
-                <input type="text" id="spent-input" placeholder="Затрачено" v-model="spentValue"
-                    class="form-control spent-input"
-                    title="Формат '2ч 45м'. Допускается вводить числа: если меньше 5 -- это часы, если больше -- минуты">
+                <input type="text" id="spent-input" v-model="spentValue" class="form-control spent-input"
+                    :placeholder="$t('worklog.form.spent.placeholder')" :title="$t('worklog.form.spent.title')">
 
-                <button type="button" @click="submitCreate" class="btn btn-primary w-25">Добавить Worklog</button>
+                <button type="button" @click="submitCreate" class="btn btn-primary w-25">
+                    {{ $t('worklog.submitButton') }}
+                </button>
             </div>
 
         </form>
@@ -34,7 +35,7 @@
   
 <script lang="ts">
 import api from "@/api/backend-api";
-import { convertTimeToMinutes } from '@/constants';
+import { convertTimeToMinutes } from '@/utils/convertTimeToMinutes';
 import { SetupContext, computed, ref, watch } from 'vue';
 
 interface TaskSuggestion {

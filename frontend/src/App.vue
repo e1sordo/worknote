@@ -1,10 +1,10 @@
 <template>
   <div spellcheck="false" class="brand" contenteditable="true">&lt;WorkNote&gt;</div>
   <nav>
-    <router-link to="/">Главная</router-link> |
-    <router-link to="/overview">Аналитика</router-link> |
-    <router-link to="/settings">Настройки</router-link> |
-    <a href="/logout" class="link-secondary">Выйти</a>
+    <router-link to="/">{{ $t("navbar.home") }}</router-link> |
+    <router-link to="/overview">{{ $t("navbar.overview") }}</router-link> |
+    <router-link to="/settings">{{ $t("navbar.settings") }}</router-link> |
+    <a href="/logout" class="link-secondary">{{ $t("navbar.logout") }}</a>
   </nav>
   <router-view />
 </template>
@@ -43,7 +43,7 @@ nav {
 
 nav a {
   font-weight: bold;
-  color: rgba(145, 179, 213, 0.55);
+  color: #777;
 }
 
 nav a.router-link-exact-active {

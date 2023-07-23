@@ -3,10 +3,10 @@
         <small>{{ helpText }}</small>
     </p>
     <p v-if="minutesRemain == 0 && synchronized != total && exeedPercent == 0" class="text-primary">
-        <small>Нужно синхронизировать</small>
+        <small>{{ $t('worklog.progress.needToSync') }}</small>
     </p>
     <p v-if="exeedPercent > 0" class="text-danger">
-        <small>Внесено больше, чем нужно</small>
+        <small>{{ $t('worklog.progress.exceeding') }}</small>
     </p>
 
     <div class="progress my-2" :style="{ height: big ? '16px' : '6px' }">
@@ -31,6 +31,7 @@
 <script>
 import { formatTime } from '@/constants';
 import { defineComponent, reactive, watchEffect } from 'vue';
+import {useI18n} from "vue-i18n";
 
 export default defineComponent({
     name: 'ProgressBar',
@@ -42,6 +43,8 @@ export default defineComponent({
         isPast: Boolean
     },
     setup(props) {
+        const i18n = useI18n();
+
         const state = reactive({
             realSynced: 0,
             realLogged: 0,
@@ -71,7 +74,7 @@ export default defineComponent({
             state.syncedPercent = Math.ceil(state.realSynced / props.total * 100);
             state.loggedPercent = Math.ceil(state.realLogged / props.total * 100);
 
-            state.helpText = `Осталось внести ${formatTime(state.minutesRemain)}`;
+            state.helpText = i18n.t('worklog.progress.remainToLog', { time: formatTime(state.minutesRemain) });
         };
 
         watchEffect(() => {

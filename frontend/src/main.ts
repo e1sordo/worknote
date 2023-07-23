@@ -1,20 +1,21 @@
-listenForThemeChanges();
-
+import App from '@/App.vue';
+import i18n from '@/i18n';
+import router from '@/router';
+import { listenForThemeChanges } from '@/theme';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
 import { createApp } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
-import App from './App.vue';
-import router from './router';
+
+listenForThemeChanges();
 
 createApp(App)
     .use(router)
+    .use(i18n as any)
     .use(VCalendar, {})
     .use(VueApexCharts)
     .mount('#app')
 
-import "bootstrap/dist/js/bootstrap.js"; 
-import { listenForThemeChanges } from '@/theme';
-
+import 'bootstrap/dist/js/bootstrap.js';

@@ -1,34 +1,41 @@
 <template>
   <div class="home">
     <div class="m-4 text-start">
-      <h2>Настройки задач</h2>
-      <task-table/>
+      <h2>{{ $t("settings.tasks.title") }}</h2>
+      <task-table />
     </div>
 
-    <hr/>
+    <hr />
 
     <div class="m-4 text-start">
-      <h2>Настройки Jira</h2>
+      <h2>{{ $t("settings.language.title") }}</h2>
+      <LocaleSwitcher />
+    </div>
+
+    <hr />
+
+    <div class="m-4 text-start">
+      <h2>{{ $t("settings.jira.title") }}</h2>
       <form @submit.prevent="saveJiraSettings">
         <div class="row">
           <div class="col-sm-6 mb-3">
-            <label for="proxyUrlInput" class="form-label">URL рабочего прокси</label>
+            <label for="proxyUrlInput" class="form-label">{{ $t("settings.jira.form.proxyUrl.label") }}</label>
             <input type="text" id="proxyUrlInput" class="form-control" v-model="proxyUrl">
           </div>
           <div class="col-sm-6 mb-3">
-            <label for="serverUrlInput" class="form-label">URL сервера Jira</label>
+            <label for="serverUrlInput" class="form-label">{{ $t("settings.jira.form.serverUrl.label") }}</label>
             <input type="text" id="serverUrlInput" class="form-control" v-model="serverUrl">
           </div>
           <div class="col-sm-6 mb-3">
-            <label for="usernameInput" class="form-label">Логин</label>
+            <label for="usernameInput" class="form-label">{{ $t("settings.jira.form.login.label") }}</label>
             <input type="text" id="usernameInput" class="form-control" v-model="username">
           </div>
           <div class="col-sm-6 mb-3">
-            <label for="passwordInput" class="form-label">Пароль</label>
+            <label for="passwordInput" class="form-label">{{ $t("settings.jira.form.password.label") }}</label>
             <input type="password" id="passwordInput" class="form-control" v-model="password">
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="submit" class="btn btn-primary">{{ $t("settings.jira.submitButton") }}</button>
       </form>
     </div>
   </div>
@@ -36,7 +43,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TaskTable from '@/components/TaskTable.vue'
+import TaskTable from '@/components/TaskTable.vue';
+import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
 
 // interface State {
 //   msg: string;
@@ -49,7 +57,7 @@ const jiraSettignsKey = "settings:jira";
 export default defineComponent({
   name: 'SettingsView',
   components: {
-    TaskTable
+    TaskTable, LocaleSwitcher
   },
 
   // data: (): State => {

@@ -1,6 +1,6 @@
 <template>
     <div class="list-group worklogs-compact-list">
-        <a v-for="worklog in data" :key="worklog.id" class="worklogs-group-item list-group-item-action"
+        <a v-for="worklog in data" :key="worklog.id" class="worklogs-group-item"
             data-bs-toggle="tooltip" :title="worklog.task.title">
             <div class="d-flex mb-1 w-100 align-items-center justify-content-between">
                 <span class="d-inline-block" tabindex="0">
@@ -14,7 +14,9 @@
             </div>
             <div class="worklog-description">
                 <mark>{{ worklog.startTime.split(':').slice(0, 2).join(':') }}</mark> {{ worklog.summary }}
-                <span v-if="!worklog.summary" class="text-muted"><em>Не заполнено</em></span>
+                <span v-if="!worklog.summary" class="text-muted">
+                    <em>{{ $t('calendar.placeholder.worklogSummary') }}</em>
+                </span>
             </div>
         </a>
     </div>

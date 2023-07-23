@@ -1,14 +1,14 @@
 <template>
     <div>
         <task-form :task="editedTask" @on-submit="upsertTask" class="mb-3" />
-        <input type="text" v-model="filter" placeholder="Фильтр" />
+        <input type="text" v-model="filter" placeholder="Filter" />
         <table class="table table-striped table-hover table-bordered align-middle">
             <thead>
                 <tr>
                     <th scope="row">Project</th>
                     <th scope="row">ID</th>
-                    <th>Название</th>
-                    <th>Была в работе</th>
+                    <th>Name</th>
+                    <th>Last time in use</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,14 +27,14 @@
                             <span v-else>Close</span>
                         </button>
                     </td>
-                    <td>{{ task.latestWorklogDateTime }}</td>
+                    <td>{{ humanDateTime(task.latestWorklogDateTime) }}</td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <button :disabled="currentPage === 1" @click="prevPage">Предыдущая страница</button>
-            <span>Страница {{ currentPage }} из {{ totalPages }}</span>
-            <button :disabled="currentPage === totalPages" @click="nextPage">Следующая страница</button>
+            <button :disabled="currentPage === 1" @click="prevPage">Previous page</button>
+            <span>Page {{ currentPage }} out of {{ totalPages }}</span>
+            <button :disabled="currentPage === totalPages" @click="nextPage">Next page</button>
         </div>
     </div>
 </template>
@@ -109,6 +109,23 @@ export default defineComponent({
                 // const foundTask = this.tasks[foundIndex];
                 // }
             });
+        },
+        humanDateTime(dateTime: string) {
+            if (Number.isNaN(new Date(dateTime).getTime())) {
+                return '';
+            }
+
+            const options = {
+                hour: 'numeric',
+                minute: 'numeric',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            } as Intl.DateTimeFormatOptions;
+
+            const locale = this.$i18n.locale;
+            const formatter = new Intl.DateTimeFormat(locale, options);
+            return formatter.format(new Date(dateTime));
         },
         // async deleteTask(taskId: number) {
         //     // Логика удаления задачи
