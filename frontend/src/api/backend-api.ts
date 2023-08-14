@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 const axiosApi = axios.create({
     baseURL: `/api`,
-    timeout: 1000,
+    timeout: 2000,
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -60,6 +60,9 @@ export interface TimeDistributionDto {
 }
 
 export default {
+    heartbeat(): Promise<AxiosResponse<void>> {
+        return axiosApi.get('/heartbeat');
+    },
     weeks(): Promise<AxiosResponse<DayInfo[]>> {
         return axiosApi.get(`/calendar/weeks`);
     },

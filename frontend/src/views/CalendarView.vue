@@ -9,7 +9,7 @@
       @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" />
 
     <v-calendar class="custom-calendar max-w-full" :masks="masks" expanded :max-date="endOfWeek" trim-weeks
-      disable-page-swipe is-expanded view="weekly" :rows="5" :locale="$i18n.locale" firstDayOfWeek="2">
+      disable-page-swipe is-expanded view="weekly" :rows="5" :locale="$i18n.locale" firstDayOfWeek=2>
       <template v-slot:day-content="{ day }">
         <calendar-day v-if="daysMap[day.id]" :day="day" :dayInfo="daysMap[day.id]"
           @selectActiveDay="handleActiveDaySelect" />
