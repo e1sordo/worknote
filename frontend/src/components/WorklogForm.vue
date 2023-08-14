@@ -93,6 +93,11 @@ export default {
             autocompleteValue.value = textSuggestion;
             selectedValue.value = textSuggestion;
             showAutocomplete.value = false;
+
+            const textInputElement = document.getElementById("text-input");
+            if (textInputElement) {
+                textInputElement.focus();
+            }
         };
 
         const submitCreate = () => {
