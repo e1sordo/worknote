@@ -11,6 +11,6 @@ public class HeartbeatController {
 
     @GetMapping
     public ResponseEntity<Void> heartbeat() {
-        return ResponseEntity.status(302).build();
+        return ResponseEntity.ok().build();
     }
 }
