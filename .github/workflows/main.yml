@@ -30,9 +30,6 @@ jobs:
           path: backend/target/backend-0.0.1-SNAPSHOT.jar
           if-no-files-found: error
 
-    outputs:
-      jar-file: ${{ runner.workspace }}/app.jar  # Declare the artifact output
-
 
   docker_deploy_job:
     runs-on: ubuntu-latest

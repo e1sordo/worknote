@@ -1,33 +1,34 @@
-# Worknote
+<div align="center">
+  <br>
+  <img src="assets/screenshots/home.png" width="800" alt="Home page view" />
+  <h1>Worknote</h1>
+</div>
 
-Welcome to the Worknote repository!
+***
+
+Welcome to the **Worknote** repository! 🙂
+
 This project is dedicated to providing a seamless solution
 for synchronizing worklogs with a private corporate Jira server.
 The system aims to simplify the process of recording work time
 into journals, providing a centralized location for managing worklogs
 and assisting users with prompts for recurring events and tasks.
 
-## Table of Contents
+***
 
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
+[![Docker Build and Deploy](https://github.com/e1sordo/worknote/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/e1sordo/worknote/actions/workflows/main.yml)
 
-## Introduction
+## 👋 Introduction
 
 At workplaces, it is often required to track and document worklogs in journals or similar systems.
-Worknote offers a convenient way to enter worklogs
+__Worknote__ offers a convenient way to enter worklogs
 and effortlessly synchronize them with your private corporate Jira server.
 The system provides a unified interface where users can easily manage their work time,
 view weekends and reduced working days,
 and receive prompts for recurring events and tasks
 that require time allocation.
 
-## Features
+## 🏋️‍♀️ Features
 
 - **Synchronization**: Seamlessly synchronize worklogs with your private corporate Jira server.
 - **Centralized Management**: All worklogs are stored and managed in a single location, providing easy access and
@@ -38,8 +39,11 @@ that require time allocation.
   allocation.
 - **Recurring Event and Task Prompts**: Receive prompts for recurring events and tasks that require time allocation,
   ensuring no worklogs are missed.
+- **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿 English, 🇪🇸 Spanish, and 🇷🇺 Russian.
+- 🌚 **Dark Theme**: The app features a dark theme option that automatically synchronizes with the system-wide 
+  dark mode settings.
 
-## Installation
+## 🏗️ Installation
 
 To install Worknote, follow these steps:
 
@@ -47,7 +51,7 @@ To install Worknote, follow these steps:
 2. Navigate to the project directory: `cd worknote`
 3. Install dependencies: `mvn clean install`
 
-## Usage
+## 🎮 Usage
 
 To use Worknote, follow these steps:
 
@@ -61,7 +65,7 @@ To use Worknote, follow these steps:
    remaining time tracking, and recurring event and task prompts.
 7. Click the sync button to synchronize your worklogs with Jira.
 
-## Configuration
+## 🎛️ Configuration
 
 Before using Worknote, you need to configure it by providing the necessary credentials and settings. Follow these steps
 to configure the system:
@@ -71,7 +75,7 @@ to configure the system:
 3. Update the `username` and `password` fields with your Jira login credentials.
 4. Save the changes.
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! If you'd like to contribute to the Worklog Sync with Jira project, please follow these
 guidelines:
@@ -82,7 +86,7 @@ guidelines:
 4. Push the changes to your branch: `git push origin feature/my-feature`
 5. Submit a pull request detailing your changes.
 
-## License
+## 🕊️ License
 
 The Worklog Sync with Jira project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free
 to use, modify, and distribute the software according to the terms of this license.

@@ -11,6 +11,7 @@ import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.CalendarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -27,6 +28,7 @@ import static java.util.stream.Collectors.toMap;
 
 @Slf4j
 @Service
+@Profile("!demo")
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
