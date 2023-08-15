@@ -1,6 +1,8 @@
 import api from "@/api/backend-api";
 import { AxiosError } from 'axios';
 
+// The request is periodically sent to the backend and depending on the work of the latter 
+// the user session is either extended or a 403 error is returned and we refresh our application page to get the login window
 const sendRequestToBackend = async () => {
     try {
         const response = await api.heartbeat()
@@ -16,5 +18,5 @@ const sendRequestToBackend = async () => {
     }
 };
 
-const interval = 2 * 60 * 1000;
+const interval = 15 * 60 * 1000;
 setInterval(sendRequestToBackend, interval);
