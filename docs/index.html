@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="qfGT1Kv7e6TSCdPftIsmrRtFg2t7dMeQsagDyPLt4wE" />
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>worknote | Simplify Jira worklog management and sync with Worknote web-app</title>
+<meta name="generator" content="Jekyll v3.9.3" />
+<meta property="og:title" content="worknote" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Simplify Jira worklog management and sync with Worknote web-app" />
+<meta property="og:description" content="Simplify Jira worklog management and sync with Worknote web-app" />
+<link rel="canonical" href="https://e1sordo.github.io/worknote/" />
+<meta property="og:url" content="https://e1sordo.github.io/worknote/" />
+<meta property="og:site_name" content="worknote" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="worknote" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"Simplify Jira worklog management and sync with Worknote web-app","headline":"worknote","name":"worknote","url":"https://e1sordo.github.io/worknote/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/worknote/assets/css/style.css?v=bc004183d0ba79e255e94ac8d8adfb3ad3468d2f">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/worknote/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://e1sordo.github.io/worknote/">worknote</a></h1>
+      
+
+      <div align="center">
+  <br />
+  <img src="assets/screenshots/home.png" width="800" alt="Home page view" />
+  <h1>Worknote</h1>
+</div>
+
+<hr />
+
+<p>Welcome to the <strong>Worknote</strong> repository! 🙂</p>
+
+<p>This project is dedicated to providing a seamless solution
+for synchronizing worklogs with a private corporate Jira server.
+The system aims to simplify the process of recording work time
+into journals, providing a centralized location for managing worklogs
+and assisting users with prompts for recurring events and tasks.</p>
+
+<hr />
+
+<p><a href="https://github.com/e1sordo/worknote/actions/workflows/main.yml"><img src="https://github.com/e1sordo/worknote/actions/workflows/main.yml/badge.svg?branch=main" alt="Docker Build and Deploy" /></a></p>
+
+<h2 id="-introduction">👋 Introduction</h2>
+
+<p>At workplaces, it is often required to track and document worklogs in journals or similar systems.
+<strong>Worknote</strong> offers a convenient way to enter worklogs
+and effortlessly synchronize them with your private corporate Jira server.
+The system provides a unified interface where users can easily manage their work time,
+view weekends and reduced working days,
+and receive prompts for recurring events and tasks
+that require time allocation.</p>
+
+<h2 id="️️-features">🏋️‍♀️ Features</h2>
+
+<ul>
+  <li><strong>Synchronization</strong>: Seamlessly synchronize worklogs with your private corporate Jira server.</li>
+  <li><strong>Centralized Management</strong>: All worklogs are stored and managed in a single location, providing easy access and
+organization.</li>
+  <li><strong>Weekend and Reduced Working Day Display</strong>: Clearly visualize weekends and reduced working days to effectively plan
+and allocate work time.</li>
+  <li><strong>Remaining Time Tracking</strong>: Easily view how much time is left to write off for a specific day, ensuring accurate time
+allocation.</li>
+  <li><strong>Recurring Event and Task Prompts</strong>: Receive prompts for recurring events and tasks that require time allocation,
+ensuring no worklogs are missed.</li>
+  <li><strong>Multi-Language Support</strong>: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿 English, 🇪🇸 Spanish, and 🇷🇺 Russian.</li>
+  <li>🌚 <strong>Dark Theme</strong>: The app features a dark theme option that automatically synchronizes with the system-wide 
+dark mode settings.</li>
+</ul>
+
+<h2 id="️-installation">🏗️ Installation</h2>
+
+<p>To install Worknote, follow these steps:</p>
+
+<ol>
+  <li>Clone the repository: <code class="language-plaintext highlighter-rouge">git clone https://github.com/e1sordo/worknote</code></li>
+  <li>Navigate to the project directory: <code class="language-plaintext highlighter-rouge">cd worknote</code></li>
+  <li>Install dependencies: <code class="language-plaintext highlighter-rouge">mvn clean install</code></li>
+</ol>
+
+<h2 id="-usage">🎮 Usage</h2>
+
+<p>To use Worknote, follow these steps:</p>
+
+<ol>
+  <li>Ensure you have completed the installation steps.</li>
+  <li>Set required environment variables <code class="language-plaintext highlighter-rouge">export ENV_VAR_NAME=value</code></li>
+  <li>Launch the application: <code class="language-plaintext highlighter-rouge">sudo mvn --projects backend spring-boot:start</code> in detached background mode and run even if
+you close the terminal. Can be stopped with <code class="language-plaintext highlighter-rouge">sudo mvn --projects backend spring-boot:stop</code></li>
+  <li>Access the application through your preferred web browser at <code class="language-plaintext highlighter-rouge">http://localhost:8098</code>.</li>
+  <li>Sign in to your private corporate Jira instance using your credentials.</li>
+  <li>Enter your worklogs, taking advantage of the system’s features such as weekend and reduced working day display,
+remaining time tracking, and recurring event and task prompts.</li>
+  <li>Click the sync button to synchronize your worklogs with Jira.</li>
+</ol>
+
+<h2 id="️-configuration">🎛️ Configuration</h2>
+
+<p>Before using Worknote, you need to configure it by providing the necessary credentials and settings. Follow these steps
+to configure the system:</p>
+
+<ol>
+  <li>Open the <code class="language-plaintext highlighter-rouge">config.js</code> file located in the project root directory.</li>
+  <li>Update the <code class="language-plaintext highlighter-rouge">jiraUrl</code> field with the URL of your private corporate Jira instance.</li>
+  <li>Update the <code class="language-plaintext highlighter-rouge">username</code> and <code class="language-plaintext highlighter-rouge">password</code> fields with your Jira login credentials.</li>
+  <li>Save the changes.</li>
+</ol>
+
+<h2 id="-contributing">🤝 Contributing</h2>
+
+<p>Contributions are welcome! If you’d like to contribute to the Worklog Sync with Jira project, please follow these
+guidelines:</p>
+
+<ol>
+  <li>Fork the repository.</li>
+  <li>Create a new branch: <code class="language-plaintext highlighter-rouge">git checkout -b feature/my-feature</code></li>
+  <li>Make your changes and commit them: <code class="language-plaintext highlighter-rouge">git commit -m 'Add new feature'</code></li>
+  <li>Push the changes to your branch: <code class="language-plaintext highlighter-rouge">git push origin feature/my-feature</code></li>
+  <li>Submit a pull request detailing your changes.</li>
+</ol>
+
+<h2 id="️-license">🕊️ License</h2>
+
+<p>The Worklog Sync with Jira project is licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>. Feel free
+to use, modify, and distribute the software according to the terms of this license.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/e1sordo/worknote/edit/main/README.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

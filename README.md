@@ -39,7 +39,7 @@ that require time allocation.
   allocation.
 - **Recurring Event and Task Prompts**: Receive prompts for recurring events and tasks that require time allocation,
   ensuring no worklogs are missed.
-- **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿 English, 🇪🇸 Spanish, and 🇷🇺 Russian.
+- **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿&nbsp;English, 🇪🇸&nbsp;Spanish, and 🇷🇺&nbsp;Russian.
 - 🌚 **Dark Theme**: The app features a dark theme option that automatically synchronizes with the system-wide 
   dark mode settings.
 
