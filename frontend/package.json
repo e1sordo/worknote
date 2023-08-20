@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.6",
-    "@babel/eslint-parser": "^7.22.6",
+    "@babel/eslint-parser": "^7.22.10",
     "@babel/preset-typescript": "^7.22.5",
     "@intlify/vue-i18n-loader": "^3.0.0",
     "@types/bootstrap": "^5.2.6",
