@@ -6,7 +6,7 @@
   </div>
   <div v-if="Object.keys(daysMap).length !== 0" class="mb-5">
     <full-day-modal :dayInfo="activeDayInfo" @createWorklog="addWorklog" @deleteWorklog="removeWorklog"
-      @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" />
+      @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" @updateDayVacation="setNewDayVacation" />
 
     <v-calendar class="custom-calendar max-w-full" :masks="masks" expanded :max-date="endOfWeek" trim-weeks
       disable-page-swipe is-expanded view="weekly" :rows="5" :locale="$i18n.locale" firstDayOfWeek=2>
@@ -25,7 +25,7 @@ import FullDayModal from '@/components/FullDayModal.vue';
 import moment from 'moment';
 import { defineComponent, ref } from 'vue';
 
-interface Foo {
+interface DayInfoMap {
   [key: string]: DayInfo;
 }
 
@@ -37,7 +37,7 @@ export default defineComponent({
 
   data() {
     return {
-      daysMap: {} as Foo
+      daysMap: {} as DayInfoMap
     };
   },
   beforeMount() {
@@ -87,6 +87,10 @@ export default defineComponent({
     setNewDaySummary(date: string, newSummary: string) {
       const dayInfo = this.daysMap[date];
       dayInfo.summary = newSummary;
+    },
+    setNewDayVacation(date: string, newValue: boolean) {
+      const dayInfo = this.daysMap[date];
+      dayInfo.vacation = newValue;
     },
     setOrderStyle() {
       const parentClass = 'vc-pane-layout';

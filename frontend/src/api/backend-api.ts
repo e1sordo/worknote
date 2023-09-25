@@ -15,6 +15,7 @@ interface User {
 export interface DayInfo {
     date: string;
     nonWorkingDay: boolean;
+    vacation: boolean;
     reducedWorkingDay: boolean;
     workingMinutes: number;
     additionalInfo: string;
@@ -71,6 +72,9 @@ export default {
     },
     updateDaySummary(date: string, newText: string): Promise<AxiosResponse<void>> {
         return axiosApi.patch(`/calendar/day/${date}/summary`, { newText });
+    },
+    updateDayVacation(date: string, value: boolean): Promise<AxiosResponse<void>> {
+        return axiosApi.patch(`/calendar/day/${date}/vacation`, { value });
     },
     searchTasks(query: string): Promise<AxiosResponse<Task[]>> {
         return axiosApi.get(`/tasks/search?query=${query}`);

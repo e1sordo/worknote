@@ -13,4 +13,6 @@ public interface CalendarService {
     DayDto getDay(LocalDate date);
 
     void updateDaySummary(LocalDate date, String newText);
+
+    void updateDayVacation(LocalDate date, boolean value);
 }

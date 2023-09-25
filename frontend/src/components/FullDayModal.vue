@@ -10,18 +10,31 @@
                         :placeholder="$t('calendar.placeholder.daySummary')">
                         {{ dayInfo.summary }}
                     </span>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group me-2" role="group" aria-label="First group">
+                            <button type="button" class="btn" @click="toggleVacation(!dayInfo.vacation)">
+                                <span v-if="!dayInfo.vacation">🏖️</span>
+                                <span v-else>💼</span>
+                            </button>
+                            <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">X</button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-body">
-                    <p v-if="dayInfo.nonWorkingDay" class="text-muted mb-0 mt-2">
-                        Выходной. {{ dayInfo.additionalInfo }}
+                    <p v-if="dayInfo.nonWorkingDay" class="text-muted mb-2 mt-2">
+                        {{ $t("calendar.weekend") }}. {{ dayInfo.additionalInfo }}
+                    </p>
+                    <p v-if="dayInfo.vacation" class="mb-2 mt-2">
+                        🏖️ {{ $t("calendar.vacation") }}
                     </p>
 
-                    <worklog-form :date="dayInfo.date" @createWorklog="addWorklog" />
+                    <worklog-form v-if="!dayInfo.vacation" :date="dayInfo.date" @createWorklog="addWorklog" />
                 </div>
+
                 <div class="modal-footer">
-                    <div v-if="!dayInfo.nonWorkingDay" class="w-100 container">
+                    <div v-if="!dayInfo.nonWorkingDay && !dayInfo.vacation" class="w-100 container">
                         <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
                             :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
                             :isPast="new Date(dayInfo.date) < new Date()" />
@@ -77,6 +90,13 @@ export default defineComponent({
                 .then(response => {
                     this.$emit('updateDaySummary', this.dayInfo.date, this.text);
                     console.log("Day summary was updated. Response status: " + response.status)
+                });
+        },
+        toggleVacation(newValue) {
+            api.updateDayVacation(this.dayInfo.date, newValue)
+                .then(response => {
+                    this.$emit('updateDayVacation', this.dayInfo.date, newValue);
+                    console.log("Day vacation status was updated. Response status: " + response.status)
                 });
         },
         addWorklog(worklog) {

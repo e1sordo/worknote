@@ -10,7 +10,9 @@
         "placeholder": {
             "worklogSummary": "No completado",
             "daySummary": "Día sin nombre"
-        }
+        },
+        "weekend": "Día libre",
+        "vacation": "Vacaciones"
     },
     "time": {
         "shortHour": "h",

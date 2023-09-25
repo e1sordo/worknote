@@ -68,6 +68,7 @@ public class CalendarServiceImpl implements CalendarService {
                                         day,
                                         weekday,
                                         false,
+                                        false,
                                         weekday ? 0 : 480,
                                         null,
                                         null,
@@ -80,6 +81,7 @@ public class CalendarServiceImpl implements CalendarService {
                     return new DayDto(
                             day.toString(),
                             dayInfo.isNonWorkingDay(),
+                            dayInfo.isVacation(),
                             dayInfo.isReducedWorkingDay(),
                             dayInfo.getWorkingMinutes(),
                             dayInfo.getAdditionalInfo(),
@@ -101,6 +103,15 @@ public class CalendarServiceImpl implements CalendarService {
         dayRepository.findById(date).ifPresent(day -> {
             log.info("Try to update day {} summary from '{}' to '{}'", date, day.getSummary(), newText);
             day.setSummary(newText);
+            dayRepository.save(day);
+        });
+    }
+
+    @Override
+    public void updateDayVacation(final LocalDate date, final boolean value) {
+        dayRepository.findById(date).ifPresent(day -> {
+            log.info("Try to update day {} vacation status from '{}' to '{}'", date, day.isVacation(), value);
+            day.setVacation(value);
             dayRepository.save(day);
         });
     }

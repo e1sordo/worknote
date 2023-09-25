@@ -10,7 +10,9 @@
         "placeholder": {
             "worklogSummary": "Не заполнено",
             "daySummary": "Безымянный день"
-        }
+        },
+        "weekend": "Выходной день",
+        "vacation": "Отпуск"
     },
     "time": {
         "shortHour": "ч",

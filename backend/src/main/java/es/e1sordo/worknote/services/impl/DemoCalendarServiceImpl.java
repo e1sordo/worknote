@@ -124,7 +124,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                    String summary,
                    List<WorklogDto> worklogs) {
         public DayDto forDay(LocalDate day) {
-            return new DayDto(day.toString(), nonWorkingDay, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary, worklogs);
+            return new DayDto(day.toString(), nonWorkingDay, false, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary, worklogs);
         }
     }
 
@@ -173,6 +173,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                 date.toString(),
                 List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()),
                 false,
+                false,
                 List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()) ? 0 : 480,
                 null,
                 null,
@@ -188,5 +189,9 @@ public class DemoCalendarServiceImpl implements CalendarService {
 
     @Override
     public void updateDaySummary(final LocalDate date, final String newText) {
+    }
+
+    @Override
+    public void updateDayVacation(final LocalDate date, final boolean value) {
     }
 }

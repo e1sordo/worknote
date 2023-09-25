@@ -13,12 +13,17 @@
         </div>
 
         <div class="flex-grow overflow-y-auto overflow-x-auto text-xs leading-tight rounded-sm p-1 mt-0 mb-1">
+            <div v-if="dayInfo.vacation" class="alert alert-warning" role="alert">
+                🏖️ {{ $t("calendar.vacation") }}
+            </div>
+
             <div v-if="dayInfo.additionalInfo" class="alert alert-success" role="alert">
                 {{ dayInfo.additionalInfo }}
             </div>
 
-            <progress-bar v-if="isPastDay && dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
-                :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes" :isPast="isPastDay" />
+            <progress-bar v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
+                :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
+                :isPast="isPastDay" />
 
             <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-info mb-1">
                 {{ dayInfo.summary }}
