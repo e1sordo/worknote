@@ -21,16 +21,16 @@ import java.util.Map;
 public class DemoCalendarServiceImpl implements CalendarService {
 
     private static final TaskDto TASK_DAILY = new TaskDto(
-            77L, 586, "ABCDEF", "ABC", JiraTaskType.PROCESS_MAINTENANCE, "Daily", false
+            77L, 586, "ABCDEF", "ABC", JiraTaskType.PROCESS_MAINTENANCE, "Daily", "Daily, DSM", false
     );
     private static final TaskDto TASK_DEVELOPMENT_1 = new TaskDto(
-            78L, 1987, "ABCDEF", "ABC", JiraTaskType.DEVELOPMENT, "Feature A", false
+            78L, 1987, "ABCDEF", "ABC", JiraTaskType.DEVELOPMENT, "Feature A", "Feature A", false
     );
     private static final TaskDto TASK_STUDY = new TaskDto(
-            79L, 35, "XYZ", "XYZ", JiraTaskType.TRAINING_AND_DEVELOPMENT, "Trainings", false
+            79L, 35, "XYZ", "XYZ", JiraTaskType.TRAINING_AND_DEVELOPMENT, "Trainings", "Trainings", false
     );
     private static final TaskDto TASK_MEETINGS = new TaskDto(
-            80L, 511, "ABCDEF", "ABC", JiraTaskType.ORGANIZING_ACTIVITIES, "Activities", false
+            80L, 511, "ABCDEF", "ABC", JiraTaskType.ORGANIZING_ACTIVITIES, "Activities", "Activities", false
     );
 
     private static final Map<Integer, DemoDay> DEMO_DATA = Map.of(

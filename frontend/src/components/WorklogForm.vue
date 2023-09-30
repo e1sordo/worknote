@@ -9,8 +9,14 @@
                     <ul>
                         <li v-for="suggestion in autocompleteSuggestions" :key="suggestion.entityId"
                             @click="selectAutocompleteSuggestion(suggestion)">
-                            <span class="badge bg-primary">{{ suggestion.code }}-{{ suggestion.id }}</span>
-                            {{ suggestion.title }}
+                            <p>
+                                {{ taskTypeMeta[suggestion.type].icon }}
+                                <span class="badge bg-primary mx-2">{{ suggestion.code }}-{{ suggestion.id }}</span>
+                                <span v-html="suggestion.title"></span>
+                            </p>
+                            <p>
+                                <small class="text-muted" v-html="suggestion.examples"></small>
+                            </p>
                         </li>
                     </ul>
                 </div>
@@ -35,6 +41,7 @@
   
 <script lang="ts">
 import api from "@/api/backend-api";
+import { taskTypeMeta } from '@/constants';
 import { convertTimeToMinutes } from '@/utils/convertTimeToMinutes';
 import { SetupContext, computed, ref, watch } from 'vue';
 
@@ -43,6 +50,8 @@ interface TaskSuggestion {
     code: string;
     id: number;
     title: string;
+    type: string;
+    examples: string;
 }
 
 export default {
@@ -74,7 +83,9 @@ export default {
                             entityId: task.entityId,
                             code: task.code,
                             id: task.id,
-                            title: task.title
+                            title: task.title,
+                            type: task.type,
+                            examples: task.examples
                         }
                     });
 
@@ -89,7 +100,8 @@ export default {
         });
 
         const selectAutocompleteSuggestion = (suggestion: TaskSuggestion) => {
-            const textSuggestion = `(${suggestion.code}-${suggestion.id}) ${suggestion.title}`
+            const suggestionTitleWithoutHtmlTags = suggestion.title.replace(/<[^>]*>/g, '')
+            const textSuggestion = `(${suggestion.code}-${suggestion.id}) ${suggestionTitleWithoutHtmlTags}`
             autocompleteValue.value = textSuggestion;
             selectedValue.value = textSuggestion;
             showAutocomplete.value = false;
@@ -126,6 +138,7 @@ export default {
         });
 
         return {
+            taskTypeMeta,
             textValue,
             timeValue,
             spentValue,
@@ -150,7 +163,7 @@ export default {
     border: 1px solid #ddd;
     padding: 4px;
     width: 100%;
-    max-height: 200px;
+    max-height: 340px;
     overflow-y: auto;
 }
 
@@ -167,6 +180,10 @@ export default {
 
 .autocomplete-dropdown li:hover {
     background-color: #f4f4f4;
+}
+
+.autocomplete-dropdown li p {
+    margin-bottom: 0;
 }
 
 .form-control {

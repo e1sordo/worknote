@@ -106,6 +106,7 @@ public class WorklogsServiceImpl implements WorklogsService {
                         task.getProject().getShortCode(),
                         task.getType(),
                         task.getTitle(),
+                        task.getExamples(),
                         task.isClosed()
                 ),
                 entity.getJiraId(),

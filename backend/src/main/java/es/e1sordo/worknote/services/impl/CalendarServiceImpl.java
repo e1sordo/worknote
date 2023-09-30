@@ -130,6 +130,7 @@ public class CalendarServiceImpl implements CalendarService {
                         task.getProject().getShortCode(),
                         task.getType(),
                         task.getTitle(),
+                        task.getExamples(),
                         task.isClosed()
                 ),
                 entity.getJiraId(),
