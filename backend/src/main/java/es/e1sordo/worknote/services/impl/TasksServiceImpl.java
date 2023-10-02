@@ -189,6 +189,7 @@ public class TasksServiceImpl implements TasksService {
 
         final Optional<JiraTaskEntity> task = repository.findByJiraIdAndProject(request.id(), project);
 
+        final TaskDto result;
         if (task.isPresent()) {
             final var taskEntity = task.get();
             log.info("Task was found, so try to update it ({})", taskEntity.getTitle());
@@ -197,11 +198,19 @@ public class TasksServiceImpl implements TasksService {
             taskEntity.setType(request.type());
             taskEntity.setExamples(request.examples());
             taskEntity.setClosed(request.closed());
-            return mapToDto(repository.save(taskEntity));
+            result = mapToDto(repository.save(taskEntity));
+        } else {
+            log.info("Task was not found, so try to create. Title: {}", request.title());
+            result = mapToDto(repository.save(createEntity(request, project)));
         }
 
-        log.info("Task was not found, so try to create. Title: {}", request.title());
-        return mapToDto(repository.save(createEntity(request, project)));
+        try {
+            fillUpLucene();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
     }
 
     private JiraTaskEntity createEntity(final UpsertTaskDto request, final JiraProjectEntity project) {
