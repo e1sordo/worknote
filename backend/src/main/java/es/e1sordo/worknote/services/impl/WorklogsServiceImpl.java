@@ -10,11 +10,13 @@ import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.ProjectRepository;
 import es.e1sordo.worknote.repositories.TaskRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
+import es.e1sordo.worknote.services.TasksService;
 import es.e1sordo.worknote.services.WorklogsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +30,7 @@ public class WorklogsServiceImpl implements WorklogsService {
     private final WorklogRepository repository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
+    private final TasksService tasksService;
 
     @Override
     public WorklogDto create(final CreateWorklogDto request) {
@@ -88,8 +91,24 @@ public class WorklogsServiceImpl implements WorklogsService {
                         new JiraProjectEntity(projectCode, projectCode, projectCode)));
 
         return taskRepository.findByJiraIdAndProject(jiraTaskId, project)
-                .orElseGet(() -> taskRepository.save(
-                        new JiraTaskEntity(null, jiraTaskId, project, JiraTaskType.DEVELOPMENT, false, taskTitle, null, List.of())));
+                .orElseGet(() -> {
+                    final JiraTaskEntity taskEntity = taskRepository.save(new JiraTaskEntity(
+                            null,
+                            jiraTaskId,
+                            project,
+                            JiraTaskType.DEVELOPMENT,
+                            false,
+                            taskTitle,
+                            null,
+                            List.of()
+                    ));
+                    try {
+                        tasksService.fillUpLucene();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return taskEntity;
+                });
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {
