@@ -6,16 +6,27 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">{{ humanDate(dayInfo.date) }}</h5>
                     <span ref="editableText" contenteditable="true" @keydown.enter="saveText" @blur="saveText"
-                        @keydown="handleKeyDown" class="day-summary mx-2 px-1 w-50 text-start"
+                        @keydown="handleKeyDown" class="day-summary mx-3 px-1 text-start" style="flex-grow: 1;"
                         :placeholder="$t('calendar.placeholder.daySummary')">
                         {{ dayInfo.summary }}
                     </span>
 
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group me-2" role="group" aria-label="First group">
+                        <div v-if="!dayInfo.nonWorkingDay" class="btn-group me-2" role="group"
+                            aria-label="Working minutes group">
+                            <button type="button" class="btn btn-secondary" @click="changeWorkingMinutes(false)">-</button>
+                            <button type="button" class="btn btn-secondary">{{ dayInfo.workingMinutes / 60 }}</button>
+                            <button type="button" class="btn btn-secondary" @click="changeWorkingMinutes(true)">+</button>
+                        </div>
+
+                        <div class="btn-group me-2" role="group" aria-label="Indicators group">
+                            <button type="button" class="btn" @click="toggleNonWorkingStatus(!dayInfo.nonWorkingDay)">
+                                <span v-if="!dayInfo.nonWorkingDay" :title="$t('calendar.actions.markHoliday')">🎉</span>
+                                <span v-else :title="$t('calendar.actions.markWorking')">📆</span>
+                            </button>
                             <button type="button" class="btn" @click="toggleVacation(!dayInfo.vacation)">
-                                <span v-if="!dayInfo.vacation">🏖️</span>
-                                <span v-else>💼</span>
+                                <span v-if="!dayInfo.vacation" :title="$t('calendar.actions.markVacation')">🏖️</span>
+                                <span v-else :title="$t('calendar.actions.unmarkVacation')">💼</span>
                             </button>
                             <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">X</button>
                         </div>
@@ -79,9 +90,9 @@ export default defineComponent({
         },
         handleKeyDown(event) {
             if (event.keyCode === 13) {
-                event.preventDefault(); // Предотвращаем перевод строки
+                event.preventDefault(); // Prevent new line
                 this.saveText();
-                this.$refs.editableText.blur(); // Снимаем фокус с редактируемого текста
+                this.$refs.editableText.blur(); // Drop focus from editable text
             }
         },
         saveText() {
@@ -90,6 +101,23 @@ export default defineComponent({
                 .then(response => {
                     this.$emit('updateDaySummary', this.dayInfo.date, this.text);
                     console.log("Day summary was updated. Response status: " + response.status)
+                });
+        },
+        changeWorkingMinutes(direction) {
+            const valToChange = 30 // half an hour
+            const newValue = this.dayInfo.workingMinutes + valToChange * (direction ? 1 : -1);
+            api.updateWorkingMinutesCount(this.dayInfo.date, newValue)
+                .then(response => {
+                    this.$emit('updateWorkingMinutesCount', this.dayInfo.date, newValue);
+                    console.log("Day working minutes were updated. Response status: " + response.status)
+                });
+        },
+        toggleNonWorkingStatus(newValue) {
+            api.updateDayNonWorkingStatus(this.dayInfo.date, newValue)
+                .then(response => {
+                    const newMinutesCount = response.data;
+                    this.$emit('updateDayNonWorkingStatus', this.dayInfo.date, newValue, newMinutesCount);
+                    console.log("Day non-working status was updated. Response status: " + response.status)
                 });
         },
         toggleVacation(newValue) {
@@ -111,7 +139,7 @@ export default defineComponent({
     },
     data() {
         return {
-            text: "Нажмите, чтобы редактировать"
+            text: "Click to edit"
         };
     },
     props: {
@@ -122,11 +150,11 @@ export default defineComponent({
             try {
                 const arr = [...this.dayInfo.worklogs];
                 arr.sort(function (a, b) {
-                    // Преобразуем строки времени в объекты Date
+                    // Map string dates to Date object
                     var timeA = Date.parse('2000-01-01 ' + a.startTime);
                     var timeB = Date.parse('2000-01-01 ' + b.startTime);
 
-                    // Сравниваем времена и возвращаем результат сортировки
+                    // Compare times
                     return timeA - timeB;
                 });
                 return arr;

@@ -188,6 +188,14 @@ public class DemoCalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    public void updateWorkingMinutesCount(final LocalDate date, final int value) {
+    }
+
+    @Override
+    public void updateDayNonWorkingStatus(final LocalDate date, final boolean value) {
+    }
+
+    @Override
     public void updateDaySummary(final LocalDate date, final String newText) {
     }
 

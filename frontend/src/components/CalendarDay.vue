@@ -5,7 +5,7 @@
 
         <div class="flex day-label-header">
             <span class="day-label text-dark" :class="{ 'text-muted': !isPastDay, 'text-danger': day.isToday }">
-                {{ day.day }}
+                {{ day.day }} <span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
             <span v-if="dayInfo.sequenceNumber === 'number'">
                 #{{ dayInfo.sequenceNumber }}

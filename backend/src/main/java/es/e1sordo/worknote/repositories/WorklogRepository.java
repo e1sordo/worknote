@@ -1,5 +1,6 @@
 package es.e1sordo.worknote.repositories;
 
+import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.WorklogEntity;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +10,8 @@ import java.util.List;
 
 @Repository
 public interface WorklogRepository extends ListCrudRepository<WorklogEntity, Long> {
+
     List<WorklogEntity> findByDateBetween(final LocalDate from, final LocalDate to);
+
+    List<WorklogEntity> findByTask(JiraTaskEntity task);
 }

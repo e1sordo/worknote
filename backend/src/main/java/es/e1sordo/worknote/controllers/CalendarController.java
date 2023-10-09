@@ -1,6 +1,7 @@
 package es.e1sordo.worknote.controllers;
 
 import es.e1sordo.worknote.dto.DayDto;
+import es.e1sordo.worknote.dto.UpdateDayNonWorkingStatusDto;
 import es.e1sordo.worknote.dto.UpdateDaySummaryDto;
 import es.e1sordo.worknote.dto.UpdateDayVacationDto;
 import es.e1sordo.worknote.services.CalendarService;
@@ -36,6 +37,17 @@ public class CalendarController {
     @PatchMapping("/day/{date}/summary")
     public void updateDaySummary(@PathVariable LocalDate date, @RequestBody UpdateDaySummaryDto request) {
         calendarService.updateDaySummary(date, request.newText());
+    }
+
+    @PatchMapping("/day/{date}/minutes/{value}")
+    public void updateDayNonWorkingStatus(@PathVariable LocalDate date, @PathVariable int value) {
+        calendarService.updateWorkingMinutesCount(date, value);
+    }
+
+    @PatchMapping("/day/{date}/non-working")
+    public int updateDayNonWorkingStatus(@PathVariable LocalDate date, @RequestBody UpdateDayNonWorkingStatusDto request) {
+        calendarService.updateDayNonWorkingStatus(date, request.value());
+        return calendarService.getDay(date).workingMinutes();
     }
 
     @PatchMapping("/day/{date}/vacation")

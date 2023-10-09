@@ -12,7 +12,13 @@
             "daySummary": "Día sin nombre"
         },
         "weekend": "Día libre",
-        "vacation": "Vacaciones"
+        "vacation": "Vacaciones",
+        "actions": {
+            "markHoliday": "Marcar como feriado",
+            "markWorking": "Marcar como funcionando",
+            "markVacation": "Marcar como vacaciones",
+            "unmarkVacation": "Desmarcar vacaciones"
+        }
     },
     "time": {
         "shortHour": "h",

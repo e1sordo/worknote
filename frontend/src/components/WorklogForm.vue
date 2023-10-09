@@ -72,31 +72,39 @@ export default {
         const showAutocomplete = ref(false);
         const autocompleteSuggestions = ref<TaskSuggestion[]>([]);
 
-        watch(autocompleteValue, async (newValue) => {
-            if (selectedValue.value == autocompleteValue.value) {
-                showAutocomplete.value = false;
-            } else {
-                try {
-                    const response = await api.searchTasks(newValue);
-                    autocompleteSuggestions.value = response.data.map(task => {
-                        return {
-                            entityId: task.entityId,
-                            code: task.code,
-                            id: task.id,
-                            title: task.title,
-                            type: task.type,
-                            examples: task.examples
-                        }
-                    });
+        let timer: NodeJS.Timeout | null = null;
 
-                    if (autocompleteSuggestions.value.length > 0) {
-                        showAutocomplete.value = true;
-                    }
-                } catch (error) {
-                    console.error(error);
-                    showAutocomplete.value = false;
-                }
+        watch(autocompleteValue, async (newValue) => {
+            if (timer) {
+                clearTimeout(timer);
             }
+
+            timer = setTimeout(async () => {
+                if (selectedValue.value == autocompleteValue.value) {
+                    showAutocomplete.value = false;
+                } else {
+                    try {
+                        const response = await api.searchTasks(newValue);
+                        autocompleteSuggestions.value = response.data.map(task => {
+                            return {
+                                entityId: task.entityId,
+                                code: task.code,
+                                id: task.id,
+                                title: task.title,
+                                type: task.type,
+                                examples: task.examples
+                            }
+                        });
+
+                        if (autocompleteSuggestions.value.length > 0) {
+                            showAutocomplete.value = true;
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        showAutocomplete.value = false;
+                    }
+                }
+            }, 500);
         });
 
         const selectAutocompleteSuggestion = (suggestion: TaskSuggestion) => {

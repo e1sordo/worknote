@@ -32,6 +32,8 @@ import static java.util.stream.Collectors.toMap;
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
+    private static final int MAX_WORKING_MINUTES = 480;
+
     private final DayRepository dayRepository;
     private final WorklogRepository worklogRepository;
 
@@ -69,7 +71,7 @@ public class CalendarServiceImpl implements CalendarService {
                                         weekday,
                                         false,
                                         false,
-                                        weekday ? 0 : 480,
+                                        getMinutesByDayStatus(!weekday),
                                         null,
                                         null,
                                         null));
@@ -101,8 +103,35 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public void updateDaySummary(final LocalDate date, final String newText) {
         dayRepository.findById(date).ifPresent(day -> {
-            log.info("Try to update day {} summary from '{}' to '{}'", date, day.getSummary(), newText);
-            day.setSummary(newText);
+            var newValue = newText.replace("\n\r", "").trim();
+            log.info("Try to update day {} summary from '{}' to '{}'", date, day.getSummary(), newValue);
+            if (day.isNonWorkingDay()) {
+                day.setSummary(null);
+                day.setAdditionalInfo(newValue);
+            } else {
+                day.setSummary(newValue);
+                day.setAdditionalInfo(null);
+            }
+            dayRepository.save(day);
+        });
+    }
+
+    @Override
+    public void updateWorkingMinutesCount(final LocalDate date, final int value) {
+        dayRepository.findById(date).ifPresent(day -> {
+            log.info("Try to update day {} working minutes from '{}' to '{}'", date, day.getWorkingMinutes(), value);
+            day.setWorkingMinutes(value);
+            day.setReducedWorkingDay(value < MAX_WORKING_MINUTES);
+            dayRepository.save(day);
+        });
+    }
+
+    @Override
+    public void updateDayNonWorkingStatus(final LocalDate date, final boolean value) {
+        dayRepository.findById(date).ifPresent(day -> {
+            log.info("Try to update day {} non-working status from '{}' to '{}'", date, day.isNonWorkingDay(), value);
+            day.setNonWorkingDay(value);
+            day.setWorkingMinutes(getMinutesByDayStatus(!value));
             dayRepository.save(day);
         });
     }
@@ -136,5 +165,9 @@ public class CalendarServiceImpl implements CalendarService {
                 entity.getJiraId(),
                 entity.isSynced()
         );
+    }
+
+    private int getMinutesByDayStatus(boolean isWorkingDay) {
+        return isWorkingDay ? MAX_WORKING_MINUTES : 0;
     }
 }

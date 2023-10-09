@@ -73,6 +73,12 @@ export default {
     updateDaySummary(date: string, newText: string): Promise<AxiosResponse<void>> {
         return axiosApi.patch(`/calendar/day/${date}/summary`, { newText });
     },
+    updateWorkingMinutesCount(date: string, value: boolean): Promise<AxiosResponse<void>> {
+        return axiosApi.patch(`/calendar/day/${date}/minutes/${value}`);
+    },
+    updateDayNonWorkingStatus(date: string, value: boolean): Promise<AxiosResponse<void>> {
+        return axiosApi.patch(`/calendar/day/${date}/non-working`, { value });
+    },
     updateDayVacation(date: string, value: boolean): Promise<AxiosResponse<void>> {
         return axiosApi.patch(`/calendar/day/${date}/vacation`, { value });
     },

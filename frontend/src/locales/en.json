@@ -12,7 +12,13 @@
             "daySummary": "Nameless day"
         },
         "weekend": "Weekend",
-        "vacation": "Vacation"
+        "vacation": "Vacation",
+        "actions": {
+            "markHoliday": "Mark as holiday",
+            "markWorking": "Mark as working",
+            "markVacation": "Mark as vacation",
+            "unmarkVacation": "Unmark vacation"
+        }
     },
     "time": {
         "shortHour": "h",

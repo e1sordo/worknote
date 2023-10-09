@@ -14,5 +14,9 @@ public interface CalendarService {
 
     void updateDaySummary(LocalDate date, String newText);
 
+    void updateWorkingMinutesCount(LocalDate date, int value);
+
+    void updateDayNonWorkingStatus(LocalDate date, boolean value);
+
     void updateDayVacation(LocalDate date, boolean value);
 }

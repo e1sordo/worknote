@@ -6,7 +6,9 @@
   </div>
   <div v-if="Object.keys(daysMap).length !== 0" class="mb-5">
     <full-day-modal :dayInfo="activeDayInfo" @createWorklog="addWorklog" @deleteWorklog="removeWorklog"
-      @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary" @updateDayVacation="setNewDayVacation" />
+      @worklogSynced="syncWorklog" @updateDaySummary="setNewDaySummary"
+      @updateDayNonWorkingStatus="setNewDayNonWorkingStatus" @updateDayVacation="setNewDayVacation"
+      @updateWorkingMinutesCount="setNewDayWorkingMinutes" />
 
     <v-calendar class="custom-calendar max-w-full" :masks="masks" expanded :max-date="endOfWeek" trim-weeks
       disable-page-swipe is-expanded view="weekly" :rows="5" :locale="$i18n.locale" firstDayOfWeek=2>
@@ -87,6 +89,15 @@ export default defineComponent({
     setNewDaySummary(date: string, newSummary: string) {
       const dayInfo = this.daysMap[date];
       dayInfo.summary = newSummary;
+    },
+    setNewDayWorkingMinutes(date: string, newValue: number) {
+      const dayInfo = this.daysMap[date];
+      dayInfo.workingMinutes = newValue;
+    },
+    setNewDayNonWorkingStatus(date: string, newValue: boolean, newMinutesCount: number) {
+      const dayInfo = this.daysMap[date];
+      dayInfo.nonWorkingDay = newValue;
+      dayInfo.workingMinutes = newMinutesCount;
     },
     setNewDayVacation(date: string, newValue: boolean) {
       const dayInfo = this.daysMap[date];

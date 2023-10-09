@@ -12,7 +12,13 @@
             "daySummary": "Безымянный день"
         },
         "weekend": "Выходной день",
-        "vacation": "Отпуск"
+        "vacation": "Отпуск",
+        "actions": {
+            "markHoliday": "Сделать выходным",
+            "markWorking": "Сделать обычным рабочим днем",
+            "markVacation": "Отметить как отпуск",
+            "unmarkVacation": "Обычный день без отпуска"
+        }
     },
     "time": {
         "shortHour": "ч",

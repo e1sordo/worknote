@@ -7,6 +7,7 @@ import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.repositories.ProjectRepository;
 import es.e1sordo.worknote.repositories.TaskRepository;
+import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.TasksService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,10 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -61,6 +65,7 @@ import static java.util.stream.Collectors.joining;
 public class TasksServiceImpl implements TasksService {
 
     private final ProjectRepository projectRepository;
+    private final WorklogRepository worklogRepository;
     private final TaskRepository repository;
 
     private static final Analyzer ANALYZER;
@@ -76,6 +81,40 @@ public class TasksServiceImpl implements TasksService {
     }
 
     @PostConstruct
+    public void postConstruct() throws IOException {
+        removeDuplicates();
+        fillUpLucene();
+    }
+
+    public void removeDuplicates() {
+        final List<JiraTaskEntity> allTasks = repository.findAll();
+        var duplicateIds = allTasks.stream()
+                .collect(groupingBy(entity -> entity.getProject().getCode() + "-" + entity.getJiraId(), counting()))
+                .entrySet()
+                .stream()
+                .filter(m -> m.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(toSet());
+
+        if (duplicateIds.isEmpty()) {
+            log.info("No duplicated tasks were found");
+            return;
+        }
+
+        log.info("Found {} task duplicates: {}", duplicateIds.size(), duplicateIds);
+
+        var duplicates = allTasks.stream()
+                .filter(entity -> duplicateIds.contains(entity.getProject().getCode() + "-" + entity.getJiraId()))
+                .toList();
+
+        for (JiraTaskEntity duplicate : duplicates) {
+            if (worklogRepository.findByTask(duplicate).isEmpty()) {
+                log.info("Duplicate {} were deleted", duplicate);
+                repository.delete(duplicate);
+            }
+        }
+    }
+
     public void fillUpLucene() throws IOException {
         final List<JiraTaskEntity> data = repository.findByClosedFalse();
         IndexWriterConfig config;
@@ -102,7 +141,7 @@ public class TasksServiceImpl implements TasksService {
         log.info("Find tasks by query: {}", searchString);
 
         final String searchQuery = stream(searchString.split(" "))
-                .map(s -> s + "*")
+                .map(s -> s + " " + s + "*") // задач -> "задач задач*"
                 .collect(joining(" "));
 
         String[] columns = { "jiraId", "project", "type", "title", "examples" };
