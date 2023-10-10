@@ -2,6 +2,7 @@ package es.e1sordo.worknote.services.impl;
 
 import es.e1sordo.worknote.dto.CreateWorklogDto;
 import es.e1sordo.worknote.dto.TaskDto;
+import es.e1sordo.worknote.dto.UpsertTaskDto;
 import es.e1sordo.worknote.dto.WorklogDto;
 import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
@@ -16,9 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,25 +89,11 @@ public class WorklogsServiceImpl implements WorklogsService {
                 .orElseGet(() -> projectRepository.save(
                         new JiraProjectEntity(projectCode, projectCode, projectCode)));
 
-        return taskRepository.findByJiraIdAndProject(jiraTaskId, project)
-                .orElseGet(() -> {
-                    final JiraTaskEntity taskEntity = taskRepository.save(new JiraTaskEntity(
-                            null,
-                            jiraTaskId,
-                            project,
-                            JiraTaskType.DEVELOPMENT,
-                            false,
-                            taskTitle,
-                            null,
-                            List.of()
-                    ));
-                    try {
-                        tasksService.fillUpLucene();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return taskEntity;
-                });
+        tasksService.upsert(new UpsertTaskDto(
+                jiraTaskId, projectCode, JiraTaskType.DEVELOPMENT, taskTitle, null, false
+        ));
+
+        return taskRepository.findByJiraIdAndProject(jiraTaskId, project).get();
     }
 
     private WorklogDto mapToDto(WorklogEntity entity) {

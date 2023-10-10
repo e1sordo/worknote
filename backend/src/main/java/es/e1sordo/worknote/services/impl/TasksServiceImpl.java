@@ -27,6 +27,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.StoredFields;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
@@ -86,7 +87,7 @@ public class TasksServiceImpl implements TasksService {
         fillUpLucene();
     }
 
-    public void removeDuplicates() {
+    private void removeDuplicates() {
         final List<JiraTaskEntity> allTasks = repository.findAll();
         var duplicateIds = allTasks.stream()
                 .collect(groupingBy(entity -> entity.getProject().getCode() + "-" + entity.getJiraId(), counting()))
@@ -115,7 +116,7 @@ public class TasksServiceImpl implements TasksService {
         }
     }
 
-    public void fillUpLucene() throws IOException {
+    private void fillUpLucene() throws IOException {
         final List<JiraTaskEntity> data = repository.findByClosedFalse();
         IndexWriterConfig config;
         if (!data.isEmpty()) {
@@ -125,14 +126,24 @@ public class TasksServiceImpl implements TasksService {
             writer = new IndexWriter(DIRECTORY, config);
             writer.addDocuments(documents);
         }
+        commitAndCloseWriter();
+    }
+
+    private void addToLucene(JiraTaskEntity entity, boolean updateExisted) {
         try {
-            writer.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            writer.rollback();
-        } finally {
-            writer.close();
-            writer = null;
+            IndexWriterConfig config = new IndexWriterConfig();
+            writer = new IndexWriter(DIRECTORY, config);
+
+            if (updateExisted) {
+                Term term = new Term("id", String.valueOf(entity.getId()));
+                writer.deleteDocuments(term);
+            }
+
+            writer.addDocument(wrapDocument(entity));
+
+            commitAndCloseWriter();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -237,16 +248,17 @@ public class TasksServiceImpl implements TasksService {
             taskEntity.setType(request.type());
             taskEntity.setExamples(request.examples());
             taskEntity.setClosed(request.closed());
+
+            addToLucene(taskEntity, true);
+
             result = mapToDto(repository.save(taskEntity));
         } else {
             log.info("Task was not found, so try to create. Title: {}", request.title());
-            result = mapToDto(repository.save(createEntity(request, project)));
-        }
+            final JiraTaskEntity taskEntity = createEntity(request, project);
 
-        try {
-            fillUpLucene();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            addToLucene(taskEntity, false);
+
+            result = mapToDto(repository.save(taskEntity));
         }
 
         return result;
@@ -293,12 +305,27 @@ public class TasksServiceImpl implements TasksService {
 
     private Document wrapDocument(JiraTaskEntity entity) {
         final var document = new Document();
-        document.add(new StoredField("id", entity.getId()));
-        document.add(new StringField("jiraId", String.valueOf(entity.getJiraId()), Field.Store.YES));
-        document.add(new StringField("project", entity.getProject().getCode(), Field.Store.YES));
-        document.add(new StringField("type", entity.getType().name(), Field.Store.YES));
-        document.add(new TextField("title", entity.getTitle(), Field.Store.YES));
-        document.add(new TextField("examples", ofNullable(entity.getExamples()).orElse(""), Field.Store.YES));
+        List.of(
+                new StoredField("id", entity.getId()),
+                new StringField("jiraId", String.valueOf(entity.getJiraId()), Field.Store.YES),
+                new StringField("project", entity.getProject().getCode(), Field.Store.YES),
+                new StringField("type", entity.getType().name(), Field.Store.YES),
+                new TextField("title", entity.getTitle(), Field.Store.YES),
+                new TextField("examples", ofNullable(entity.getExamples()).orElse(""), Field.Store.YES)
+        ).forEach(document::add);
+
         return document;
+    }
+
+    private void commitAndCloseWriter() throws IOException {
+        try {
+            writer.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            writer.rollback();
+        } finally {
+            writer.close();
+            writer = null;
+        }
     }
 }
