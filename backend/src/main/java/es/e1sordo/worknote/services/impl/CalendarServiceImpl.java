@@ -9,6 +9,7 @@ import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.CalendarService;
+import es.e1sordo.worknote.utils.SanitizingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -103,7 +104,7 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public void updateDaySummary(final LocalDate date, final String newText) {
         dayRepository.findById(date).ifPresent(day -> {
-            var newValue = newText.replace("\n\r", "").trim();
+            var newValue = SanitizingUtil.sanitize(newText);
             log.info("Try to update day {} summary from '{}' to '{}'", date, day.getSummary(), newValue);
             if (day.isNonWorkingDay()) {
                 day.setSummary(null);

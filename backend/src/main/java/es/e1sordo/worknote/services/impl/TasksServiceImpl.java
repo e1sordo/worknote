@@ -9,6 +9,7 @@ import es.e1sordo.worknote.repositories.ProjectRepository;
 import es.e1sordo.worknote.repositories.TaskRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.TasksService;
+import es.e1sordo.worknote.utils.SanitizingUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,9 +150,10 @@ public class TasksServiceImpl implements TasksService {
 
     @Override
     public List<TaskDto> getAllByQuery(final String searchString) {
-        log.info("Find tasks by query: {}", searchString);
+        final String sanitizedSearchString = SanitizingUtil.sanitize(searchString);
+        log.info("Find tasks by query: {}", sanitizedSearchString);
 
-        final String searchQuery = stream(searchString.split(" "))
+        final String searchQuery = stream(sanitizedSearchString.trim().split(" "))
                 .map(s -> s + " " + s + "*") // задач -> "задач задач*"
                 .collect(joining(" "));
 
@@ -248,17 +250,13 @@ public class TasksServiceImpl implements TasksService {
             taskEntity.setType(request.type());
             taskEntity.setExamples(request.examples());
             taskEntity.setClosed(request.closed());
-
             addToLucene(taskEntity, true);
-
             result = mapToDto(repository.save(taskEntity));
         } else {
             log.info("Task was not found, so try to create. Title: {}", request.title());
-            final JiraTaskEntity taskEntity = createEntity(request, project);
-
+            final JiraTaskEntity taskEntity = repository.save(createEntity(request, project));
             addToLucene(taskEntity, false);
-
-            result = mapToDto(repository.save(taskEntity));
+            result = mapToDto(taskEntity);
         }
 
         return result;
