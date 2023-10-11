@@ -136,11 +136,13 @@ public class TasksServiceImpl implements TasksService {
             writer = new IndexWriter(DIRECTORY, config);
 
             if (updateExisted) {
-                Term term = new Term("id", String.valueOf(entity.getId()));
+                Term term = new Term("jiraId", String.valueOf(entity.getJiraId()));
                 writer.deleteDocuments(term);
             }
 
-            writer.addDocument(wrapDocument(entity));
+            if (!entity.isClosed()) {
+                writer.addDocument(wrapDocument(entity));
+            }
 
             commitAndCloseWriter();
         } catch (IOException e) {
