@@ -3,7 +3,6 @@ package es.e1sordo.worknote.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,7 +20,8 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/**").authenticated())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(login ->
+                        login.defaultSuccessUrl("/", true))
                 .logout(logout ->
                         logout.deleteCookies("JSESSIONID")
                                 .invalidateHttpSession(true)

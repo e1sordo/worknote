@@ -42,6 +42,7 @@ import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.search.highlight.TokenSources;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -54,6 +55,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.enToRu;
+import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.ruToEn;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.counting;
@@ -66,6 +69,7 @@ import static java.util.stream.Collectors.toSet;
 @RequiredArgsConstructor
 public class TasksServiceImpl implements TasksService {
 
+    private final Environment environment;
     private final ProjectRepository projectRepository;
     private final WorklogRepository worklogRepository;
     private final TaskRepository repository;
@@ -84,6 +88,9 @@ public class TasksServiceImpl implements TasksService {
 
     @PostConstruct
     public void postConstruct() throws IOException {
+        if (environment.matchesProfiles("test")) {
+            return;
+        }
         removeDuplicates();
         fillUpLucene();
     }
@@ -155,8 +162,11 @@ public class TasksServiceImpl implements TasksService {
         final String sanitizedSearchString = SanitizingUtil.sanitize(searchString);
         log.info("Find tasks by query: {}", sanitizedSearchString);
 
-        final String searchQuery = stream(sanitizedSearchString.trim().split(" "))
-                .map(s -> s + " " + s + "*") // задач -> "задач задач*"
+        final String fullSearchString = ruToEn(sanitizedSearchString) + " " + enToRu(sanitizedSearchString);
+        log.debug("Full string to search tasks by: {}", fullSearchString);
+
+        final String searchQuery = stream(fullSearchString.trim().split(" "))
+                .map(s -> s + " " + s + "*") // tasks -> "tasks tasks*"
                 .collect(joining(" "));
 
         String[] columns = { "jiraId", "project", "type", "title", "examples" };
@@ -164,6 +174,9 @@ public class TasksServiceImpl implements TasksService {
         SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<mark>", "</mark>");
 
         List<TaskDto> results = new ArrayList<>();
+        if (searchQuery.startsWith("*")) {
+            return results;
+        }
 
         try {
             IndexReader reader = DirectoryReader.open(DIRECTORY);
