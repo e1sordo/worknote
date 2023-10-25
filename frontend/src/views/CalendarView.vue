@@ -234,7 +234,7 @@ export default defineComponent({
   }
 
   & .day-today {
-    background-color: rgb(255, 250, 252);
+    background-color: rgba(255, 158, 196, 0.19);
   }
 
   & .day-core {

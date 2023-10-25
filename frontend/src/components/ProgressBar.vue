@@ -1,5 +1,5 @@
 <template>
-    <p v-if="minutesRemain > 0" class="text-primary">
+    <p v-if="minutesRemain > 0" :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
         <small>{{ helpText }}</small>
     </p>
     <p v-if="minutesRemain == 0 && synchronized != total && exeedPercent == 0" class="text-primary">
@@ -31,7 +31,7 @@
 <script>
 import { formatTime } from '@/constants';
 import { defineComponent, reactive, watchEffect } from 'vue';
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
     name: 'ProgressBar',
@@ -40,7 +40,8 @@ export default defineComponent({
         loggedHereOnly: Number,
         total: { type: Number, required: true },
         big: { type: Boolean, default: false },
-        isPast: Boolean
+        isPast: Boolean,
+        isToday: Boolean
     },
     setup(props) {
         const i18n = useI18n();

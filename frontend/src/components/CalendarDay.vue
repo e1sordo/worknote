@@ -4,7 +4,7 @@
         @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header">
-            <span class="day-label text-dark" :class="{ 'text-muted': !isPastDay, 'text-danger': day.isToday }">
+            <span class="day-label" :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-danger': day.isToday }">
                 {{ day.day }} <span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
             <span v-if="dayInfo.sequenceNumber === 'number'">
@@ -23,7 +23,7 @@
 
             <progress-bar v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
                 :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
-                :isPast="isPastDay" />
+                :isPast="isPastDay" :isToday="day.isToday" />
 
             <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-info mb-1">
                 {{ dayInfo.summary }}

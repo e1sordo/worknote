@@ -21,8 +21,8 @@
                     </ul>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <input type="text" id="text-input" v-model="textValue" class="form-control w-50"
+            <div class="d-flex gap-3 justify-content-between align-items-center w-100">
+                <input type="text" id="text-input" v-model="textValue" class="form-control flex-grow-1"
                     :placeholder="$t('worklog.form.summary.placeholder')">
 
                 <input type="time" id="time-input" v-model="timeValue" step="900" class="form-control">
@@ -30,7 +30,7 @@
                 <input type="text" id="spent-input" v-model="spentValue" class="form-control spent-input"
                     :placeholder="$t('worklog.form.spent.placeholder')" :title="$t('worklog.form.spent.title')">
 
-                <button type="button" @click="submitCreate" class="btn btn-primary w-25">
+                <button type="button" @click="submitCreate" class="btn btn-outline-primary text-nowrap">
                     {{ $t('worklog.submitButton') }}
                 </button>
             </div>

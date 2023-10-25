@@ -3,6 +3,7 @@
         <div class="row">
             <div v-for="worklog in data" :key="worklog.id" class="col-sm-6 col-lg-4 my-3">
                 <div class="card" :class="{ 'border-warning': !worklog.synced }">
+
                     <div class="card-header text-start d-flex align-items-center">
                         <div class="d-flex align-items-center w-100">
                             <div class="candidate-list-images"
@@ -14,10 +15,10 @@
                                     backgroundColor: taskTypeMeta[worklog.task.type].bgColor,
                                     color: taskTypeMeta[worklog.task.type].textColor
                                 }">
-                                    {{ worklog.task.code }}-{{ worklog.task.id }}
+                                    {{ worklog.task.code }}-<strong>{{ worklog.task.id }}</strong>
                                 </span>
                                 <h5 class="max-lines font-size-16 mb-1" :title="worklog.task.title">
-                                    <a class="text-dark">{{ worklog.task.title }}</a>
+                                    <a class="text-secondary">{{ worklog.task.title }}</a>
                                 </h5>
                             </div>
                         </div>
@@ -34,23 +35,23 @@
                     </div>
                     <div class="card-body text-start">
                         <div class="row pt-1 fs-6">
-                            <p class="col-sm-5 mb-0 mt-2 font-size-14">
+                            <p class="col-sm-5 my-1">
                                 <i class="bi bi-clock pe-2 text-primary"></i>
                                 {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
                             </p>
-                            <p class="col-sm-7 mb-0 mt-2 font-size-14">
+                            <p class="col-sm-7 my-1">
                                 <i class="bi bi-hourglass-split pe-2 text-primary"></i>
                                 {{ formatTime(worklog.durationInMinutes) }}
                             </p>
-                            <p v-if="worklog.synced" class="mb-0 mt-2 font-size-14">
+                            <p v-if="worklog.synced" class="my-1">
                                 <i class="bi bi-patch-check text-success pe-2"></i>
                                 {{ worklog.jiraId }}
                             </p>
-                            <p v-else class="text-danger mb-0 mt-2 font-size-14">
+                            <p v-else class="text-danger my-1">
                                 <i class="bi bi-patch-exclamation text-danger pe-2"></i>
                                 {{ $t('worklog.modalItem.notSynced') }}
                             </p>
-                            <p class="mb-0 mt-2 font-size-14">
+                            <p class="my-1">
                                 <i class="bi pe-2 text-primary"
                                     :class="{ 'bi-chat-left-text': worklog.summary, 'bi-chat-left': !worklog.summary }"></i>
                                 {{ worklog.summary }}
@@ -132,7 +133,7 @@ export default defineComponent({
 <style>
 .card {
     margin-bottom: 24px;
-    box-shadow: 0 2px 3px #e4e8f0;
+    box-shadow: 0 2px 3px #7b7d821f;
     font-family: var(--font-family-sans-serif);
 }
 

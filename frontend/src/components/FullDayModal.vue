@@ -1,7 +1,7 @@
 <template>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-xl modal-fullscreen-xl-down modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">{{ humanDate(dayInfo.date) }}</h5>
@@ -14,9 +14,9 @@
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                         <div v-if="!dayInfo.nonWorkingDay" class="btn-group me-2" role="group"
                             aria-label="Working minutes group">
-                            <button type="button" class="btn btn-secondary" @click="changeWorkingMinutes(false)">-</button>
-                            <button type="button" class="btn btn-secondary">{{ dayInfo.workingMinutes / 60 }}</button>
-                            <button type="button" class="btn btn-secondary" @click="changeWorkingMinutes(true)">+</button>
+                            <button type="button" class="btn btn-light" @click="changeWorkingMinutes(false)">-</button>
+                            <button type="button" class="btn btn-light">{{ dayInfo.workingMinutes / 60 }}</button>
+                            <button type="button" class="btn btn-light" @click="changeWorkingMinutes(true)">+</button>
                         </div>
 
                         <div class="btn-group me-2" role="group" aria-label="Indicators group">
@@ -42,13 +42,14 @@
                     </p>
 
                     <worklog-form v-if="!dayInfo.vacation" :date="dayInfo.date" @createWorklog="addWorklog" />
-                </div>
 
-                <div class="modal-footer">
+                    <br />
+
                     <div v-if="!dayInfo.nonWorkingDay && !dayInfo.vacation" class="w-100 container">
                         <progress-bar :big="true" v-if="dayInfo.workingMinutes > 0" :synchronized="durationOfSynced"
                             :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
-                            :isPast="new Date(dayInfo.date) < new Date()" />
+                            :isPast="new Date(dayInfo.date) < new Date()"
+                            :isToday="(new Date(dayInfo.date)).setHours(0, 0, 0, 0) === (new Date()).setHours(0, 0, 0, 0)" />
                     </div>
 
                     <worklog-modal-list :date="dayInfo.date" :data="sortedWorklogs" @deleteWorklog="removeWorklog"
@@ -106,11 +107,13 @@ export default defineComponent({
         changeWorkingMinutes(direction) {
             const valToChange = 30 // half an hour
             const newValue = this.dayInfo.workingMinutes + valToChange * (direction ? 1 : -1);
-            api.updateWorkingMinutesCount(this.dayInfo.date, newValue)
-                .then(response => {
-                    this.$emit('updateWorkingMinutesCount', this.dayInfo.date, newValue);
-                    console.log("Day working minutes were updated. Response status: " + response.status)
-                });
+            if (newValue >= 0 && newValue <= 24 * 60) {
+                api.updateWorkingMinutesCount(this.dayInfo.date, newValue)
+                    .then(response => {
+                        this.$emit('updateWorkingMinutesCount', this.dayInfo.date, newValue);
+                        console.log("Day working minutes were updated. Response status: " + response.status)
+                    });
+            }
         },
         toggleNonWorkingStatus(newValue) {
             api.updateDayNonWorkingStatus(this.dayInfo.date, newValue)
