@@ -5,7 +5,8 @@
                 <input type="text" id="autocomplete-input" v-model="autocompleteValue" class="form-control w-100"
                     autocomplete="off" @keydown.esc="showAutocomplete = false"
                     :placeholder="$t('worklog.form.task.placeholder')">
-                <div v-if="showAutocomplete" class="autocomplete-dropdown">
+                <div v-if="showAutocomplete"
+                    class="autocomplete-dropdown bg-body border-bottom border-start border-end border-secondary rounded-bottom">
                     <ul>
                         <li v-for="suggestion in autocompleteSuggestions" :key="suggestion.entityId"
                             @click="selectAutocompleteSuggestion(suggestion)">
@@ -167,8 +168,6 @@ export default {
     text-align: left;
     position: absolute;
     z-index: 1;
-    background-color: #fff;
-    border: 1px solid #ddd;
     padding: 4px;
     width: 100%;
     max-height: 340px;
@@ -187,7 +186,7 @@ export default {
 }
 
 .autocomplete-dropdown li:hover {
-    background-color: #f4f4f4;
+    background-color: #f4f4f445;
 }
 
 .autocomplete-dropdown li p {

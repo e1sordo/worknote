@@ -1,10 +1,18 @@
 package es.e1sordo.worknote.services;
 
 import es.e1sordo.worknote.dto.CreateWorklogDto;
-import es.e1sordo.worknote.dto.WorklogDto;
+import es.e1sordo.worknote.models.JiraTaskEntity;
+import es.e1sordo.worknote.models.WorklogEntity;
+
+import java.util.List;
 
 public interface WorklogsService {
-    WorklogDto create(CreateWorklogDto request);
-    WorklogDto updateSync(long id, long jiraWorklogId);
+
+    List<WorklogEntity> findByTask(JiraTaskEntity task);
+
+    WorklogEntity create(CreateWorklogDto request);
+
+    WorklogEntity updateSync(long id, long jiraWorklogId);
+
     void delete(long id);
 }

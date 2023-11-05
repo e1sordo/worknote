@@ -3,6 +3,7 @@ package es.e1sordo.worknote.controllers;
 import es.e1sordo.worknote.dto.CreateWorklogDto;
 import es.e1sordo.worknote.dto.UpdateWorklogSyncDto;
 import es.e1sordo.worknote.dto.WorklogDto;
+import es.e1sordo.worknote.mapping.Mappings;
 import es.e1sordo.worknote.services.WorklogsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,13 @@ public class WorklogController {
     @PostMapping
     public WorklogDto create(@RequestBody CreateWorklogDto request) {
         log.info("Create Worklog Request");
-        return service.create(request);
+        return Mappings.mapToDto(service.create(request));
     }
 
     @PutMapping("/{id}")
     public WorklogDto updateSync(@PathVariable long id, @RequestBody UpdateWorklogSyncDto request) {
-        log.info("Delete Worklog {} Request", id);
-        return service.updateSync(id, request.jiraWorklogId());
+        log.info("Update Worklog {} Request", id);
+        return Mappings.mapToDto(service.updateSync(id, request.jiraWorklogId()));
     }
 
     @DeleteMapping("/{id}")

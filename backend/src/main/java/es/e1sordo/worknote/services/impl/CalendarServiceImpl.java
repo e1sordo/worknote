@@ -1,14 +1,13 @@
 package es.e1sordo.worknote.services.impl;
 
-import es.e1sordo.worknote.dto.DayDto;
-import es.e1sordo.worknote.dto.TaskDto;
-import es.e1sordo.worknote.dto.WorklogDto;
+import es.e1sordo.worknote.enums.AppSettingKeys;
 import es.e1sordo.worknote.models.DayEntity;
-import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
+import es.e1sordo.worknote.services.AppSettingsService;
 import es.e1sordo.worknote.services.CalendarService;
+import es.e1sordo.worknote.utils.Pair;
 import es.e1sordo.worknote.utils.SanitizingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
@@ -37,9 +37,10 @@ public class CalendarServiceImpl implements CalendarService {
 
     private final DayRepository dayRepository;
     private final WorklogRepository worklogRepository;
+    private final AppSettingsService appSettingsService;
 
     @Override
-    public List<DayDto> getWeekdays(final LocalDate from, final int weeks) {
+    public List<Pair<DayEntity, List<WorklogEntity>>> getWeekdays(final LocalDate from, final int weeks) {
         final var endOfCurrentWeek = from.with(DayOfWeek.SUNDAY);
         var endOfWeekExclusively = endOfCurrentWeek.plusDays(1);
 
@@ -55,49 +56,45 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<DayDto> getDays(final LocalDate from, final LocalDate to) {
+    public List<Pair<DayEntity, List<WorklogEntity>>> getDays(final LocalDate from, final LocalDate to) {
         final Map<LocalDate, DayEntity> days = dayRepository.findByDateBetween(from, to).stream()
                 .collect(toMap(DayEntity::getDate, identity(), (d1, d2) -> d1));
 
         final Map<LocalDate, List<WorklogEntity>> worklogs = worklogRepository.findByDateBetween(from, to).stream()
                 .collect(groupingBy(WorklogEntity::getDate));
 
+        final AtomicInteger workedSequenceNumber = new AtomicInteger(0);
         return from.datesUntil(to)
                 .map(day -> {
                     var dayInfo = ofNullable(days.get(day)).orElseGet(() -> {
                         var weekday = day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY;
-                        return dayRepository.save(
-                                new DayEntity(
-                                        day,
-                                        weekday,
-                                        false,
-                                        false,
-                                        getMinutesByDayStatus(!weekday),
-                                        null,
-                                        null,
-                                        null));
+
+                        final var entity = new DayEntity(
+                                day,
+                                weekday,
+                                false,
+                                false,
+                                getMinutesByDayStatus(!weekday),
+                                null,
+                                weekday ? null : workedSequenceNumber.incrementAndGet(),
+                                null
+                        );
+
+                        return dayRepository.save(entity);
                     });
+
+                    ofNullable(dayInfo.getWorkedSequenceNumber()).ifPresent(workedSequenceNumber::set);
 
                     final List<WorklogEntity> dayWorklogs = worklogs.getOrDefault(day, emptyList());
                     dayWorklogs.sort(comparing(WorklogEntity::getStartTime));
 
-                    return new DayDto(
-                            day.toString(),
-                            dayInfo.isNonWorkingDay(),
-                            dayInfo.isVacation(),
-                            dayInfo.isReducedWorkingDay(),
-                            dayInfo.getWorkingMinutes(),
-                            dayInfo.getAdditionalInfo(),
-                            dayInfo.getWorkedSequenceNumber(),
-                            dayInfo.getSummary(),
-                            dayWorklogs.stream().map(this::mapToDto).toList()
-                    );
+                    return Pair.of(dayInfo, dayWorklogs);
                 })
                 .toList();
     }
 
     @Override
-    public DayDto getDay(final LocalDate date) {
+    public Pair<DayEntity, List<WorklogEntity>> getDay(final LocalDate date) {
         return getDays(date, date.plusDays(1)).get(0);
     }
 
@@ -134,6 +131,8 @@ public class CalendarServiceImpl implements CalendarService {
             day.setNonWorkingDay(value);
             day.setWorkingMinutes(getMinutesByDayStatus(!value));
             dayRepository.save(day);
+
+            updateNewFirstWorkingDay(date);
         });
     }
 
@@ -143,29 +142,49 @@ public class CalendarServiceImpl implements CalendarService {
             log.info("Try to update day {} vacation status from '{}' to '{}'", date, day.isVacation(), value);
             day.setVacation(value);
             dayRepository.save(day);
+
+            updateNewFirstWorkingDay(date);
         });
     }
 
-    private WorklogDto mapToDto(WorklogEntity entity) {
-        final JiraTaskEntity task = entity.getTask();
-        return new WorklogDto(
-                entity.getId(),
-                entity.getStartTime(),
-                entity.getDurationInMinutes(),
-                entity.getSummary(),
-                new TaskDto(
-                        task.getId(),
-                        task.getJiraId(),
-                        task.getProject().getCode(),
-                        task.getProject().getShortCode(),
-                        task.getType(),
-                        task.getTitle(),
-                        task.getExamples(),
-                        task.isClosed()
-                ),
-                entity.getJiraId(),
-                entity.isSynced()
-        );
+    @Override
+    public void updateNewFirstWorkingDay(LocalDate from) {
+        final String value = appSettingsService.get(AppSettingKeys.WORK_SINCE).getValue();
+        if (value == null) {
+            return;
+        }
+        final var newFirstWorkingDay = LocalDate.parse(value);
+
+        final var today = LocalDate.now();
+        if (newFirstWorkingDay.isAfter(today)) {
+            return;
+        }
+
+        final List<DayEntity> allDays = dayRepository.findAll()
+                .stream()
+                .sorted(comparing(DayEntity::getDate))
+                .filter(entity -> from == null || !entity.getDate().isBefore(from))
+                .toList();
+
+        var counter = 1;
+        if (from != null) {
+            var previousCounter = dayRepository.findMaxWorkedSequenceNumberBeforeDate(from);
+            if (previousCounter != null) {
+                counter = previousCounter + 1;
+            }
+        }
+
+        for (DayEntity day : allDays) {
+            final LocalDate dayDate = day.getDate();
+            if (dayDate.isBefore(newFirstWorkingDay) || day.isNonWorkingDay() || day.isVacation()) {
+                day.setWorkedSequenceNumber(null);
+                continue;
+            }
+
+            day.setWorkedSequenceNumber(counter++);
+        }
+
+        dayRepository.saveAll(allDays);
     }
 
     private int getMinutesByDayStatus(boolean isWorkingDay) {

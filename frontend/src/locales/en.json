@@ -83,6 +83,12 @@
         "language": {
             "title": "Language preferences"
         },
+        "workSince": {
+            "title": "First work day",
+            "currentValue": "Now all days are numbered from {currentDay}",
+            "default": "Enter the date of your first working day so that Worknote can number all your days worked",
+            "submitButton": "Renumber"
+        },
         "jira": {
             "title": "Jira connection",
             "form": {

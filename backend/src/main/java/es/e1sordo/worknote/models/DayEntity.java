@@ -1,6 +1,5 @@
 package es.e1sordo.worknote.models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -26,8 +25,6 @@ public class DayEntity {
     @Id
     private LocalDate date;
     private boolean nonWorkingDay;
-
-    @Column(columnDefinition = "boolean default false")
     private boolean vacation;
 
     private boolean reducedWorkingDay;

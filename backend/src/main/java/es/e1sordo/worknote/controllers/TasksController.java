@@ -1,14 +1,15 @@
 package es.e1sordo.worknote.controllers;
 
+import es.e1sordo.worknote.dto.SearchTaskResult;
 import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.TaskWithUsageDto;
 import es.e1sordo.worknote.dto.UpsertTaskDto;
+import es.e1sordo.worknote.mapping.Mappings;
+import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.services.TasksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,16 +26,32 @@ public class TasksController {
 
     @GetMapping("/search")
     public List<TaskDto> getAllByQuery(@RequestParam String query) {
-        return service.getAllByQuery(query);
+        final List<SearchTaskResult> serviceResults = service.getAllByQuery(query);
+
+        return serviceResults.stream().map(searchTaskResult -> {
+            final JiraTaskEntity entity = searchTaskResult.entity();
+            final String highlightedTitle = searchTaskResult.highlightedTitle();
+            final String highlightedExamples = searchTaskResult.highlightedExamples();
+            return new TaskDto(
+                    entity.getId(),
+                    entity.getJiraId(),
+                    entity.getProject().getCode(),
+                    entity.getProject().getShortCode(),
+                    entity.getType(),
+                    highlightedTitle.isBlank() ? entity.getTitle() : highlightedTitle,
+                    highlightedExamples.isBlank() ? entity.getExamples() : highlightedExamples,
+                    entity.isClosed()
+            );
+        }).toList();
     }
 
     @GetMapping
     public List<TaskWithUsageDto> getAll() {
-        return service.getAllSortedByUsage();
+        return service.getAllSortedByUsage().stream().map(Mappings::mapToDtoWithUsage).toList();
     }
 
     @PostMapping
     public TaskDto upsert(@RequestBody UpsertTaskDto request) {
-        return service.upsert(request);
+        return Mappings.mapToDto(service.upsert(request));
     }
 }

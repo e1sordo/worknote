@@ -9,7 +9,14 @@
 
     <div class="m-4 text-start">
       <h2>{{ $t("settings.language.title") }}</h2>
-      <LocaleSwitcher />
+      <locale-switcher />
+    </div>
+
+    <hr />
+
+    <div class="m-4 text-start">
+      <h2>{{ $t("settings.workSince.title") }}</h2>
+      <work-since-setting />
     </div>
 
     <hr />
@@ -45,6 +52,7 @@
 import { defineComponent } from 'vue';
 import TaskTable from '@/components/TaskTable.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
+import WorkSinceSetting from '@/components/WorkSinceSetting.vue';
 
 // interface State {
 //   msg: string;
@@ -57,7 +65,7 @@ const jiraSettignsKey = "settings:jira";
 export default defineComponent({
   name: 'SettingsView',
   components: {
-    TaskTable, LocaleSwitcher
+    TaskTable, LocaleSwitcher, WorkSinceSetting
   },
 
   // data: (): State => {

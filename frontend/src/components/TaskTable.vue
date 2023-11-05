@@ -15,14 +15,14 @@
                 <tr v-for="task in filteredTasks" :key="task.entityId">
                     <th scope="row">{{ task.code }}</th>
                     <th scope="row">{{ task.id }}</th>
-                    <td>
-                        {{ taskTypeMeta[task.type].icon }}
+                    <td class="middle-vertical-children">
+                        <span class="fs-3 pr-2">{{ taskTypeMeta[task.type].icon }}</span>
                         <del v-if="task.closed" class="text-muted">{{ task.title }}</del>
                         <strong v-else>{{ task.title }}</strong>
-                        <button type="button" class="btn btn-light btn-sm mx-2" @click="editTask(task)">
+                        <button type="button" class="btn btn-outline-light btn-sm mx-2" @click="editTask(task)">
                             Edit
                         </button>
-                        <button type="button" class="btn btn-light btn-sm" @click="openCloseTask(task)">
+                        <button type="button" class="btn btn-outline-light btn-sm" @click="openCloseTask(task)">
                             <span v-if="task.closed">Open</span>
                             <span v-else>Close</span>
                         </button>
@@ -149,3 +149,8 @@ export default defineComponent({
     }
 });
 </script>
+
+<style>
+.middle-vertical-children > * {
+    vertical-align: middle;
+}</style>

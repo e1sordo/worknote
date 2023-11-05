@@ -83,6 +83,12 @@
         "language": {
             "title": "Configuración de idioma"
         },
+        "workSince": {
+            "title": "Primer dia de trabajo",
+            "currentValue": "Ahora todos los días están contados a partir del {currentDay}",
+            "default": "Introduce la fecha de tu primer día laborable para que Worknote pueda numerar todos tus días trabajados",
+            "submitButton": "Volver a numerar"
+        },
         "jira": {
             "title": "Conexión a Jira",
             "form": {

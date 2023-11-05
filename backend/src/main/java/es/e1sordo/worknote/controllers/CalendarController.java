@@ -4,6 +4,7 @@ import es.e1sordo.worknote.dto.DayDto;
 import es.e1sordo.worknote.dto.UpdateDayNonWorkingStatusDto;
 import es.e1sordo.worknote.dto.UpdateDaySummaryDto;
 import es.e1sordo.worknote.dto.UpdateDayVacationDto;
+import es.e1sordo.worknote.mapping.Mappings;
 import es.e1sordo.worknote.services.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,12 @@ public class CalendarController {
 
     @GetMapping("/weeks")
     public List<DayDto> getWeeks(@RequestParam(defaultValue = "4") int needsToLoad) {
-        return calendarService.getWeekdays(LocalDate.now(), needsToLoad);
+        return calendarService.getWeekdays(LocalDate.now(), needsToLoad).stream().map(Mappings::mapToDto).toList();
     }
 
     @GetMapping("/day")
     public DayDto getDay(@RequestParam LocalDate date) {
-        return calendarService.getDay(date);
+        return Mappings.mapToDto(calendarService.getDay(date));
     }
 
     @PatchMapping("/day/{date}/summary")
@@ -47,7 +48,7 @@ public class CalendarController {
     @PatchMapping("/day/{date}/non-working")
     public int updateDayNonWorkingStatus(@PathVariable LocalDate date, @RequestBody UpdateDayNonWorkingStatusDto request) {
         calendarService.updateDayNonWorkingStatus(date, request.value());
-        return calendarService.getDay(date).workingMinutes();
+        return calendarService.getDay(date).first().getWorkingMinutes();
     }
 
     @PatchMapping("/day/{date}/vacation")

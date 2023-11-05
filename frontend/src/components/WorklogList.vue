@@ -13,9 +13,9 @@
                 </h6>
             </div>
             <div class="worklog-description">
-                <mark class="opacity-75">
+                <span class="badge rounded-pill" :class="{ 'bg-secondary': worklog.synced, 'bg-warning': !worklog.synced }">
                     {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
-                </mark>
+                </span>
                 {{ worklog.summary }}
                 <span v-if="!worklog.summary" class="text-muted">
                     <em>{{ $t('calendar.placeholder.worklogSummary') }}</em>

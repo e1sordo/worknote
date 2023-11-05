@@ -1,36 +1,42 @@
 package es.e1sordo.worknote.services.impl;
 
-import es.e1sordo.worknote.dto.DayDto;
-import es.e1sordo.worknote.dto.TaskDto;
-import es.e1sordo.worknote.dto.WorklogDto;
+import es.e1sordo.worknote.models.DayEntity;
+import es.e1sordo.worknote.models.JiraProjectEntity;
+import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.JiraTaskType;
+import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.services.CalendarService;
+import es.e1sordo.worknote.utils.Pair;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.emptyList;
 
 @Service
 @Profile("demo")
 public class DemoCalendarServiceImpl implements CalendarService {
 
-    private static final TaskDto TASK_DAILY = new TaskDto(
-            77L, 586, "ABCDEF", "ABC", JiraTaskType.PROCESS_MAINTENANCE, "Daily", "Daily, DSM", false
+    private static final JiraProjectEntity ABCDEF_PROJECT = new JiraProjectEntity("ABCDEF", "", "ABC");
+    private static final JiraProjectEntity XYZ_PROJECT = new JiraProjectEntity("XYZ", "", "XYZ");
+
+    private static final JiraTaskEntity TASK_DAILY = new JiraTaskEntity(
+            77L, 586, ABCDEF_PROJECT, JiraTaskType.PROCESS_MAINTENANCE, false, "Daily", "Daily, DSM", emptyList()
     );
-    private static final TaskDto TASK_DEVELOPMENT_1 = new TaskDto(
-            78L, 1987, "ABCDEF", "ABC", JiraTaskType.DEVELOPMENT, "Feature A", "Feature A", false
+    private static final JiraTaskEntity TASK_DEVELOPMENT_1 = new JiraTaskEntity(
+            78L, 1987, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature A", "Feature A", emptyList()
     );
-    private static final TaskDto TASK_STUDY = new TaskDto(
-            79L, 35, "XYZ", "XYZ", JiraTaskType.TRAINING_AND_DEVELOPMENT, "Trainings", "Trainings", false
+    private static final JiraTaskEntity TASK_STUDY = new JiraTaskEntity(
+            79L, 35, XYZ_PROJECT, JiraTaskType.TRAINING_AND_DEVELOPMENT, false, "Trainings", "Trainings", emptyList()
     );
-    private static final TaskDto TASK_MEETINGS = new TaskDto(
-            80L, 511, "ABCDEF", "ABC", JiraTaskType.ORGANIZING_ACTIVITIES, "Activities", "Activities", false
+    private static final JiraTaskEntity TASK_MEETINGS = new JiraTaskEntity(
+            80L, 511, ABCDEF_PROJECT, JiraTaskType.ORGANIZING_ACTIVITIES, false, "Activities", "Activities", emptyList()
     );
 
     private static final Map<Integer, DemoDay> DEMO_DATA = Map.of(
@@ -42,7 +48,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     77,
                     null,
                     List.of(
-                            new WorklogDto(1L, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, null, false)
+                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, null, false)
                     )
             ),
             1, new DemoDay(
@@ -62,9 +68,9 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     76,
                     null,
                     List.of(
-                            new WorklogDto(1L, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
-                            new WorklogDto(2L, LocalTime.of(9, 0), 300, "Code Review, Bug Fix", TASK_DEVELOPMENT_1, 454565L, true),
-                            new WorklogDto(3L, LocalTime.of(17, 0), 105, "Team Retro", TASK_DAILY, null, false)
+                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
+                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 300, "Code Review, Bug Fix", TASK_DEVELOPMENT_1, 454565L, true),
+                            new WorklogEntity(3L, null, LocalTime.of(17, 0), 105, "Team Retro", TASK_DAILY, null, false)
                     )
             ),
             3, new DemoDay(
@@ -75,8 +81,8 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     76,
                     "Jonathan went on vacation for 2 weeks 🏖️",
                     List.of(
-                            new WorklogDto(1L, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
-                            new WorklogDto(2L, LocalTime.of(9, 0), 465, "Task investigation", TASK_DEVELOPMENT_1, 454565L, true)
+                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
+                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 465, "Task investigation", TASK_DEVELOPMENT_1, 454565L, true)
                     )
             ),
             4, new DemoDay(
@@ -87,7 +93,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     76,
                     null,
                     List.of(
-                            new WorklogDto(2L, LocalTime.of(10, 0), 480, "Finish online course on information security", TASK_STUDY, null, false)
+                            new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Finish online course on information security", TASK_STUDY, null, false)
                     )
             ),
             5, new DemoDay(
@@ -98,7 +104,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     75,
                     "I got a 2-day corporate training appt 🥲",
                     List.of(
-                            new WorklogDto(2L, LocalTime.of(10, 0), 480, "Online course on information security", TASK_STUDY, 454565L, true)
+                            new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Online course on information security", TASK_STUDY, 454565L, true)
                     )
             ),
             6, new DemoDay(
@@ -109,9 +115,9 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     75,
                     null,
                     List.of(
-                            new WorklogDto(1L, LocalTime.of(8, 30), 30, "Stand-up meeting", TASK_DAILY, 77877L, true),
-                            new WorklogDto(2L, LocalTime.of(10, 0), 120, "Meeting with Sally on microservice architecture", TASK_MEETINGS, 454565L, true),
-                            new WorklogDto(3L, LocalTime.of(13, 0), 330, "Testing", TASK_DEVELOPMENT_1, 454565L, true)
+                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 30, "Stand-up meeting", TASK_DAILY, 77877L, true),
+                            new WorklogEntity(2L, null, LocalTime.of(10, 0), 120, "Meeting with Sally on microservice architecture", TASK_MEETINGS, 454565L, true),
+                            new WorklogEntity(3L, null, LocalTime.of(13, 0), 330, "Testing", TASK_DEVELOPMENT_1, 454565L, true)
                     )
             )
     );
@@ -122,14 +128,17 @@ public class DemoCalendarServiceImpl implements CalendarService {
                    String additionalInfo,
                    Integer sequenceNumber,
                    String summary,
-                   List<WorklogDto> worklogs) {
-        public DayDto forDay(LocalDate day) {
-            return new DayDto(day.toString(), nonWorkingDay, false, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary, worklogs);
+                   List<WorklogEntity> worklogs) {
+        public Pair<DayEntity, List<WorklogEntity>> forDay(LocalDate day) {
+            return Pair.of(
+                    new DayEntity(day, nonWorkingDay, false, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary),
+                    worklogs
+            );
         }
     }
 
     @Override
-    public List<DayDto> getWeekdays(final LocalDate from, final int weeks) {
+    public List<Pair<DayEntity, List<WorklogEntity>>> getWeekdays(final LocalDate from, final int weeks) {
         final var endOfCurrentWeek = from.with(DayOfWeek.SUNDAY);
         var endOfWeekExclusively = endOfCurrentWeek.plusDays(1);
 
@@ -142,8 +151,8 @@ public class DemoCalendarServiceImpl implements CalendarService {
     }
 
     @Override
-    public List<DayDto> getDays(final LocalDate from, final LocalDate to) {
-        final var list = new LinkedList<DayDto>();
+    public List<Pair<DayEntity, List<WorklogEntity>>> getDays(final LocalDate from, final LocalDate to) {
+        final var list = new LinkedList<Pair<DayEntity, List<WorklogEntity>>>();
 
         int testDayCounter = 0;
 
@@ -168,22 +177,24 @@ public class DemoCalendarServiceImpl implements CalendarService {
         return list;
     }
 
-    private DayDto generateEmptyDay(LocalDate date) {
-        return new DayDto(
-                date.toString(),
-                List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()),
-                false,
-                false,
-                List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()) ? 0 : 480,
-                null,
-                null,
-                null,
-                Collections.emptyList()
+    private Pair<DayEntity, List<WorklogEntity>> generateEmptyDay(LocalDate date) {
+        return Pair.of(
+                new DayEntity(
+                        date,
+                        List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()),
+                        false,
+                        false,
+                        List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()) ? 0 : 480,
+                        null,
+                        null,
+                        null
+                ),
+                emptyList()
         );
     }
 
     @Override
-    public DayDto getDay(final LocalDate date) {
+    public Pair<DayEntity, List<WorklogEntity>> getDay(final LocalDate date) {
         return null;
     }
 
@@ -201,5 +212,9 @@ public class DemoCalendarServiceImpl implements CalendarService {
 
     @Override
     public void updateDayVacation(final LocalDate date, final boolean value) {
+    }
+
+    @Override
+    public void updateNewFirstWorkingDay(final LocalDate from) {
     }
 }

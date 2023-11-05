@@ -7,7 +7,7 @@
             <span class="day-label" :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-danger': day.isToday }">
                 {{ day.day }} <span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
-            <span v-if="dayInfo.sequenceNumber === 'number'">
+            <span v-if="dayInfo.sequenceNumber > 0" class="text-muted font-monospace fs-6">
                 #{{ dayInfo.sequenceNumber }}
             </span>
         </div>
@@ -17,7 +17,7 @@
                 🏖️ {{ $t("calendar.vacation") }}
             </div>
 
-            <div v-if="dayInfo.additionalInfo" class="alert alert-success" role="alert">
+            <div v-if="dayInfo.additionalInfo" class="alert alert-danger" role="alert">
                 {{ dayInfo.additionalInfo }}
             </div>
 
@@ -25,7 +25,7 @@
                 :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
                 :isPast="isPastDay" :isToday="day.isToday" />
 
-            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-info mb-1">
+            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mb-1">
                 {{ dayInfo.summary }}
             </div>
 

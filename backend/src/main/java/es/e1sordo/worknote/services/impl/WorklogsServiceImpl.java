@@ -1,9 +1,7 @@
 package es.e1sordo.worknote.services.impl;
 
 import es.e1sordo.worknote.dto.CreateWorklogDto;
-import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.UpsertTaskDto;
-import es.e1sordo.worknote.dto.WorklogDto;
 import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.JiraTaskType;
@@ -18,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,12 @@ public class WorklogsServiceImpl implements WorklogsService {
     private final TasksService tasksService;
 
     @Override
-    public WorklogDto create(final CreateWorklogDto request) {
+    public List<WorklogEntity> findByTask(final JiraTaskEntity task) {
+        return repository.findByTask(task);
+    }
+
+    @Override
+    public WorklogEntity create(final CreateWorklogDto request) {
         final JiraTaskEntity task = resolveTask(request.taskLabel());
         log.info("Task: {}", task);
 
@@ -48,11 +52,11 @@ public class WorklogsServiceImpl implements WorklogsService {
         ));
         log.info("Worklog successfully created!");
 
-        return mapToDto(storedWorklog);
+        return storedWorklog;
     }
 
     @Override
-    public WorklogDto updateSync(final long id, final long jiraWorklogId) {
+    public WorklogEntity updateSync(final long id, final long jiraWorklogId) {
         final WorklogEntity storedWorklog = repository.findById(id).orElseThrow(RuntimeException::new);
 
         storedWorklog.setSynced(true);
@@ -61,7 +65,7 @@ public class WorklogsServiceImpl implements WorklogsService {
         repository.save(storedWorklog);
         log.info("Worklog with id={} was successfully synced ({})", id, jiraWorklogId);
 
-        return mapToDto(storedWorklog);
+        return storedWorklog;
     }
 
     @Override
@@ -94,29 +98,7 @@ public class WorklogsServiceImpl implements WorklogsService {
                     tasksService.upsert(new UpsertTaskDto(
                             jiraTaskId, projectCode, JiraTaskType.DEVELOPMENT, taskTitle, null, false
                     ));
-                    return taskRepository.findByJiraIdAndProject(jiraTaskId, project).get();
+                    return taskRepository.findByJiraIdAndProject(jiraTaskId, project).orElseThrow();
                 });
-    }
-
-    private WorklogDto mapToDto(WorklogEntity entity) {
-        final JiraTaskEntity task = entity.getTask();
-        return new WorklogDto(
-                entity.getId(),
-                entity.getStartTime(),
-                entity.getDurationInMinutes(),
-                entity.getSummary(),
-                new TaskDto(
-                        task.getId(),
-                        task.getJiraId(),
-                        task.getProject().getCode(),
-                        task.getProject().getShortCode(),
-                        task.getType(),
-                        task.getTitle(),
-                        task.getExamples(),
-                        task.isClosed()
-                ),
-                entity.getJiraId(),
-                entity.isSynced()
-        );
     }
 }

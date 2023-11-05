@@ -1,15 +1,19 @@
 package es.e1sordo.worknote.services;
 
-import es.e1sordo.worknote.dto.TaskDto;
-import es.e1sordo.worknote.dto.TaskWithUsageDto;
+import es.e1sordo.worknote.dto.SearchTaskResult;
 import es.e1sordo.worknote.dto.UpsertTaskDto;
+import es.e1sordo.worknote.models.JiraTaskEntity;
+import es.e1sordo.worknote.utils.Pair;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TasksService {
-    List<TaskDto> getAllByQuery(String query);
+    List<JiraTaskEntity> getAllOpenTasks();
 
-    List<TaskWithUsageDto> getAllSortedByUsage();
+    List<SearchTaskResult> getAllByQuery(String query);
 
-    TaskDto upsert(UpsertTaskDto request);
+    List<Pair<JiraTaskEntity, LocalDateTime>> getAllSortedByUsage();
+
+    JiraTaskEntity upsert(UpsertTaskDto request);
 }

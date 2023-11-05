@@ -143,9 +143,8 @@ export default defineComponent({
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
     background-clip: border-box;
-    border: 1px solid #eff0f2;
+    border: 1px solid #8b8d8f80;
     border-radius: 1rem;
     margin-bottom: 0;
     height: 100%;
