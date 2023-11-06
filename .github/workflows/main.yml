@@ -70,8 +70,8 @@ jobs:
           username: ${{ secrets.REMOTE_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.REMOTE_PORT }}
-          fingerprint: ${{ secrets.REMOTE_FINGERPRINT }}
           script: |
             cd worknote
             docker-compose pull
             docker-compose up -d
+          script_stop: true # after first failure
