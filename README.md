@@ -1,6 +1,6 @@
 <div align="center">
   <br>
-  <img src="assets/screenshots/home.png" width="800" alt="Home page view" />
+  <img src="assets/images/home-mixed.png" width="800" alt="Home page view" />
   <h1>Worknote</h1>
 </div>
 
@@ -39,8 +39,9 @@ that require time allocation.
   allocation.
 - **Recurring Event and Task Prompts**: Receive prompts for recurring events and tasks that require time allocation,
   ensuring no worklogs are missed.
-- **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿&nbsp;English, 🇪🇸&nbsp;Spanish, and 🇷🇺&nbsp;Russian.
-- 🌚 **Dark Theme**: The app features a dark theme option that automatically synchronizes with the system-wide 
+- **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿&nbsp;English,
+  🇪🇸&nbsp;Spanish, and 🇷🇺&nbsp;Russian.
+- 🌚 **Dark Theme**: The app features a dark theme option that automatically synchronizes with the system-wide
   dark mode settings.
 
 ## 🏗️ Installation
@@ -60,20 +61,15 @@ To use Worknote, follow these steps:
 3. Launch the application: `sudo mvn --projects backend spring-boot:start` in detached background mode and run even if
    you close the terminal. Can be stopped with `sudo mvn --projects backend spring-boot:stop`
 4. Access the application through your preferred web browser at `http://localhost:8098`.
-5. Sign in to your private corporate Jira instance using your credentials.
+5. Specify the details to connect to a private enterprise Jira instance using your credentials.
 6. Enter your worklogs, taking advantage of the system's features such as weekend and reduced working day display,
    remaining time tracking, and recurring event and task prompts.
 7. Click the sync button to synchronize your worklogs with Jira.
 
 ## 🎛️ Configuration
 
-Before using Worknote, you need to configure it by providing the necessary credentials and settings. Follow these steps
-to configure the system:
-
-1. Open the `config.js` file located in the project root directory.
-2. Update the `jiraUrl` field with the URL of your private corporate Jira instance.
-3. Update the `username` and `password` fields with your Jira login credentials.
-4. Save the changes.
+Before using Worknote, you must configure it by providing the necessary credentials and settings
+in the appropriate section of the application.
 
 ## 🤝 Contributing
 
@@ -90,3 +86,18 @@ guidelines:
 
 The Worklog Sync with Jira project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free
 to use, modify, and distribute the software according to the terms of this license.
+
+## 📺 Screenshots
+
+<picture>
+  <img alt="Home Light" src="./assets/images/home.png">
+</picture>  
+<picture>
+  <img alt="Home Dark" src="./assets/images/home-dark.png">
+</picture>  
+<picture>
+  <img alt="Day Details" src="./assets/images/day-details.png">
+</picture>  
+<picture>
+  <img alt="Overview" src="./assets/images/overview.png">
+</picture>

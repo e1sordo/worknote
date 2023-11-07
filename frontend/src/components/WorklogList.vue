@@ -8,12 +8,12 @@
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
                 </span>
                 <h6 class="mb-0">
-                    <small><i v-if="!worklog.synced" class="bi bi-patch-question-fill text-danger"></i></small>
+                    <small><i v-if="!worklog.synced" class="bi bi-patch-question-fill text-warning"></i></small>
                     {{ formatTime(worklog.durationInMinutes) }}
                 </h6>
             </div>
             <div class="worklog-description">
-                <span class="badge rounded-pill" :class="{ 'bg-secondary': worklog.synced, 'bg-warning': !worklog.synced }">
+                <span class="badge rounded-pill" :class="{ 'bg-secondary': worklog.synced, 'bg-warning text-dark': !worklog.synced }">
                     {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
                 </span>
                 {{ worklog.summary }}

@@ -78,7 +78,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    76,
+                    75,
                     "Jonathan went on vacation for 2 weeks 🏖️",
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
@@ -90,7 +90,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    76,
+                    74,
                     null,
                     List.of(
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Finish online course on information security", TASK_STUDY, null, false)
@@ -101,7 +101,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    75,
+                    73,
                     "I got a 2-day corporate training appt 🥲",
                     List.of(
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Online course on information security", TASK_STUDY, 454565L, true)
@@ -112,7 +112,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    75,
+                    72,
                     null,
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 30, "Stand-up meeting", TASK_DAILY, 77877L, true),

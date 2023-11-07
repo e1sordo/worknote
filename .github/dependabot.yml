@@ -10,6 +10,7 @@ updates:
       interval: "weekly"
       time: "09:00"
     open-pull-requests-limit: 3
+    target-branch: "dependabot"
 
   - package-ecosystem: "npm"
     # Look for `package.json` and `lock` files in the `frontend` directory
@@ -18,6 +19,7 @@ updates:
       interval: "weekly"
       time: "09:00"
     open-pull-requests-limit: 3
+    target-branch: "dependabot"
 
   - package-ecosystem: "docker"
     # Look for a `Dockerfile` in the `root` directory
@@ -26,3 +28,4 @@ updates:
       interval: "weekly"
       time: "09:00"
     open-pull-requests-limit: 3
+    target-branch: "dependabot"
