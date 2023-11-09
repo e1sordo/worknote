@@ -12,8 +12,12 @@
                             @click="selectAutocompleteSuggestion(suggestion)">
                             <p>
                                 {{ taskTypeMeta[suggestion.type].icon }}
-                                <span class="badge bg-primary mx-2">{{ suggestion.code }}-{{ suggestion.id }}</span>
-                                <span v-html="suggestion.title"></span>
+                                <span class="badge bg-primary" :class="{ 'mx-2': !suggestion.new }">
+                                    {{ suggestion.code }}-{{ suggestion.id }}
+                                </span>
+                                <span v-if="suggestion.new" class="badge bg-success mx-2">New</span>
+                                <span v-html="suggestion.title"
+                                    :class="{ 'text-decoration-line-through': suggestion.closed }" />
                             </p>
                             <p>
                                 <small class="text-muted" v-html="suggestion.examples"></small>
@@ -41,7 +45,8 @@
 </template>
   
 <script lang="ts">
-import api from "@/api/backend-api";
+import backendApi from "@/api/backend-api";
+import clientApi from "@/api/client-api";
 import { taskTypeMeta } from '@/constants';
 import { convertTimeToMinutes } from '@/utils/convertTimeToMinutes';
 import { SetupContext, computed, ref, watch } from 'vue';
@@ -53,6 +58,8 @@ interface TaskSuggestion {
     title: string;
     type: string;
     examples: string;
+    closed: boolean;
+    new: boolean;
 }
 
 export default {
@@ -85,7 +92,7 @@ export default {
                     showAutocomplete.value = false;
                 } else {
                     try {
-                        const response = await api.searchTasks(newValue);
+                        const response = await backendApi.searchTasks(newValue);
                         autocompleteSuggestions.value = response.data.map(task => {
                             return {
                                 entityId: task.entityId,
@@ -93,9 +100,39 @@ export default {
                                 id: task.id,
                                 title: task.title,
                                 type: task.type,
-                                examples: task.examples
+                                examples: task.examples,
+                                closed: task.closed,
+                                new: false
                             }
                         });
+
+                        // try to find in Jira
+                        if (autocompleteSuggestions.value.length == 0) {
+                            const jiraKeyMatch = newValue.match(/\(([^)]+)\)/);
+                            if (jiraKeyMatch && jiraKeyMatch[1]) {
+                                try {
+                                    const jiraKey = jiraKeyMatch[1];
+                                    const response = await clientApi.getIssue(jiraKey);
+
+                                    if (response.data) {
+                                        const jiraIssue = response.data;
+                                        const codeWithId = jiraKey.split("-")
+                                        autocompleteSuggestions.value.push({
+                                            entityId: jiraIssue.id,
+                                            code: codeWithId[0],
+                                            id: parseInt(codeWithId[1]),
+                                            title: jiraIssue.fields.summary,
+                                            type: "DEVELOPMENT",
+                                            examples: "",
+                                            closed: false,
+                                            new: true
+                                        });
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                }
+                            }
+                        }
 
                         if (autocompleteSuggestions.value.length > 0) {
                             showAutocomplete.value = true;
@@ -123,7 +160,7 @@ export default {
 
         const submitCreate = () => {
             try {
-                api.createWorklog(props.date, timeValue.value, convertTimeToMinutes(spentValue.value), textValue.value, autocompleteValue.value)
+                backendApi.createWorklog(props.date, timeValue.value, convertTimeToMinutes(spentValue.value), textValue.value, autocompleteValue.value)
                     .then(response => {
                         context.emit('createWorklog', response.data);
                         textValue.value = '';

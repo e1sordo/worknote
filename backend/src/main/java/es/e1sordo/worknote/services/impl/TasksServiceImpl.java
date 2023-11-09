@@ -33,11 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.enToRu;
 import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.ruToEn;
 import static java.util.Arrays.stream;
-import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -90,9 +92,20 @@ public class TasksServiceImpl implements TasksService {
 
     @Override
     public List<SearchTaskResult> getAllByQuery(final String searchString) {
-        final String sanitizedSearchString = SanitizingUtil.sanitize(searchString);
-        log.info("Find tasks by query: {}", sanitizedSearchString);
+        log.info("Find tasks by query: {}", searchString);
 
+        final List<SearchTaskResult> searchResults = new ArrayList<>();
+
+        findTaskByFullNumber(searchString)
+                .ifPresent(searchResults::add);
+
+        if (searchResults.size() > 0) {
+            return searchResults;
+        }
+
+        final String sanitizedSearchString = SanitizingUtil.sanitize(searchString)
+                .replace("(", "")
+                .replace(")", "");
         final String fullSearchString = ruToEn(sanitizedSearchString) + " " + enToRu(sanitizedSearchString);
         log.debug("Full string to search tasks by: {}", fullSearchString);
 
@@ -100,21 +113,38 @@ public class TasksServiceImpl implements TasksService {
                 .map(s -> s + " " + s + "*") // tasks -> "tasks tasks*"
                 .collect(joining(" "));
 
-        if (searchQuery.startsWith("*")) {
-            return emptyList();
+        if (!searchQuery.startsWith("*")) {
+            final TriFunction<Document, Analyzer, Highlighter, SearchTaskResult> function = ((document, analyzer, highlighter) -> {
+                final long documentId = Long.parseLong(document.get("id"));
+                final JiraTaskEntity task = repository.findById(documentId).orElseThrow();
+
+                String highlightedTitle = extractHighlights("title", task::getTitle, analyzer, highlighter);
+                String highlightedExamples = extractHighlights("examples", task::getExamples, analyzer, highlighter);
+
+                return new SearchTaskResult(task, highlightedTitle, highlightedExamples);
+            });
+
+            searchResults.addAll(luceneService.search(searchQuery, function));
         }
 
-        final TriFunction<Document, Analyzer, Highlighter, SearchTaskResult> function = ((document, analyzer, highlighter) -> {
-            final long documentId = Long.parseLong(document.get("id"));
-            final JiraTaskEntity task = repository.findById(documentId).orElseThrow();
+        return searchResults;
+    }
 
-            String highlightedTitle = extractHighlights("title", task::getTitle, analyzer, highlighter);
-            String highlightedExamples = extractHighlights("examples", task::getExamples, analyzer, highlighter);
+    private Optional<SearchTaskResult> findTaskByFullNumber(final String sanitizedSearchString) {
+        // show closed task by full match
+        Pattern pattern = Pattern.compile("\\(([^-]+)-([^)]+)\\)");
+        Matcher matcher = pattern.matcher(sanitizedSearchString);
 
-            return new SearchTaskResult(task, highlightedTitle, highlightedExamples);
-        });
+        if (matcher.find()) {
+            String projectCode = matcher.group(1);
+            int id = Integer.parseInt(matcher.group(2));
 
-        return luceneService.search(searchQuery, function);
+            return projectsService.findByCode(projectCode)
+                    .flatMap(jiraProject -> repository.findByJiraIdAndProject(id, jiraProject))
+                    .map(jiraTask -> new SearchTaskResult(jiraTask, null, null));
+        }
+
+        return empty();
     }
 
     @Override

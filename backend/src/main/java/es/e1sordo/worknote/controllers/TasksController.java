@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
@@ -38,8 +40,8 @@ public class TasksController {
                     entity.getProject().getCode(),
                     entity.getProject().getShortCode(),
                     entity.getType(),
-                    highlightedTitle.isBlank() ? entity.getTitle() : highlightedTitle,
-                    highlightedExamples.isBlank() ? entity.getExamples() : highlightedExamples,
+                    isBlank(highlightedTitle) ? entity.getTitle() : highlightedTitle,
+                    isBlank(highlightedExamples) ? entity.getExamples() : highlightedExamples,
                     entity.isClosed()
             );
         }).toList();

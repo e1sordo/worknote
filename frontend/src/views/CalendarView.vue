@@ -191,8 +191,8 @@ export default defineComponent({
   }
 
   & .vc-title {
-    color: rgb(180, 180, 180);
-    background: rgba(181, 245, 255, 0.2);
+    color: rgb(155, 155, 155);
+    background: rgba(149, 164, 181, 0.3);
     text-transform: capitalize;
     opacity: 0.8;
   }

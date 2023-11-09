@@ -130,6 +130,7 @@ public class LuceneServiceImpl implements LuceneService {
             }
             return results;
         } catch (ParseException | IOException ex) {
+            log.error("Failed to find by query: '{}'", textQuery);
             throw new RuntimeException(ex);
         }
     }

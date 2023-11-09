@@ -22,7 +22,19 @@ interface WorklogResponse {
     id: number;
 }
 
+interface IssueFieldsDto {
+    summary: string;
+}
+
+interface IssueResponse {
+    id: number;
+    fields: IssueFieldsDto;
+}
+
 export default {
+    getIssue(issueKey: string): Promise<AxiosResponse<IssueResponse>> {
+        return axiosJiraApi.get<IssueResponse>(`/rest/api/2/issue/${issueKey}?fields=summary`);
+    },
     createWorklog(issueKey: string, durationInMinutes: number, comment: string, started: string): Promise<AxiosResponse<WorklogResponse>> {
         return axiosJiraApi.post<WorklogResponse>(`/rest/api/2/issue/${issueKey}/worklog?notifyUsers=false`, {
             timeSpentSeconds: durationInMinutes * 60,
