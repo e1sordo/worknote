@@ -24,7 +24,7 @@ interface WorklogResponse {
 
 export default {
     createWorklog(issueKey: string, durationInMinutes: number, comment: string, started: string): Promise<AxiosResponse<WorklogResponse>> {
-        return axiosJiraApi.post<WorklogResponse>(`/worklogs/create?issue=${issueKey}`, {
+        return axiosJiraApi.post<WorklogResponse>(`/rest/api/2/issue/${issueKey}/worklog?notifyUsers=false`, {
             timeSpentSeconds: durationInMinutes * 60,
             comment,
             started

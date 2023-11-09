@@ -31,24 +31,28 @@ app.get('/ping', (req, res) => {
     res.send({pong: origin});
 });
 
-app.post('/worklogs/create', async (req, res) => {
-  try {
-    const issueId = req.query.issue;
-    const jiraUrl = req.header('X-Jira-Url');
-    log.info('New request. ' + jiraUrl + ' ' + issueId + ' ' + req.body);
-    const response = await axiosApi.post(`${jiraUrl}/rest/api/2/issue/${issueId}/worklog?notifyUsers=false`, req.body, {
-        headers: { 'Authorization': req.header('Authorization') }
-    });
-    log.info('Response: ' + response.status);
-    res.send(response.data);
-  } catch (error) {
-    log.error(error.response.data);
-    res.status(error.response.status).send(error.response.data);
-  }
+app.all('/rest/api/*', async (req, res) => {
+    try {
+        const jiraUrl = req.header('X-Jira-Url');
+        log.info('New request. ' + jiraUrl + ' ' + req.url + ' ' + req.body);
+
+        const response = await axiosApi({
+            method: req.method,
+            url: `${jiraUrl}${req.url}`,
+            data: req.body,
+            headers: { 'Authorization': req.header('Authorization') }
+        });
+
+        log.info('Response: ' + response.status);
+        res.status(response.status).send(response.data);
+    } catch (error) {
+        log.error(error.response.data);
+        res.status(error.response.status).send(error.response.data);
+    }
 });
 
 app.listen(13333, () => {
-  log.info('The proxy server to Jira Server is running on port 13333');
+    log.info('Proxy server to Jira is running on port 13333');
 });
 
 const svc = new Service({

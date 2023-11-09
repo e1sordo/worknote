@@ -1,9 +1,8 @@
-## Possible problems:
-
-### Installation
+## Installation
 
 https://www.npmjs.com/package/node-windows
 
+## Possible problems:
 
 ### Chromium did not want to send requests to the local proxy to Jira
 
