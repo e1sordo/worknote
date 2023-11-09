@@ -91,6 +91,10 @@ export default {
                 if (selectedValue.value == autocompleteValue.value) {
                     showAutocomplete.value = false;
                 } else {
+                    if (newValue.trim().length === 0) {
+                        showAutocomplete.value = false;
+                        return;
+                    }
                     try {
                         const response = await backendApi.searchTasks(newValue);
                         autocompleteSuggestions.value = response.data.map(task => {

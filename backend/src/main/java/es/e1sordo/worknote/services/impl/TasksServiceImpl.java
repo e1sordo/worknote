@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.enToRu;
 import static es.e1sordo.worknote.utils.KeyboardSwitchUtil.ruToEn;
 import static java.util.Arrays.stream;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -96,10 +95,10 @@ public class TasksServiceImpl implements TasksService {
 
         final List<SearchTaskResult> searchResults = new ArrayList<>();
 
-        findTaskByFullNumber(searchString)
-                .ifPresent(searchResults::add);
-
-        if (searchResults.size() > 0) {
+        final var pattern = Pattern.compile("\\(([^-]+)-([^)]+)\\)");
+        final var matcher = pattern.matcher(searchString);
+        if (matcher.find()) {
+            findTaskByFullNumber(matcher).ifPresent(searchResults::add);
             return searchResults;
         }
 
@@ -130,21 +129,14 @@ public class TasksServiceImpl implements TasksService {
         return searchResults;
     }
 
-    private Optional<SearchTaskResult> findTaskByFullNumber(final String sanitizedSearchString) {
+    private Optional<SearchTaskResult> findTaskByFullNumber(final Matcher matcher) {
         // show closed task by full match
-        Pattern pattern = Pattern.compile("\\(([^-]+)-([^)]+)\\)");
-        Matcher matcher = pattern.matcher(sanitizedSearchString);
+        String projectCode = matcher.group(1);
+        int id = Integer.parseInt(matcher.group(2));
 
-        if (matcher.find()) {
-            String projectCode = matcher.group(1);
-            int id = Integer.parseInt(matcher.group(2));
-
-            return projectsService.findByCode(projectCode)
-                    .flatMap(jiraProject -> repository.findByJiraIdAndProject(id, jiraProject))
-                    .map(jiraTask -> new SearchTaskResult(jiraTask, null, null));
-        }
-
-        return empty();
+        return projectsService.findByCode(projectCode)
+                .flatMap(jiraProject -> repository.findByJiraIdAndProject(id, jiraProject))
+                .map(jiraTask -> new SearchTaskResult(jiraTask, null, null));
     }
 
     @Override

@@ -8,6 +8,7 @@ import es.e1sordo.worknote.mapping.Mappings;
 import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.services.TasksService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +28,10 @@ public class TasksController {
     private final TasksService service;
 
     @GetMapping("/search")
-    public List<TaskDto> getAllByQuery(@RequestParam String query) {
+    public ResponseEntity<List<TaskDto>> getAllByQuery(@RequestParam String query) {
         final List<SearchTaskResult> serviceResults = service.getAllByQuery(query);
 
-        return serviceResults.stream().map(searchTaskResult -> {
+        final List<TaskDto> data = serviceResults.stream().map(searchTaskResult -> {
             final JiraTaskEntity entity = searchTaskResult.entity();
             final String highlightedTitle = searchTaskResult.highlightedTitle();
             final String highlightedExamples = searchTaskResult.highlightedExamples();
@@ -45,6 +46,8 @@ public class TasksController {
                     entity.isClosed()
             );
         }).toList();
+
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping
