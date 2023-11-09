@@ -9,4 +9,6 @@ public interface JiraProjectsService {
     Optional<JiraProjectEntity> findByCode(String code);
 
     JiraProjectEntity create(String code);
+
+    JiraProjectEntity create(JiraProjectEntity entity);
 }

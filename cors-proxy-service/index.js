@@ -38,19 +38,15 @@ const proxyRequest = async (req) => {
 
     log.info(`New ${method} request. ` + jiraUrl + ' ' + url + ' ' + data);
 
-    let conf = {
-        method,
-        url: `${jiraUrl}${url}`,
-        data,
-        headers
-    }
-
     try {
-        res = await axiosApi(conf)
+        res = await axiosApi({
+            method,
+            url: `${jiraUrl}${url}`,
+            data,
+            headers
+        });
         return res;
-    }
-    //handle axios throwing an error(like 400 level issues) which should just be passed through
-    catch (e) {
+    } catch (e) {
         return e.response;
     }
 }
@@ -64,7 +60,7 @@ app.all('/rest/api/*', async (req, res) => {
     let resp = await proxyRequest(req);
 
     if (!resp) {
-        console.log("failed to forward the request")
+        log.info("Failed to forward the request");
         res.status(200).end();
         return;
     }
@@ -96,4 +92,4 @@ svc.on('uninstall', function () {
 // Uninstall the service.
 //svc.uninstall();
 
-svc.install();
+// svc.install();

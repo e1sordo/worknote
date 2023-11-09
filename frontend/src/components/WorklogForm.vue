@@ -123,7 +123,7 @@ export default {
                                         const codeWithId = jiraKey.split("-")
                                         autocompleteSuggestions.value.push({
                                             entityId: jiraIssue.id,
-                                            code: codeWithId[0],
+                                            code: codeWithId[0].toUpperCase(),
                                             id: parseInt(codeWithId[1]),
                                             title: jiraIssue.fields.summary,
                                             type: "DEVELOPMENT",

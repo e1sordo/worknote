@@ -6,9 +6,8 @@ import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.models.JiraTaskType;
 import es.e1sordo.worknote.models.WorklogEntity;
-import es.e1sordo.worknote.repositories.ProjectRepository;
-import es.e1sordo.worknote.repositories.TaskRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
+import es.e1sordo.worknote.services.JiraProjectsService;
 import es.e1sordo.worknote.services.TasksService;
 import es.e1sordo.worknote.services.WorklogsService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,7 @@ import java.util.regex.Pattern;
 public class WorklogsServiceImpl implements WorklogsService {
 
     private final WorklogRepository repository;
-    private final ProjectRepository projectRepository;
-    private final TaskRepository taskRepository;
+    private final JiraProjectsService projectsService;
     private final TasksService tasksService;
 
     @Override
@@ -85,20 +83,20 @@ public class WorklogsServiceImpl implements WorklogsService {
             throw new RuntimeException("Failed to parse task. Wrong input format");
         }
 
-        final String projectCode = matcher.group(1);
+        final String projectCode = matcher.group(1).toUpperCase();
         final int jiraTaskId = Integer.parseInt(matcher.group(2));
         final String taskTitle = matcher.group(3);
 
-        final JiraProjectEntity project = projectRepository.findByCode(projectCode)
-                .orElseGet(() -> projectRepository.save(
+        final JiraProjectEntity project = projectsService.findByCode(projectCode)
+                .orElseGet(() -> projectsService.create(
                         new JiraProjectEntity(projectCode, projectCode, projectCode)));
 
-        return taskRepository.findByJiraIdAndProject(jiraTaskId, project)
+        return tasksService.findByTaskIdAndProject(jiraTaskId, project)
                 .orElseGet(() -> {
                     tasksService.upsert(new UpsertTaskDto(
                             jiraTaskId, projectCode, JiraTaskType.DEVELOPMENT, taskTitle, null, false
                     ));
-                    return taskRepository.findByJiraIdAndProject(jiraTaskId, project).orElseThrow();
+                    return tasksService.findByTaskIdAndProject(jiraTaskId, project).orElseThrow();
                 });
     }
 }

@@ -173,6 +173,12 @@ public class TasksServiceImpl implements TasksService {
     }
 
     @Override
+    public Optional<JiraTaskEntity> findByTaskIdAndProject(final int taskId, final JiraProjectEntity project) {
+        log.info("Find task by its Project ({}) and ID ({})", project.getCode(), taskId);
+        return repository.findByJiraIdAndProject(taskId, project);
+    }
+
+    @Override
     public JiraTaskEntity upsert(final UpsertTaskDto request) {
         log.info("Upsert task by its Project ({}) and ID ({})", request.code(), request.id());
 

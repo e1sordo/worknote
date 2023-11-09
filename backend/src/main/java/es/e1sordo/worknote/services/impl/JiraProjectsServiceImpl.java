@@ -23,4 +23,9 @@ public class JiraProjectsServiceImpl implements JiraProjectsService {
     public JiraProjectEntity create(final String code) {
         return repository.save(new JiraProjectEntity(code, code, code));
     }
+
+    @Override
+    public JiraProjectEntity create(final JiraProjectEntity entity) {
+        return repository.save(entity);
+    }
 }
