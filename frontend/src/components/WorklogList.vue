@@ -1,22 +1,27 @@
 <template>
     <div class="list-group worklogs-compact-list">
-        <a v-for="worklog in data" :key="worklog.id" class="worklogs-group-item" data-bs-toggle="tooltip"
+        <a v-for="worklog in sortedData" :key="worklog.id" class="worklogs-group-item" data-bs-toggle="tooltip"
             :title="worklog.task.title">
             <div class="d-flex mb-1 w-100 align-items-center justify-content-between">
                 <span class="d-inline-block" tabindex="0">
                     <small>{{ taskTypeMeta[worklog.task.type].icon }} </small>
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
                 </span>
-                <h6 class="mb-0">
-                    <small><i v-if="!worklog.synced" class="bi bi-patch-question-fill text-warning"></i></small>
-                    {{ formatTime(worklog.durationInMinutes) }}
-                </h6>
+                <div class="d-flex w-50 flex-row-reverse">
+                    <div class="progress" style="height: 14px;" :style="{ width: progressBarWidths[worklog.id] }">
+                        <div class="progress-bar bg-secondary w-100" role="progressbar"
+                            :aria-valuenow="progressBarWidths[worklog.id]">
+                            {{ formatTime(worklog.durationInMinutes) }}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="worklog-description">
-                <span class="badge rounded-pill" :class="{ 'bg-secondary': worklog.synced, 'bg-warning text-dark': !worklog.synced }">
+                <span class="badge worklog-start-time"
+                    :class="{ 'bg-secondary': worklog.synced, 'bg-warning text-dark': !worklog.synced }">
                     {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
                 </span>
-                {{ worklog.summary }}
+                <span>{{ worklog.summary }}</span>
                 <span v-if="!worklog.summary" class="text-muted">
                     <em>{{ $t('calendar.placeholder.worklogSummary') }}</em>
                 </span>
@@ -40,14 +45,42 @@ export default defineComponent({
     },
     setup() {
         return { formatTime, taskTypeMeta }
+    },
+    computed: {
+        sortedData() {
+            const sortedArray = [...this.data];
+            sortedArray.sort((a, b) => b.durationInMinutes - a.durationInMinutes);
+            return sortedArray;
+        },
+        progressBarWidths() {
+            const widthMap = {};
+            const minWidth = 15; // %
+
+            const minDuration = 0;
+            const maxDuration = Math.max(...this.data.map(worklog => worklog.durationInMinutes));
+
+            this.data.forEach((worklog) => {
+                const normalizedWidth = minWidth + ((worklog.durationInMinutes - minDuration) / (maxDuration - minDuration)) * (100 - minWidth);
+
+                widthMap[worklog.id] = `${Math.max(minWidth, Math.min(100, normalizedWidth))}%`;
+            });
+
+            return widthMap;
+        },
     }
 });
 </script>
 
 <style>
+.worklog-start-time {
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+}
+
 .worklog-description {
-    line-height: 16px;
-    font-size: 13px;
+    line-height: 18px;
+    font-size: 14px;
 }
 
 .worklogs-group-item {

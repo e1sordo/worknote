@@ -4,7 +4,8 @@
         @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header">
-            <span class="day-label" :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-danger': day.isToday }">
+            <span class="day-label"
+                :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-danger': day.isToday }">
                 {{ day.day }} <span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
             <span v-if="dayInfo.sequenceNumber > 0" class="text-muted font-monospace fs-6">
