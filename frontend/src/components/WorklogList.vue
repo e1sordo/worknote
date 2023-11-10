@@ -8,17 +8,20 @@
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
                 </span>
                 <div class="d-flex w-50 flex-row-reverse">
-                    <div class="progress" style="height: 14px;" :style="{ width: progressBarWidths[worklog.id] }">
+                    <div class="progress" style="height: 14px;" :style="{ width: progressBarWidths[worklog.id] + '%' }"
+                        :title="formatTime(worklog.durationInMinutes)">
                         <div class="progress-bar bg-secondary w-100" role="progressbar"
                             :aria-valuenow="progressBarWidths[worklog.id]">
-                            {{ formatTime(worklog.durationInMinutes) }}
+                            <small v-if="progressBarWidths[worklog.id] > 35">
+                                {{ formatTime(worklog.durationInMinutes) }}
+                            </small>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="worklog-description">
                 <span class="badge worklog-start-time"
-                    :class="{ 'bg-secondary': worklog.synced, 'bg-warning text-dark': !worklog.synced }">
+                    :class="{ 'bg-success': worklog.synced, 'bg-warning text-dark': !worklog.synced }">
                     {{ worklog.startTime.split(':').slice(0, 2).join(':') }}
                 </span>
                 <span>{{ worklog.summary }}</span>
@@ -62,7 +65,7 @@ export default defineComponent({
             this.data.forEach((worklog) => {
                 const normalizedWidth = minWidth + ((worklog.durationInMinutes - minDuration) / (maxDuration - minDuration)) * (100 - minWidth);
 
-                widthMap[worklog.id] = `${Math.max(minWidth, Math.min(100, normalizedWidth))}%`;
+                widthMap[worklog.id] = Math.max(minWidth, Math.min(100, parseInt(normalizedWidth, 10)));
             });
 
             return widthMap;
