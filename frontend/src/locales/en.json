@@ -45,7 +45,7 @@
         "submitButton": "Add Worklog",
         "progress": {
             "needToSync": "All that remains is to synchronize",
-            "exceeding": "Charged more time than necessary",
+            "exceeding": "Charged more time than necessary ({minutes}m)",
             "remainToLog": "{time} left to log"
         }
     },

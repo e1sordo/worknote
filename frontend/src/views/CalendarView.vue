@@ -243,7 +243,7 @@ export default defineComponent({
   }
 
   & .weekday {
-    background-image: linear-gradient(135deg, rgba(84, 90, 101, 0.1) 25%, rgba(45, 49, 58, 0.1) 25%, rgba(45, 49, 58, 0.1) 50%, rgba(84, 90, 101, 0.1) 50%, rgba(84, 90, 101, 0.1) 75%, rgba(45, 49, 58, 0.1) 75%, rgba(45, 49, 58, 0.1) 100%);
+    background-image: linear-gradient(135deg, rgba(84, 90, 101, 0.07) 25%, rgba(45, 49, 58, 0.15) 25%, rgba(45, 49, 58, 0.15) 50%, rgba(84, 90, 101, 0.07) 50%, rgba(84, 90, 101, 0.07) 75%, rgba(45, 49, 58, 0.15) 75%, rgba(45, 49, 58, 0.15) 100%);
     background-size: 40px 40px;
   }
 }

@@ -22,13 +22,13 @@
                 {{ dayInfo.additionalInfo }}
             </div>
 
+            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mb-3 py-2 px-3">
+                <small>{{ dayInfo.summary }}</small>
+            </div>
+
             <progress-bar v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
                 :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
                 :isPast="isPastDay" :isToday="day.isToday" />
-
-            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mb-1">
-                {{ dayInfo.summary }}
-            </div>
 
             <worklog-list :data="sortedWorklogs" />
         </div>
@@ -53,11 +53,8 @@ export default defineComponent({
         sortedWorklogs() {
             const arr = [...this.dayInfo.worklogs];
             arr.sort(function (a, b) {
-                // Преобразуем строки времени в объекты Date
                 var timeA = Date.parse('2000-01-01 ' + a.startTime);
                 var timeB = Date.parse('2000-01-01 ' + b.startTime);
-
-                // Сравниваем времена и возвращаем результат сортировки
                 return timeA - timeB;
             });
             return arr;

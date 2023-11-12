@@ -187,8 +187,19 @@ export default defineComponent({
     pointer-events: none;
     display: block;
     /* For Firefox */
-    color: rgba(0, 0, 0, 0.172);
+    color: rgba(0, 0, 0, 0.15);
     font-style: italic;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    .modal-body {
+        background-color: rgb(16, 26, 34) !important;
+    }
+
+    .day-summary:empty:before {
+        color: rgba(233, 233, 233, 0.15);
+    }
 }
 
 .modal-title:first-letter {

@@ -45,7 +45,7 @@
         "submitButton": "Добавить Worklog",
         "progress": {
             "needToSync": "Нужно синхронизировать",
-            "exceeding": "Внесено больше, чем нужно",
+            "exceeding": "Внесено на {minutes} минут больше, чем нужно",
             "remainToLog": "Осталось внести {time}"
         }
     },

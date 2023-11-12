@@ -2,11 +2,11 @@
     <p v-if="minutesRemain > 0" :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
         <small>{{ helpText }}</small>
     </p>
-    <p v-if="minutesRemain == 0 && synchronized != total && exeedPercent == 0" class="text-primary">
+    <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0" class="text-primary">
         <small>{{ $t('worklog.progress.needToSync') }}</small>
     </p>
-    <p v-if="exeedPercent > 0" class="text-danger">
-        <small>{{ $t('worklog.progress.exceeding') }}</small>
+    <p v-if="exceedPercent > 0" class="text-danger">
+        <small>{{ $t('worklog.progress.exceeding', { minutes: minutesExceed }) }}</small>
     </p>
 
     <div class="progress my-2" :style="{ height: big ? '16px' : '6px' }">
@@ -21,7 +21,7 @@
             class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
             :style="{ width: toLogPercent + '%' }">
         </div>
-        <div :aria-valuenow="exeedPercent" aria-valuemin="0" aria-valuemax="100"
+        <div :aria-valuenow="exceedPercent" aria-valuemin="0" aria-valuemax="100"
             class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
             :style="{ width: exeedPercent + '%' }">
         </div>
@@ -52,8 +52,9 @@ export default defineComponent({
             syncedPercent: 0,
             loggedPercent: 0,
             toLogPercent: 0,
-            exeedPercent: 0,
+            exceedPercent: 0,
             minutesRemain: 0,
+            minutesExceed: 0,
             helpText: ''
         });
 
@@ -63,17 +64,19 @@ export default defineComponent({
 
             const remainMinutes = props.total - state.realSynced - state.realLogged;
             if (remainMinutes < 0) {
+                state.minutesExceed = -remainMinutes;
+                state.exceedPercent = Math.ceil(state.minutesExceed / props.total * 100);
                 state.toLogPercent = 0;
-                state.exeedPercent = Math.ceil(-remainMinutes / props.total * 100);
             } else {
+                state.minutesExceed = 0;
+                state.exceedPercent = 0;
                 state.toLogPercent = Math.ceil(remainMinutes / props.total * 100);
-                state.exeedPercent = 0;
             }
 
             state.minutesRemain = Math.max(0, remainMinutes);
 
             state.syncedPercent = Math.ceil(state.realSynced / props.total * 100);
-            state.loggedPercent = Math.ceil(state.realLogged / props.total * 100);
+            state.loggedPercent = Math.ceil(state.realLogged / props.total * 100) - state.exceedPercent;
 
             state.helpText = i18n.t('worklog.progress.remainToLog', { time: formatTime(state.minutesRemain) });
         };

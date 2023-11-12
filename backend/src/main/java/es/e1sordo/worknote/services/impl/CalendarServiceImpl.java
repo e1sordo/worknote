@@ -2,11 +2,13 @@ package es.e1sordo.worknote.services.impl;
 
 import es.e1sordo.worknote.enums.AppSettingKeys;
 import es.e1sordo.worknote.models.DayEntity;
+import es.e1sordo.worknote.models.UnusualProductionDayInfo;
 import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
 import es.e1sordo.worknote.services.AppSettingsService;
 import es.e1sordo.worknote.services.CalendarService;
+import es.e1sordo.worknote.services.ProductionCalendarService;
 import es.e1sordo.worknote.utils.Pair;
 import es.e1sordo.worknote.utils.SanitizingUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     private final DayRepository dayRepository;
     private final WorklogRepository worklogRepository;
+    private final ProductionCalendarService productionCalendarService;
     private final AppSettingsService appSettingsService;
 
     @Override
@@ -49,9 +52,6 @@ public class CalendarServiceImpl implements CalendarService {
         }
 
         final var begin = from.minusWeeks(weeks).with(DayOfWeek.MONDAY);
-
-        // todo sync holidays to next month if needed (using syncTimesheetRepo)
-
         return getDays(begin, endOfWeekExclusively);
     }
 
@@ -66,22 +66,38 @@ public class CalendarServiceImpl implements CalendarService {
         final AtomicInteger workedSequenceNumber = new AtomicInteger(0);
         return from.datesUntil(to)
                 .map(day -> {
-                    var dayInfo = ofNullable(days.get(day)).orElseGet(() -> {
-                        var weekday = day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY;
+                    var dayInfo = ofNullable(days.get(day))
+                            .orElseGet(() -> {
+                                var weekday = day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY;
 
-                        final var entity = new DayEntity(
-                                day,
-                                weekday,
-                                false,
-                                false,
-                                getMinutesByDayStatus(!weekday),
-                                null,
-                                weekday ? null : workedSequenceNumber.incrementAndGet(),
-                                null
-                        );
+                                final var entity = new DayEntity(
+                                        day,
+                                        weekday,
+                                        false,
+                                        false,
+                                        getMinutesByDayStatus(!weekday),
+                                        null,
+                                        null, // set it later in this code
+                                        null
+                                );
 
-                        return dayRepository.save(entity);
-                    });
+                                final Map<LocalDate, UnusualProductionDayInfo> daysInfo
+                                        = productionCalendarService.getUnusualDaysInfo(from, to);
+
+                                daysInfo.computeIfPresent(day, (localDate, productionInfo) -> {
+                                    entity.setNonWorkingDay(productionInfo.isNonWorkingDay());
+                                    entity.setReducedWorkingDay(productionInfo.isReducedWorkingDay());
+                                    entity.setWorkingMinutes(productionInfo.getWorkingMinutes());
+                                    entity.setAdditionalInfo(productionInfo.getAdditionalInfo());
+                                    return productionInfo;
+                                });
+
+                                entity.setWorkedSequenceNumber(
+                                        entity.isNonWorkingDay() ? null : workedSequenceNumber.incrementAndGet()
+                                );
+
+                                return dayRepository.save(entity);
+                            });
 
                     ofNullable(dayInfo.getWorkedSequenceNumber()).ifPresent(workedSequenceNumber::set);
 

@@ -45,7 +45,7 @@
         "submitButton": "Agregar Worklog",
         "progress": {
             "needToSync": "Necesita sincronización",
-            "exceeding": "Excedido",
+            "exceeding": "Excedido ({minutes}m)",
             "remainToLog": "Queda por registrar {time}"
         }
     },
