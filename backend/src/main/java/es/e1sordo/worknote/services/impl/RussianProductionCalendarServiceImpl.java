@@ -8,7 +8,9 @@ import es.e1sordo.worknote.models.UnusualProductionDayInfo;
 import es.e1sordo.worknote.services.ProductionCalendarService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,17 +20,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static es.e1sordo.worknote.configuration.CachingConfiguration.PRODUCTION_DAYS_CACHE_NAME;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class RussianProductionCalendarServiceImpl implements ProductionCalendarService {
 
-    private static DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+    private static final String CACHE_TTL_IN_MILLIS = 1000 * 60 * 10 + ""; // ten minutes
 
     private final XmlCalendarRuClient client;
 
+    @CacheEvict(value = PRODUCTION_DAYS_CACHE_NAME, allEntries = true)
+    @Scheduled(fixedRateString = CACHE_TTL_IN_MILLIS)
+    public void emptyCache() {
+        log.info("Emptying {} cache", PRODUCTION_DAYS_CACHE_NAME);
+    }
+
     @Override
-    @Caching
+    @Cacheable(PRODUCTION_DAYS_CACHE_NAME)
     public Map<LocalDate, UnusualProductionDayInfo> getUnusualDaysInfo(final LocalDate startDate, final LocalDate endDate) {
         final Map<LocalDate, UnusualProductionDayInfo> productionInfo = new HashMap<>();
         final Map<LocalDate, UnusualProductionDayInfo> specialDaysInfo = new HashMap<>();

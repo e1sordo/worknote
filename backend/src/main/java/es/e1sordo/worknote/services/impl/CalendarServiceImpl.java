@@ -96,6 +96,8 @@ public class CalendarServiceImpl implements CalendarService {
                                         entity.isNonWorkingDay() ? null : workedSequenceNumber.incrementAndGet()
                                 );
 
+                                log.info("Day {} is absent in DB, so creating it: {}", day, entity);
+
                                 return dayRepository.save(entity);
                             });
 
