@@ -32,15 +32,19 @@ public class DemoCalendarServiceImpl implements CalendarService {
     private static final JiraTaskEntity TASK_DEVELOPMENT_1 = new JiraTaskEntity(
             78L, 1987, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature A", "Feature A", emptyList()
     );
+    private static final JiraTaskEntity TASK_DEVELOPMENT_2 = new JiraTaskEntity(
+            79L, 559, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature B", "Feature B", emptyList()
+    );
     private static final JiraTaskEntity TASK_STUDY = new JiraTaskEntity(
-            79L, 35, XYZ_PROJECT, JiraTaskType.TRAINING_AND_DEVELOPMENT, false, "Trainings", "Trainings", emptyList()
+            80L, 35, XYZ_PROJECT, JiraTaskType.TRAINING_AND_DEVELOPMENT, false, "Trainings", "Trainings", emptyList()
     );
     private static final JiraTaskEntity TASK_MEETINGS = new JiraTaskEntity(
-            80L, 511, ABCDEF_PROJECT, JiraTaskType.ORGANIZING_ACTIVITIES, false, "Activities", "Activities", emptyList()
+            81L, 511, ABCDEF_PROJECT, JiraTaskType.ORGANIZING_ACTIVITIES, false, "Activities", "Activities", emptyList()
     );
 
     private static final Map<Integer, DemoDay> DEMO_DATA = Map.of(
             0, new DemoDay(
+                    false,
                     false,
                     false,
                     480,
@@ -48,55 +52,71 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     77,
                     null,
                     List.of(
-                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, null, false)
+                            new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, null, false),
+                            new WorklogEntity(2L, null, LocalTime.of(14, 0), 105, "Team Retro", TASK_DAILY, null, false)
                     )
             ),
             1, new DemoDay(
-                    true,
                     false,
-                    0,
-                    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Late Summer Bank Holiday",
-                    null,
-                    null,
-                    List.of()
-            ),
-            2, new DemoDay(
                     false,
                     false,
                     480,
                     null,
                     76,
-                    null,
+                    "Back to work! 💪💪💪",
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
-                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 300, "Code Review, Bug Fix", TASK_DEVELOPMENT_1, 454565L, true),
-                            new WorklogEntity(3L, null, LocalTime.of(17, 0), 105, "Team Retro", TASK_DAILY, null, false)
+                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 300, "Code Review, Bug Fix", TASK_DEVELOPMENT_1, 454565L, true)
                     )
             ),
+            2, new DemoDay(
+                    true,
+                    false,
+                    false,
+                    0,
+                    "Late Summer Bank Holiday 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+                    null,
+                    null,
+                    List.of()
+            ),
             3, new DemoDay(
+                    true,
+                    true,
+                    false,
+                    0,
+                    null,
+                    null,
+                    null,
+                    List.of()
+            ),
+            4, new DemoDay(
+                    false,
                     false,
                     false,
                     480,
                     null,
                     75,
-                    "Jonathan went on vacation for 2 weeks 🏖️",
+                    null,
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
-                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 465, "Task investigation", TASK_DEVELOPMENT_1, 454565L, true)
+                            new WorklogEntity(2L, null, LocalTime.of(9, 0), 375, "Task investigation", TASK_DEVELOPMENT_1, 454565L, true),
+                            new WorklogEntity(3L, null, LocalTime.of(15, 45), 90, "Code review and validation", TASK_DEVELOPMENT_2, 4214565L, true)
                     )
             ),
-            4, new DemoDay(
+            5, new DemoDay(
+                    false,
                     false,
                     false,
                     480,
                     null,
                     74,
-                    null,
+                    "Jonathan went on vacation for 2 weeks 🏖️",
                     List.of(
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Finish online course on information security", TASK_STUDY, null, false)
                     )
             ),
-            5, new DemoDay(
+            6, new DemoDay(
+                    false,
                     false,
                     false,
                     480,
@@ -107,7 +127,8 @@ public class DemoCalendarServiceImpl implements CalendarService {
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Online course on information security", TASK_STUDY, 454565L, true)
                     )
             ),
-            6, new DemoDay(
+            7, new DemoDay(
+                    false,
                     false,
                     false,
                     480,
@@ -123,6 +144,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
     );
 
     record DemoDay(boolean nonWorkingDay,
+                   boolean vacation,
                    boolean reducedWorkingDay,
                    int workingMinutes,
                    String additionalInfo,
@@ -131,7 +153,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                    List<WorklogEntity> worklogs) {
         public Pair<DayEntity, List<WorklogEntity>> forDay(LocalDate day) {
             return Pair.of(
-                    new DayEntity(day, nonWorkingDay, false, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary),
+                    new DayEntity(day, nonWorkingDay, vacation, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary),
                     worklogs
             );
         }

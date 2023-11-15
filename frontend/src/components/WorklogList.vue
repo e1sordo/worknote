@@ -8,7 +8,7 @@
                     <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
                 </span>
                 <div class="d-flex w-50 flex-row-reverse">
-                    <div class="progress" style="height: 14px;" :style="{ width: progressBarWidths[worklog.id] + '%' }"
+                    <div class="progress" style="height: 15px;" :style="{ width: progressBarWidths[worklog.id] + '%' }"
                         :title="formatTime(worklog.durationInMinutes)">
                         <div class="progress-bar bg-secondary w-100" role="progressbar"
                             :aria-valuenow="progressBarWidths[worklog.id]">
@@ -99,5 +99,9 @@ export default defineComponent({
 
 .worklogs-compact-list :last-child {
     border-bottom: 0;
+}
+
+.progress-bar.bg-secondary {
+    --bs-bg-opacity: 0.7;
 }
 </style>

@@ -200,6 +200,12 @@ export default defineComponent({
     .day-summary:empty:before {
         color: rgba(233, 233, 233, 0.15);
     }
+
+    .btn.btn-light {
+        --bs-btn-color: #c1c1c1;
+        --bs-btn-bg: #2e3541;
+        --bs-btn-border-color: #2e3237;
+    }
 }
 
 .modal-title:first-letter {

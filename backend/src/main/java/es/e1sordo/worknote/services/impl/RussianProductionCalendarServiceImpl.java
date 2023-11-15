@@ -35,7 +35,6 @@ public class RussianProductionCalendarServiceImpl implements ProductionCalendarS
     @CacheEvict(value = PRODUCTION_DAYS_CACHE_NAME, allEntries = true)
     @Scheduled(fixedRateString = CACHE_TTL_IN_MILLIS)
     public void emptyCache() {
-        log.info("Emptying {} cache", PRODUCTION_DAYS_CACHE_NAME);
     }
 
     @Override

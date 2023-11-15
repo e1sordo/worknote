@@ -18,8 +18,11 @@
                 🏖️ {{ $t("calendar.vacation") }}
             </div>
 
-            <div v-if="dayInfo.additionalInfo" class="alert alert-danger" role="alert">
-                {{ dayInfo.additionalInfo }}
+            <div v-if="dayInfo.additionalInfo" class="alert alert-danger d-flex align-items-center border-2" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                    <use xlink:href="#info-fill" />
+                </svg>
+                <div>{{ dayInfo.additionalInfo }}</div>
             </div>
 
             <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mb-3 py-2 px-3">
