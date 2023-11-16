@@ -1,24 +1,25 @@
 <template>
     <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden"
-        :class="{ 'day-today': day.isToday, 'weekday': dayInfo.nonWorkingDay, 'opacity-25': !isPastDay }" type="button"
-        @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        :class="{ 'bg-gradient bg-danger': day.isToday, 'bg-gradient bg-success': dayInfo.nonWorkingDay, 'opacity-50': !isPastDay }"
+        type="button" @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
-        <div class="flex day-label-header">
-            <span class="day-label"
-                :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-danger': day.isToday }">
-                {{ day.day }} <span v-if="dayInfo.reducedWorkingDay">*</span>
+        <div class="flex day-label-header px-1 mb-1">
+            <span class="day-label fs-1"
+                :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-light': day.isToday }">
+                {{ day.day }}<span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
-            <span v-if="dayInfo.sequenceNumber > 0" class="text-muted font-monospace fs-6">
+            <span v-if="dayInfo.sequenceNumber > 0" class="font-monospace fs-6"
+                :class="{ 'text-light': day.isToday, 'text-muted': !day.isToday }">
                 #{{ dayInfo.sequenceNumber }}
             </span>
         </div>
 
         <div class="flex-grow overflow-y-auto overflow-x-auto text-xs leading-tight rounded-sm p-1 mt-0 mb-1">
-            <div v-if="dayInfo.vacation" class="alert alert-warning" role="alert">
+            <div v-if="dayInfo.vacation" class="alert alert-warning border-2" role="alert">
                 🏖️ {{ $t("calendar.vacation") }}
             </div>
 
-            <div v-if="dayInfo.additionalInfo" class="alert alert-danger d-flex align-items-center border-2" role="alert">
+            <div v-if="dayInfo.additionalInfo" class="alert alert-success d-flex align-items-center border-2" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
                     <use xlink:href="#info-fill" />
                 </svg>
@@ -29,11 +30,13 @@
                 <small>{{ dayInfo.summary }}</small>
             </div>
 
-            <progress-bar v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
-                :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly" :total="dayInfo.workingMinutes"
-                :isPast="isPastDay" :isToday="day.isToday" />
+            <div v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
+                :class="{ 'vc-day-body bg-body px-3 py-2 border border-danger border-2 rounded': day.isToday }">
+                <progress-bar :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly"
+                    :total="dayInfo.workingMinutes" :isPast="isPastDay" :isToday="day.isToday" />
 
-            <worklog-list :data="sortedWorklogs" />
+                <worklog-list :data="sortedWorklogs" />
+            </div>
         </div>
     </div>
 </template>
@@ -85,3 +88,9 @@ export default defineComponent({
     }
 });
 </script>
+
+<style>
+.day-core.bg-gradient.bg-success {
+    --bs-bg-opacity: 0.3;
+}
+</style>

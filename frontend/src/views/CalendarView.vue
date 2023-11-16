@@ -127,7 +127,9 @@ export default defineComponent({
     setDayStyles() {
       const vcDayElements = document.querySelectorAll('.vc-day');
       vcDayElements.forEach((element) => {
-        element.classList.add('shadow', 'mx-2', 'my-2', 'bg-body', 'rounded');
+        element.classList.add(
+          'vc-day-body', 'bg-body', 'shadow-sm', 'mx-xl-3', 'mx-lg-2', 'my-2', 'rounded'
+        );
       });
     },
     handleClick() {
@@ -173,7 +175,6 @@ export default defineComponent({
 
 [data-bs-theme=dark] {
   --bs-highlight-bg: rgb(107, 114, 10);
-  // --text-body: --text-body-light;
 }
 
 .custom-calendar.vc-container {
@@ -199,8 +200,8 @@ export default defineComponent({
   }
 
   & .vc-title {
-    color: rgb(155, 155, 155);
-    background: rgba(149, 164, 181, 0.3);
+    color: rgb(126, 126, 126);
+    background: rgba(161, 181, 149, 0.3);
     text-transform: capitalize;
     opacity: 0.8;
   }
@@ -225,6 +226,7 @@ export default defineComponent({
   }
 
   & .vc-day {
+    background: var(--bs-body-bg);
     text-align: left;
     min-height: var(--day-height);
     min-width: var(--day-width);
@@ -232,7 +234,7 @@ export default defineComponent({
   }
 
   @media (prefers-color-scheme: dark) {
-    .vc-day {
+    .vc-day-body {
       background-color: rgb(16, 26, 34) !important;
     }
   }
@@ -241,18 +243,9 @@ export default defineComponent({
     margin-bottom: 5px;
   }
 
-  & .day-today {
-    background-color: rgba(255, 158, 196, 0.19);
-  }
-
   & .day-core {
     padding: 5px 8px;
     height: 100%;
-  }
-
-  & .weekday {
-    background-image: linear-gradient(135deg, rgba(84, 90, 101, 0.07) 25%, rgba(45, 49, 58, 0.15) 25%, rgba(45, 49, 58, 0.15) 50%, rgba(84, 90, 101, 0.07) 50%, rgba(84, 90, 101, 0.07) 75%, rgba(45, 49, 58, 0.15) 75%, rgba(45, 49, 58, 0.15) 100%);
-    background-size: 40px 40px;
   }
 }
 

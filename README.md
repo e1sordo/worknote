@@ -30,15 +30,19 @@ that require time allocation.
 
 ## 🏋️‍♀️ Features
 
-- **Synchronization**: Seamlessly synchronize worklogs with your private corporate Jira server.
-- **Centralized Management**: All worklogs are stored and managed in a single location, providing easy access and
+- 🔁 **Synchronization**: Seamlessly synchronize worklogs with your private corporate Jira server.
+- 🏛️ **Centralized Management**: All worklogs are stored and managed in a single location, providing easy access and
   organization.
-- **Weekend and Reduced Working Day Display**: Clearly visualize weekends and reduced working days to effectively plan
+- 🎉 **Weekend and Reduced Working Day Display**: Clearly visualize weekends and reduced working days to effectively plan
   and allocate work time.
-- **Remaining Time Tracking**: Easily view how much time is left to write off for a specific day, ensuring accurate time
+- 🗓️ **Production Calendar Integration**: Automatic integration with the production calendar to mark work weeks 
+  with local holidays, reduced working days, and rescheduled work days (built-in integration with 🇷🇺&nbsp;Russian calendar).
+- ⏳ **Remaining Time Tracking**: Easily view how much time is left to write off for a specific day, ensuring accurate time
   allocation.
-- **Recurring Event and Task Prompts**: Receive prompts for recurring events and tasks that require time allocation,
+- 📆 **Recurring Event and Task Prompts**: Receive prompts for recurring events and tasks that require time allocation,
   ensuring no worklogs are missed.
+- 📶 **Workdays Counter**: Keep track of the number of workdays you have already completed in your company or project, 
+  providing insights into your overall work progress.
 - **Multi-Language Support**: The application offers support for three languages: 🏴󠁧󠁢󠁥󠁮󠁧󠁿&nbsp;English,
   🇪🇸&nbsp;Spanish, and 🇷🇺&nbsp;Russian.
 - 🌚 **Dark Theme**: The app features a dark theme option that automatically synchronizes with the system-wide

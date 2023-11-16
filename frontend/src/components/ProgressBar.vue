@@ -3,7 +3,8 @@
         <span v-if="isPast && !isToday">‼️ </span>
         <span>{{ helpText }}</span>
     </p>
-    <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0" class="text-primary">
+    <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0"
+        :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
         {{ $t('worklog.progress.needToSync') }}
     </p>
     <p v-if="exceedPercent > 0" class="text-danger">

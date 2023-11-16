@@ -17,6 +17,12 @@
   text-align: center;
 }
 
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: rgba(30, 32, 32, 0.03) !important;
+  }
+}
+
 .brand {
   margin-top: 20px;
   font-size: 54px;

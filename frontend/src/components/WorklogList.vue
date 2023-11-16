@@ -4,10 +4,10 @@
             :title="worklog.task.title">
             <div class="d-flex mb-1 w-100 align-items-center justify-content-between">
                 <span class="d-inline-block" tabindex="0">
-                    <small>{{ taskTypeMeta[worklog.task.type].icon }} </small>
-                    <small>{{ worklog.task.shortCode }}-{{ worklog.task.id }}</small>
+                    <small>{{ taskTypeMeta[worklog.task.type].icon }}</small>
+                    <small>&nbsp;{{ worklog.task.id }}</small>
                 </span>
-                <div class="d-flex w-50 flex-row-reverse">
+                <div class="d-flex flex-row-reverse" style="width: 60%;">
                     <div class="progress" style="height: 15px;" :style="{ width: progressBarWidths[worklog.id] + '%' }"
                         :title="formatTime(worklog.durationInMinutes)">
                         <div class="progress-bar bg-secondary w-100" role="progressbar"

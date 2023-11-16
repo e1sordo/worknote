@@ -74,7 +74,7 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     false,
                     0,
-                    "Late Summer Bank Holiday 🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+                    "🏴󠁧󠁢󠁥󠁮󠁧󠁿Late Summer Bank Holiday",
                     null,
                     null,
                     List.of()
