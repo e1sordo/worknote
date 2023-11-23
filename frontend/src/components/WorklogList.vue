@@ -12,7 +12,7 @@
                         :title="formatTime(worklog.durationInMinutes)">
                         <div class="progress-bar bg-secondary w-100" role="progressbar"
                             :aria-valuenow="progressBarWidths[worklog.id]">
-                            <small v-if="progressBarWidths[worklog.id] > 35">
+                            <small v-if="progressBarWidths[worklog.id] > 30">
                                 {{ formatTime(worklog.durationInMinutes) }}
                             </small>
                         </div>
@@ -102,6 +102,6 @@ export default defineComponent({
 }
 
 .progress-bar.bg-secondary {
-    --bs-bg-opacity: 0.7;
+    --bs-bg-opacity: 0.6;
 }
 </style>

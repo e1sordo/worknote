@@ -50,7 +50,7 @@ that require time allocation.
 
 ## 🏗️ Installation
 
-To install Worknote, follow these steps:
+To install **Worknote**, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/e1sordo/worknote`
 2. Navigate to the project directory: `cd worknote`
@@ -58,7 +58,7 @@ To install Worknote, follow these steps:
 
 ## 🎮 Usage
 
-To use Worknote, follow these steps:
+To use **Worknote**, follow these steps:
 
 1. Ensure you have completed the installation steps.
 2. Set required environment variables `export ENV_VAR_NAME=value`
@@ -72,12 +72,26 @@ To use Worknote, follow these steps:
 
 ## 🎛️ Configuration
 
-Before using Worknote, you must configure it by providing the necessary credentials and settings
+Before using **Worknote**, you must configure it by providing the necessary credentials and settings
 in the appropriate section of the application.
+
+## 🚪 CORS problem!
+
+This application can be used in two scenarios:
+1) Deploy it on your local machine and have access to **Worknote** only from there.
+2) Or deploy it on a remote server and have access to **Worknote** from any device.
+
+However, in the second scenario, you may encounter an issue with the corporate Jira server, 
+which is located in the company's private network. 
+In this case, you won't be able to make requests to Jira from outside your internal network.
+
+To overcome this problem, you can use a special [CORS proxy service](cors-proxy-service) located at the root of this repository. 
+It runs as a regular OS-service on your machine with access to Jira and proxies any request from **Worknote** to Jira 
+by bypassing the CORS protection.
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you'd like to contribute to the Worklog Sync with Jira project, please follow these
+Contributions are welcome! If you'd like to contribute to **Worknote** project, please follow these
 guidelines:
 
 1. Fork the repository.
@@ -88,7 +102,7 @@ guidelines:
 
 ## 🕊️ License
 
-The Worklog Sync with Jira project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free
+**Worknote** is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free
 to use, modify, and distribute the software according to the terms of this license.
 
 ## 📺 Screenshots

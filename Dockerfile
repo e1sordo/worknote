@@ -4,7 +4,7 @@ FROM openjdk:19-alpine
 MAINTAINER e1sordo
 
 # Add Spring Boot app.jar to Container
-COPY backend/target/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY backend/target/backend-1.0.0.jar app.jar
 
 # Set the working directory
 WORKDIR /

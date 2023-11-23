@@ -1,6 +1,5 @@
 <template>
     <p v-if="minutesRemain > 0" :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
-        <span v-if="isPast && !isToday">‼️ </span>
         <span>{{ helpText }}</span>
     </p>
     <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0"

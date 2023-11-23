@@ -3,7 +3,7 @@
         :class="{ 'bg-gradient bg-danger': day.isToday, 'bg-gradient bg-success': dayInfo.nonWorkingDay, 'opacity-50': !isPastDay }"
         type="button" @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
-        <div class="flex day-label-header px-1 mb-1">
+        <div class="flex day-label-header mb-1 mx-3">
             <span class="day-label fs-1"
                 :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-light': day.isToday }">
                 {{ day.day }}<span v-if="dayInfo.reducedWorkingDay">*</span>
@@ -14,24 +14,27 @@
             </span>
         </div>
 
-        <div class="flex-grow overflow-y-auto overflow-x-auto text-xs leading-tight rounded-sm p-1 mt-0 mb-1">
-            <div v-if="dayInfo.vacation" class="alert alert-warning border-2" role="alert">
-                🏖️ {{ $t("calendar.vacation") }}
+        <div class="d-flex flex-column h-100 rounded-3 my-0">
+            <div class="px-3">
+                <div v-if="dayInfo.vacation" class="alert alert-warning border-2" role="alert">
+                    🏖️ {{ $t("calendar.vacation") }}
+                </div>
+
+                <div v-if="dayInfo.additionalInfo" class="alert alert-success d-flex align-items-center border-2"
+                    role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                        <use xlink:href="#info-fill" />
+                    </svg>
+                    <div>{{ dayInfo.additionalInfo }}</div>
+                </div>
+
+                <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mt-1 mb-3 py-2 px-3">
+                    <small>{{ dayInfo.summary }}</small>
+                </div>
             </div>
 
-            <div v-if="dayInfo.additionalInfo" class="alert alert-success d-flex align-items-center border-2" role="alert">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
-                    <use xlink:href="#info-fill" />
-                </svg>
-                <div>{{ dayInfo.additionalInfo }}</div>
-            </div>
-
-            <div v-if="dayInfo.summary && dayInfo.summary.length > 0" class="alert alert-secondary mb-3 py-2 px-3">
-                <small>{{ dayInfo.summary }}</small>
-            </div>
-
-            <div v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0"
-                :class="{ 'vc-day-body bg-body px-3 py-2 border border-danger border-2 rounded': day.isToday }">
+            <div v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0" class="px-3 pb-3"
+                :class="{ 'vc-day-body bg-body rounded-3 h-100 pt-3': day.isToday }">
                 <progress-bar :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly"
                     :total="dayInfo.workingMinutes" :isPast="isPastDay" :isToday="day.isToday" />
 

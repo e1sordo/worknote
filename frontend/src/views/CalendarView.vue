@@ -244,7 +244,6 @@ export default defineComponent({
   }
 
   & .day-core {
-    padding: 5px 8px;
     height: 100%;
   }
 }
