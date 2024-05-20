@@ -17,7 +17,7 @@
                                 </span>
                                 <span v-if="suggestion.new" class="badge bg-success mx-2">New</span>
                                 <span v-html="suggestion.title"
-                                    :class="{ 'text-decoration-line-through': suggestion.closed }" />
+                                    :class="{ 'text-decoration-line-through': suggestion.closed }"></span>
                             </p>
                             <p>
                                 <small class="text-muted" v-html="suggestion.examples"></small>
@@ -43,10 +43,10 @@
         </form>
     </div>
 </template>
-  
+
 <script lang="ts">
 import backendApi from "@/api/backend-api";
-import clientApi from "@/api/client-api";
+import clientApi, { IssueResponse } from "@/api/client-api";
 import { taskTypeMeta } from '@/constants';
 import { convertTimeToMinutes } from '@/utils/convertTimeToMinutes';
 import { SetupContext, computed, ref, watch } from 'vue';
@@ -112,25 +112,33 @@ export default {
 
                         // try to find in Jira
                         if (autocompleteSuggestions.value.length == 0) {
+                            const jiraKeyNumberMatch = newValue.trim().match(/^\d*(\.\d+)?$/);
+                            if (jiraKeyNumberMatch && jiraKeyNumberMatch[0]) {
+                                try {
+                                    const activeProjectResponse = await backendApi.activeProjectCode();
+                                    const activeProjectCode = activeProjectResponse.data;
+
+                                    const jiraKey = activeProjectCode + '-' + jiraKeyNumberMatch[0];
+
+                                    const response = await clientApi.getIssue(jiraKey);
+                                    if (response.data) {
+                                        const jiraIssue = response.data;
+                                        autocompleteSuggestions.value.push(mapJiraTaskToSuggestion(jiraKey, jiraIssue));
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                }
+                            }
+
                             const jiraKeyMatch = newValue.match(/\(([^)]+)\)/);
                             if (jiraKeyMatch && jiraKeyMatch[1]) {
                                 try {
                                     const jiraKey = jiraKeyMatch[1];
-                                    const response = await clientApi.getIssue(jiraKey);
 
+                                    const response = await clientApi.getIssue(jiraKey);
                                     if (response.data) {
                                         const jiraIssue = response.data;
-                                        const codeWithId = jiraKey.split("-")
-                                        autocompleteSuggestions.value.push({
-                                            entityId: jiraIssue.id,
-                                            code: codeWithId[0].toUpperCase(),
-                                            id: parseInt(codeWithId[1]),
-                                            title: jiraIssue.fields.summary,
-                                            type: "DEVELOPMENT",
-                                            examples: "",
-                                            closed: false,
-                                            new: true
-                                        });
+                                        autocompleteSuggestions.value.push(mapJiraTaskToSuggestion(jiraKey, jiraIssue));
                                     }
                                 } catch (error) {
                                     console.error(error);
@@ -148,6 +156,20 @@ export default {
                 }
             }, 500);
         });
+
+        const mapJiraTaskToSuggestion = (jiraKey: string, jiraIssue: IssueResponse) => {
+            const codeWithId = jiraKey.split("-");
+            return {
+                entityId: jiraIssue.id,
+                code: codeWithId[0].toUpperCase(),
+                id: parseInt(codeWithId[1]),
+                title: jiraIssue.fields.summary,
+                type: "DEVELOPMENT",
+                examples: "",
+                closed: false,
+                new: true
+            } as TaskSuggestion
+        }
 
         const selectAutocompleteSuggestion = (suggestion: TaskSuggestion) => {
             const suggestionTitleWithoutHtmlTags = suggestion.title.replace(/<[^>]*>/g, '')

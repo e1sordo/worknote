@@ -5,6 +5,7 @@ import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.TaskWithUsageDto;
 import es.e1sordo.worknote.dto.UpsertTaskDto;
 import es.e1sordo.worknote.mapping.Mappings;
+import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
 import es.e1sordo.worknote.services.TasksService;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,13 @@ public class TasksController {
     @GetMapping
     public List<TaskWithUsageDto> getAll() {
         return service.getAllSortedByUsage().stream().map(Mappings::mapToDtoWithUsage).toList();
+    }
+
+    @GetMapping("/active-project-code")
+    public String getActiveProjectCode() {
+        return service.findActiveProject()
+                .map(JiraProjectEntity::getCode)
+                .orElse("");
     }
 
     @PostMapping

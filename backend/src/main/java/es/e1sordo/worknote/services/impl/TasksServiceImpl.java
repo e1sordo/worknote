@@ -208,6 +208,11 @@ public class TasksServiceImpl implements TasksService {
         return result;
     }
 
+    @Override
+    public Optional<JiraProjectEntity> findActiveProject() {
+        return repository.findFirstByOrderByIdDesc().map(JiraTaskEntity::getProject);
+    }
+
     @SneakyThrows
     private String extractHighlights(String field, Supplier<String> getter, Analyzer analyzer, Highlighter highlighter) {
         final String originalValue = ofNullable(getter.get()).orElse("");

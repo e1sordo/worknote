@@ -26,7 +26,7 @@ interface IssueFieldsDto {
     summary: string;
 }
 
-interface IssueResponse {
+export interface IssueResponse {
     id: number;
     fields: IssueFieldsDto;
 }

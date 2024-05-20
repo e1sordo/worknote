@@ -108,6 +108,9 @@ export default {
     upsertTask(body: Task): Promise<AxiosResponse<Task>> {
         return axiosApi.post('/tasks', body);
     },
+    activeProjectCode(): Promise<AxiosResponse<String>> {
+        return axiosApi.get('/tasks/active-project-code');
+    },
 
     // worklogs
     createWorklog(date: string, time: string, minutes: number, summary: string, task: string): Promise<AxiosResponse<Worklog>> {

@@ -39,4 +39,6 @@ public interface TaskRepository extends ListCrudRepository<JiraTaskEntity, Long>
             LIMIT 15
             """)
     List<Object[]> findTop15TasksWithTotalDuration();
+
+    Optional<JiraTaskEntity> findFirstByOrderByIdDesc();
 }
