@@ -33,7 +33,8 @@
                 <input type="time" id="time-input" v-model="timeValue" step="900" class="form-control">
 
                 <input type="text" id="spent-input" v-model="spentValue" class="form-control spent-input"
-                    :placeholder="$t('worklog.form.spent.placeholder')" :title="$t('worklog.form.spent.title')">
+                    :placeholder="$t('worklog.form.spent.placeholder')" :title="$t('worklog.form.spent.title')"
+                    @keydown.enter="spentValue.trim() !== '' && submitCreate()">
 
                 <button type="button" @click="submitCreate" class="btn btn-outline-primary text-nowrap">
                     {{ $t('worklog.submitButton') }}

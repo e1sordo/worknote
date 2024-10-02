@@ -86,6 +86,17 @@ export default defineComponent({
       return [outputData, periods];
     },
     renderChart(chartData: [OutputData[], string[]]) {
+      this.chart1Series = chartData[0];
+
+      const xLength = chartData[1].length;
+      const allY = new Array(xLength).fill(0);
+      for (let i = 0; i < xLength; i++) {
+        for (const item of this.chart1Series) {
+          allY[i] += item.data[i];
+        }
+      }
+      const maxY = Math.max(...allY);
+
       const options = {
         theme: {
           mode: 'light',
@@ -116,7 +127,7 @@ export default defineComponent({
           categories: chartData[1],
         },
         yaxis: {
-          max: 40,
+          max: Math.max(maxY, 40),
           decimalsInFloat: 0
         },
         fill: {
@@ -149,7 +160,6 @@ export default defineComponent({
       }
 
       this.chart1Options = options;
-      this.chart1Series = chartData[0];
     }
   },
   mounted() {

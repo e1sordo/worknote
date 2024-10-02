@@ -60,7 +60,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         log.info("Find time distribution by task type");
 
         final var endOfCurrentWeekExclusively = LocalDate.now().with(DayOfWeek.SUNDAY).plusDays(1);
-        final var begin = endOfCurrentWeekExclusively.minusWeeks(8).with(DayOfWeek.MONDAY);
+        final var begin = endOfCurrentWeekExclusively.minusWeeks(10).with(DayOfWeek.MONDAY);
         final List<WorklogEntity> worklogs = worklogRepository.findByDateBetween(begin, endOfCurrentWeekExclusively);
         worklogs.sort(comparing(WorklogEntity::getDate));
 
