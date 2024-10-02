@@ -72,7 +72,12 @@ export default defineComponent({
   },
   setup() {
     const activeDayInfo = ref();
-    const endOfWeek = moment().endOf('week').add(1, 'day').toDate();
+    // summer
+    // const endOfWeek = moment().endOf('week').add(1, 'day').toDate();
+
+    // winter
+    const endOfWeek = moment().endOf('week').add(1, 'week').toDate();
+
     const masks = ref({ weekdays: 'WWWW' });
 
     return { activeDayInfo, endOfWeek, masks };
