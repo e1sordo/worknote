@@ -184,6 +184,10 @@
                                         <include>static/</include>
                                         <include>index.html</include>
                                         <include>favicon.ico</include>
+                                        <include>apple-touch-icon.png</include>
+                                        <include>icon.svg</include>
+                                        <include>icon-32x32.png</include>
+                                        <include>icon-64x64.png</include>
                                     </includes>
                                 </resource>
                             </resources>
