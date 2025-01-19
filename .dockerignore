@@ -6,3 +6,5 @@ frontend/target
 backend/target
 
 !backend/target/*.jar
+
+cors-proxy-service
