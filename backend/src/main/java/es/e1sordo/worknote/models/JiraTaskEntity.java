@@ -47,6 +47,7 @@ public class JiraTaskEntity {
     private boolean closed;
 
     private String title;
+    private String defaultValue;
     private String examples;
 
     @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)

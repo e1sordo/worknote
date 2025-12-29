@@ -19,6 +19,8 @@ public interface TasksService {
 
     Optional<JiraTaskEntity> findByTaskIdAndProject(int taskId, JiraProjectEntity project);
 
+    Optional<JiraTaskEntity> findByCode(String code);
+
     JiraTaskEntity upsert(UpsertTaskDto request);
 
     Optional<JiraProjectEntity> findActiveProject();

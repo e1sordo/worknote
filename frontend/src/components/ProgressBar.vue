@@ -1,30 +1,32 @@
 <template>
-    <p v-if="minutesRemain > 0" :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
-        <span>{{ helpText }}</span>
-    </p>
-    <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0"
-        :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
-        {{ $t('worklog.progress.needToSync') }}
-    </p>
-    <p v-if="exceedPercent > 0" class="text-danger">
-        {{ $t('worklog.progress.exceeding', { minutes: minutesExceed }) }}
-    </p>
+    <div class="progress-wrapper">
+        <p v-if="minutesRemain > 0" :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
+            <span>{{ helpText }}</span>
+        </p>
+        <p v-if="minutesRemain == 0 && synchronized != total && exceedPercent == 0"
+            :class="{ 'text-primary': isToday || !isPast, 'text-danger': isPast && !isToday }">
+            {{ $t('worklog.progress.needToSync') }}
+        </p>
+        <p v-if="exceedPercent > 0" class="text-danger">
+            {{ $t('worklog.progress.exceeding', { minutes: minutesExceed }) }}
+        </p>
 
-    <div class="progress my-2" :style="{ height: big ? '16px' : '8px' }">
-        <div :aria-valuenow="syncedPercent" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-success"
-            :style="{ width: syncedPercent + '%' }" role="progressbar">
-        </div>
-        <div :aria-valuenow="loggedPercent" aria-valuemin="0" aria-valuemax="100"
-            class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
-            :style="{ width: loggedPercent + '%' }">
-        </div>
-        <div v-if="isPast && syncedPercent < 100" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100"
-            class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
-            :style="{ width: toLogPercent + '%' }">
-        </div>
-        <div :aria-valuenow="exceedPercent" aria-valuemin="0" aria-valuemax="100"
-            class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
-            :style="{ width: exeedPercent + '%' }">
+        <div class="progress my-2" :style="{ height: big ? '16px' : '8px' }">
+            <div :aria-valuenow="syncedPercent" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-success"
+                :style="{ width: syncedPercent + '%' }" role="progressbar">
+            </div>
+            <div :aria-valuenow="loggedPercent" aria-valuemin="0" aria-valuemax="100"
+                class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar"
+                :style="{ width: loggedPercent + '%' }">
+            </div>
+            <div v-if="isPast && syncedPercent < 100" :aria-valuenow="toLogPercent" aria-valuemin="0" aria-valuemax="100"
+                class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar"
+                :style="{ width: toLogPercent + '%' }">
+            </div>
+            <div :aria-valuenow="exceedPercent" aria-valuemin="0" aria-valuemax="100"
+                class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar"
+                :style="{ width: exeedPercent + '%' }">
+            </div>
         </div>
     </div>
 </template>

@@ -19,6 +19,7 @@ const log = createLogger({
 });
 
 // Установка окружения для приема невалидных сертификатов
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 sslRootCAs.inject();
 
@@ -49,18 +50,61 @@ const proxyRequest = async (req) => {
 	const data = req.body;
 	const method = req.method.toLowerCase();
 
-	log.info(`New ${method} request: ${jiraUrl}${url}`);
+	log.info(`New ${method} request to Jira: ${jiraUrl}${url}`);
+	log.debug("Request details:", {
+		headers: headers,
+		body: data,
+		method: method,
+	});
 
 	try {
+		const startTime = Date.now();
 		const res = await axiosApi({
 			method,
 			url: `${jiraUrl}${url}`,
 			data,
 			headers,
 		});
+		const duration = Date.now() - startTime;
+
+		log.info(
+			`Request successful. Status: ${res.status}. Duration: ${duration}ms`,
+		);
+		log.debug("Response details:", {
+			status: res.status,
+			headers: res.headers,
+			data: res.data,
+			duration: duration,
+		});
+
 		return res;
 	} catch (e) {
-		return e.response;
+		if (e.response) {
+			// Сервер ответил с кодом ошибки
+			log.error(`Jira API error response: ${e.response.status}`, {
+				url: `${jiraUrl}${url}`,
+				status: e.response.status,
+				headers: e.response.headers,
+				data: e.response.data,
+				error: e.message,
+			});
+			return e.response;
+		} else if (e.request) {
+			// Запрос был сделан, но ответ не получен
+			log.error("No response received from Jira API", {
+				url: `${jiraUrl}${url}`,
+				error: e.message,
+				request: e.request,
+			});
+			return null;
+		} else {
+			// Ошибка при настройке запроса
+			log.error("Error setting up Jira API request", {
+				url: `${jiraUrl}${url}`,
+				error: e.message,
+			});
+			return null;
+		}
 	}
 };
 

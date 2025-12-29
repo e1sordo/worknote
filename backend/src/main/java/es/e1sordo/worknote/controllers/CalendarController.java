@@ -30,6 +30,12 @@ public class CalendarController {
         return calendarService.getWeekdays(LocalDate.now(), needsToLoad).stream().map(Mappings::mapToDto).toList();
     }
 
+    @GetMapping("/future-weeks")
+    public List<DayDto> getFutureWeeks(@RequestParam(defaultValue = "2") int needsToLoad) {
+        LocalDate futureWeek = LocalDate.now().plusWeeks(needsToLoad);
+        return calendarService.getWeekdays(futureWeek, needsToLoad - 1).stream().map(Mappings::mapToDto).toList();
+    }
+
     @GetMapping("/day")
     public DayDto getDay(@RequestParam LocalDate date) {
         return Mappings.mapToDto(calendarService.getDay(date));

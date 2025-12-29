@@ -89,12 +89,12 @@ public class WorklogsServiceImpl implements WorklogsService {
 
         final JiraProjectEntity project = projectsService.findByCode(projectCode)
                 .orElseGet(() -> projectsService.create(
-                        new JiraProjectEntity(projectCode, projectCode, projectCode)));
+                        new JiraProjectEntity(projectCode, projectCode, projectCode, true)));
 
         return tasksService.findByTaskIdAndProject(jiraTaskId, project)
                 .orElseGet(() -> {
                     tasksService.upsert(new UpsertTaskDto(
-                            jiraTaskId, projectCode, JiraTaskType.DEVELOPMENT, taskTitle, null, false
+                            jiraTaskId, projectCode, JiraTaskType.DEVELOPMENT, taskTitle, null, null, false
                     ));
                     return tasksService.findByTaskIdAndProject(jiraTaskId, project).orElseThrow();
                 });

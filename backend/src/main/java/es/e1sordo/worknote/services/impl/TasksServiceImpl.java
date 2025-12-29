@@ -113,7 +113,8 @@ public class TasksServiceImpl implements TasksService {
                 .collect(joining(" "));
 
         if (!searchQuery.startsWith("*")) {
-            final TriFunction<Document, Analyzer, Highlighter, SearchTaskResult> function = ((document, analyzer, highlighter) -> {
+            final TriFunction<Document, Analyzer, Highlighter, SearchTaskResult> function = ((document, analyzer,
+                                                                                              highlighter) -> {
                 final long documentId = Long.parseLong(document.get("id"));
                 final JiraTaskEntity task = repository.findById(documentId).orElseThrow();
 
@@ -126,7 +127,12 @@ public class TasksServiceImpl implements TasksService {
             searchResults.addAll(luceneService.search(searchQuery, function));
         }
 
-        return searchResults;
+        final List<SearchTaskResult> activeOnlyResults = searchResults
+                .stream()
+                .filter(result -> result.entity().getProject().isActive())
+                .toList();
+
+        return activeOnlyResults;
     }
 
     private Optional<SearchTaskResult> findTaskByFullNumber(final Matcher matcher) {
@@ -160,12 +166,10 @@ public class TasksServiceImpl implements TasksService {
 
             result.add(Pair.of(
                     jiraTask,
-                    latestDate.map(date -> date.atTime(latestTime)).orElse(null)
-            ));
+                    latestDate.map(date -> date.atTime(latestTime)).orElse(null)));
         }
 
-        repository.findByWorklogsEmpty().forEach(jiraTask ->
-                result.add(Pair.of(jiraTask, null)));
+        repository.findByWorklogsEmpty().forEach(jiraTask -> result.add(Pair.of(jiraTask, null)));
 
         result.sort(Comparator.comparing(pair -> pair.first().isClosed()));
 
@@ -194,6 +198,7 @@ public class TasksServiceImpl implements TasksService {
             taskEntity.setJiraId(request.id());
             taskEntity.setTitle(request.title());
             taskEntity.setType(request.type());
+            taskEntity.setDefaultValue(request.defaultValue());
             taskEntity.setExamples(request.examples());
             taskEntity.setClosed(request.closed());
             luceneService.addToIndex(taskEntity, true);
@@ -209,12 +214,21 @@ public class TasksServiceImpl implements TasksService {
     }
 
     @Override
+    public Optional<JiraTaskEntity> findByCode(final String code) {
+        log.info("Find task by its code: {}", code);
+        final var projectCode = code.split("-")[0];
+        final var taskId = Integer.parseInt(code.split("-")[1]);
+        return findByTaskIdAndProject(taskId, projectsService.findByCode(projectCode).orElseThrow());
+    }
+
+    @Override
     public Optional<JiraProjectEntity> findActiveProject() {
         return repository.findFirstByOrderByIdDesc().map(JiraTaskEntity::getProject);
     }
 
     @SneakyThrows
-    private String extractHighlights(String field, Supplier<String> getter, Analyzer analyzer, Highlighter highlighter) {
+    private String extractHighlights(String field, Supplier<String> getter, Analyzer analyzer,
+                                     Highlighter highlighter) {
         final String originalValue = ofNullable(getter.get()).orElse("");
         final TokenStream tokenStream = TokenSources.getTokenStream(field, originalValue, analyzer);
         return highlighter.getBestFragments(tokenStream, originalValue, 10, "...");
@@ -228,8 +242,8 @@ public class TasksServiceImpl implements TasksService {
                 request.type(),
                 false,
                 request.title(),
+                request.defaultValue(),
                 request.examples(),
-                null
-        );
+                null);
     }
 }

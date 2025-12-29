@@ -10,6 +10,8 @@ import java.util.List;
 public interface CalendarService {
     List<Pair<DayEntity, List<WorklogEntity>>> getWeekdays(LocalDate from, int weeks);
 
+    void createDaysIfDoesNotExist(final LocalDate tillDate);
+
     List<Pair<DayEntity, List<WorklogEntity>>> getDays(LocalDate from, LocalDate to);
 
     Pair<DayEntity, List<WorklogEntity>> getDay(LocalDate date);
@@ -21,6 +23,4 @@ public interface CalendarService {
     void updateDayNonWorkingStatus(LocalDate date, boolean value);
 
     void updateDayVacation(LocalDate date, boolean value);
-
-    void updateNewFirstWorkingDay(LocalDate from);
 }

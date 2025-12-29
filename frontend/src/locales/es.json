@@ -1,6 +1,7 @@
 {
     "navbar": {
         "home": "Inicio",
+        "weekly": "Weekly",
         "overview": "Análisis",
         "settings": "Configuración",
         "logout": "Cerrar sesión"
@@ -18,6 +19,23 @@
             "markWorking": "Marcar como funcionando",
             "markVacation": "Marcar como vacaciones",
             "unmarkVacation": "Desmarcar vacaciones"
+        },
+        "nextVacation": {
+            "title": "Vacaciones",
+            "duration": "{days} días",
+            "countdown": {
+                "today": "hoy",
+                "tomorrow": "mañana",
+                "inDays": "en {days} días",
+                "ongoing": "en curso {days}d"
+            },
+            "status": {
+                "confirmed": "conf.",
+                "notConfirmedUrgent": "NO CONF.",
+                "needsConfirmation": "conf.!",
+                "synced": "sinc.",
+                "notSynced": "no sinc."
+            }
         }
     },
     "time": {
@@ -54,6 +72,41 @@
         "mostTimeConsumingTasks": "Tareas que consumen más tiempo"
     },
     "settings": {
+        "predefinedWorknotes": {
+            "title": "Notas de trabajo predefinidas",
+            "form": {
+                "task": {
+                    "label": "Tarea",
+                    "placeholder": "Nombre de la tarea",
+                    "findButton": "Buscar"
+                }
+            }
+        },
+        "vacations": {
+            "title": "Vacaciones",
+            "create": "Crear vacaciones",
+            "edit": "Editar",
+            "startDate": "Fecha de inicio",
+            "endDate": "Fecha de fin",
+            "totalDays": "Total de días",
+            "confirmed": "Confirmado",
+            "notConfirmed": "No confirmado",
+            "synced": "Sincronizado",
+            "notSynced": "No sincronizado",
+            "editVacation": "Editar vacaciones",
+            "createVacation": "Crear vacaciones",
+            "cancel": "Cancelar",
+            "save": "Guardar",
+            "relativeTime": "Tiempo relativo",
+            "startsIn": "Comienza en {time}",
+            "endedAgo": "Terminó hace {time}",
+            "nowOnVacation": "Actualmente de vacaciones",
+            "delete": "Eliminar",
+            "deleteConfirm": "¿Seguro que quieres eliminar estas vacaciones?"
+        },
+        "projects": {
+            "title": "Gestión de projectos"
+        },
         "tasks": {
             "title": "Gestión de tareas",
             "form": {
@@ -71,6 +124,10 @@
                 "title": {
                     "label": "Nombre",
                     "placeholder": "Nombre de la tarea"
+                },
+                "defaultValue": {
+                    "label": "Resumen predeterminado del worklog",
+                    "placeholder": "Agregue un resumen predeterminado del worklog para esta tarea"
                 },
                 "examples": {
                     "label": "Ejemplos",

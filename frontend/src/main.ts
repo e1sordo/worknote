@@ -17,6 +17,6 @@ createApp(App)
     .use(i18n as any)
     .use(VCalendar, {})
     .use(VueApexCharts)
-    .mount('#app')
+    .mount('#app');
 
 import 'bootstrap/dist/js/bootstrap.js';

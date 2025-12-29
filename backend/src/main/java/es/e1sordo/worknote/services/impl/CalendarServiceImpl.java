@@ -1,12 +1,10 @@
 package es.e1sordo.worknote.services.impl;
 
-import es.e1sordo.worknote.enums.AppSettingKeys;
 import es.e1sordo.worknote.models.DayEntity;
 import es.e1sordo.worknote.models.UnusualProductionDayInfo;
 import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.repositories.DayRepository;
 import es.e1sordo.worknote.repositories.WorklogRepository;
-import es.e1sordo.worknote.services.AppSettingsService;
 import es.e1sordo.worknote.services.CalendarService;
 import es.e1sordo.worknote.services.ProductionCalendarService;
 import es.e1sordo.worknote.utils.Pair;
@@ -20,11 +18,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
@@ -40,7 +36,6 @@ public class CalendarServiceImpl implements CalendarService {
     private final DayRepository dayRepository;
     private final WorklogRepository worklogRepository;
     private final ProductionCalendarService productionCalendarService;
-    private final AppSettingsService appSettingsService;
 
     @Override
     public List<Pair<DayEntity, List<WorklogEntity>>> getWeekdays(final LocalDate from, final int weeks) {
@@ -56,52 +51,63 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     @Override
+    public void createDaysIfDoesNotExist(final LocalDate tillDate) {
+        final LocalDate latestCreatedDate = dayRepository.findTopByOrderByDateDesc()
+                .map(DayEntity::getDate)
+                .map(d -> d.plusDays(1))
+                .orElseGet(LocalDate::now);
+
+        if (!latestCreatedDate.isBefore(tillDate)) {
+            return;
+        }
+
+        latestCreatedDate.datesUntil(tillDate).forEach(day -> {
+                    final var entity = getDayEntity(day);
+
+                    final Map<LocalDate, UnusualProductionDayInfo> daysInfo
+                            = productionCalendarService.getUnusualDaysInfo(latestCreatedDate, tillDate);
+
+                    daysInfo.computeIfPresent(day, (localDate, productionInfo) -> {
+                        entity.setNonWorkingDay(productionInfo.isNonWorkingDay());
+                        entity.setReducedWorkingDay(productionInfo.isReducedWorkingDay());
+                        entity.setWorkingMinutes(productionInfo.getWorkingMinutes());
+                        entity.setAdditionalInfo(productionInfo.getAdditionalInfo());
+                        return productionInfo;
+                    });
+
+                    log.info("Day {} is absent in DB, so creating it: {}", day, entity);
+
+                    dayRepository.save(entity);
+                }
+        );
+    }
+
+    private DayEntity getDayEntity(LocalDate day) {
+        var weekday = day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY;
+        return new DayEntity(
+                day,
+                weekday,
+                false,
+                false,
+                getMinutesByDayStatus(!weekday),
+                null,
+                null
+        );
+    }
+
+    @Override
     public List<Pair<DayEntity, List<WorklogEntity>>> getDays(final LocalDate from, final LocalDate to) {
+        createDaysIfDoesNotExist(to);
+
         final Map<LocalDate, DayEntity> days = dayRepository.findByDateBetween(from, to).stream()
                 .collect(toMap(DayEntity::getDate, identity(), (d1, d2) -> d1));
 
         final Map<LocalDate, List<WorklogEntity>> worklogs = worklogRepository.findByDateBetween(from, to).stream()
                 .collect(groupingBy(WorklogEntity::getDate));
 
-        final AtomicInteger workedSequenceNumber = new AtomicInteger(0);
         return from.datesUntil(to)
                 .map(day -> {
-                    var dayInfo = ofNullable(days.get(day))
-                            .orElseGet(() -> {
-                                var weekday = day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY;
-
-                                final var entity = new DayEntity(
-                                        day,
-                                        weekday,
-                                        false,
-                                        false,
-                                        getMinutesByDayStatus(!weekday),
-                                        null,
-                                        null, // set it later in this code
-                                        null
-                                );
-
-                                final Map<LocalDate, UnusualProductionDayInfo> daysInfo
-                                        = productionCalendarService.getUnusualDaysInfo(from, to);
-
-                                daysInfo.computeIfPresent(day, (localDate, productionInfo) -> {
-                                    entity.setNonWorkingDay(productionInfo.isNonWorkingDay());
-                                    entity.setReducedWorkingDay(productionInfo.isReducedWorkingDay());
-                                    entity.setWorkingMinutes(productionInfo.getWorkingMinutes());
-                                    entity.setAdditionalInfo(productionInfo.getAdditionalInfo());
-                                    return productionInfo;
-                                });
-
-                                entity.setWorkedSequenceNumber(
-                                        entity.isNonWorkingDay() ? null : workedSequenceNumber.incrementAndGet()
-                                );
-
-                                log.info("Day {} is absent in DB, so creating it: {}", day, entity);
-
-                                return dayRepository.save(entity);
-                            });
-
-                    ofNullable(dayInfo.getWorkedSequenceNumber()).ifPresent(workedSequenceNumber::set);
+                    var dayInfo = days.get(day);
 
                     final List<WorklogEntity> dayWorklogs = worklogs.getOrDefault(day, emptyList());
                     dayWorklogs.sort(comparing(WorklogEntity::getStartTime));
@@ -149,8 +155,6 @@ public class CalendarServiceImpl implements CalendarService {
             day.setNonWorkingDay(value);
             day.setWorkingMinutes(getMinutesByDayStatus(!value));
             dayRepository.save(day);
-
-            updateNewFirstWorkingDay(date);
         });
     }
 
@@ -160,49 +164,7 @@ public class CalendarServiceImpl implements CalendarService {
             log.info("Try to update day {} vacation status from '{}' to '{}'", date, day.isVacation(), value);
             day.setVacation(value);
             dayRepository.save(day);
-
-            updateNewFirstWorkingDay(date);
         });
-    }
-
-    @Override
-    public void updateNewFirstWorkingDay(LocalDate from) {
-        final String value = appSettingsService.get(AppSettingKeys.WORK_SINCE).getValue();
-        if (value == null) {
-            return;
-        }
-        final var newFirstWorkingDay = LocalDate.parse(value);
-
-        final var today = LocalDate.now();
-        if (newFirstWorkingDay.isAfter(today)) {
-            return;
-        }
-
-        final List<DayEntity> allDays = dayRepository.findAll()
-                .stream()
-                .sorted(comparing(DayEntity::getDate))
-                .filter(entity -> from == null || !entity.getDate().isBefore(from))
-                .toList();
-
-        var counter = 1;
-        if (from != null) {
-            var previousCounter = dayRepository.findMaxWorkedSequenceNumberBeforeDate(from);
-            if (previousCounter != null) {
-                counter = previousCounter + 1;
-            }
-        }
-
-        for (DayEntity day : allDays) {
-            final LocalDate dayDate = day.getDate();
-            if (dayDate.isBefore(newFirstWorkingDay) || day.isNonWorkingDay() || day.isVacation()) {
-                day.setWorkedSequenceNumber(null);
-                continue;
-            }
-
-            day.setWorkedSequenceNumber(counter++);
-        }
-
-        dayRepository.saveAll(allDays);
     }
 
     private int getMinutesByDayStatus(boolean isWorkingDay) {

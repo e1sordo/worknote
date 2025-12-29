@@ -1,6 +1,7 @@
 {
     "navbar": {
         "home": "Главная",
+        "weekly": "Обзор недели",
         "overview": "Аналитика",
         "settings": "Настройки",
         "logout": "Выйти"
@@ -18,6 +19,23 @@
             "markWorking": "Сделать обычным рабочим днем",
             "markVacation": "Отметить как отпуск",
             "unmarkVacation": "Обычный день без отпуска"
+        },
+        "nextVacation": {
+            "title": "Отпуск",
+            "duration": "{days} дн.",
+            "countdown": {
+                "today": "сегодня",
+                "tomorrow": "завтра",
+                "inDays": "через {days} дн.",
+                "ongoing": "идет {days} дн."
+            },
+            "status": {
+                "confirmed": "подтвержден",
+                "notConfirmedUrgent": "НЕ ПОДТВЕРЖДЕН",
+                "needsConfirmation": "нужно подтвердить!",
+                "synced": "синхронизирован",
+                "notSynced": "не внесен в Jira"
+            }
         }
     },
     "time": {
@@ -54,6 +72,41 @@
         "mostTimeConsumingTasks": "Самые времязатратные задачи"
     },
     "settings": {
+        "predefinedWorknotes": {
+            "title": "Предварительно определенные записи о работе",
+            "form": {
+                "task": {
+                    "label": "Задача",
+                    "placeholder": "Название задачи",
+                    "findButton": "Найти"
+                }
+            }
+        },
+        "vacations": {
+            "title": "Отпуска",
+            "create": "Создать отпуск",
+            "edit": "Редактировать",
+            "startDate": "Дата начала",
+            "endDate": "Дата окончания",
+            "totalDays": "Количество дней",
+            "confirmed": "Подтвержден",
+            "notConfirmed": "Не подтвержден",
+            "synced": "Синхронизирован",
+            "notSynced": "Не синхронизирован",
+            "editVacation": "Редактировать отпуск",
+            "createVacation": "Создать отпуск",
+            "cancel": "Отмена",
+            "save": "Сохранить",
+            "relativeTime": "Относительное время",
+            "startsIn": "Начнётся через {time}",
+            "endedAgo": "Завершился {time} назад",
+            "nowOnVacation": "Сейчас в отпуске",
+            "delete": "Удалить",
+            "deleteConfirm": "Вы уверены, что хотите удалить этот отпуск?"
+        },
+        "projects": {
+            "title": "Управление проектами"
+        },
         "tasks": {
             "title": "Управление задачами",
             "form": {
@@ -71,6 +124,10 @@
                 "title": {
                     "label": "Название",
                     "placeholder": "Название задачи"
+                },
+                "defaultValue": {
+                    "label": "Значение по умолчанию для записи о работе",
+                    "placeholder": "Добавьте значение по умолчанию для записи о работе для этой задачи"
                 },
                 "examples": {
                     "label": "Примеры",

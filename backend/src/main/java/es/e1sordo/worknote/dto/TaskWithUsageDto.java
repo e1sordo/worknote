@@ -9,6 +9,7 @@ public record TaskWithUsageDto(long entityId,
                                String code,
                                JiraTaskType type,
                                String title,
+                               String defaultValue,
                                String examples,
                                boolean closed,
                                LocalDateTime latestWorklogDateTime) {

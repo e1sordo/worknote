@@ -12,17 +12,8 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.ru.RussianAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.StoredFields;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.document.*;
+import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
@@ -110,7 +101,7 @@ public class LuceneServiceImpl implements LuceneService {
             final String textQuery,
             final TriFunction<Document, Analyzer, Highlighter, SearchTaskResult> transformer
     ) {
-        final String[] columns = { "jiraId", "project", "type", "title", "examples" };
+        final String[] columns = {"jiraId", "project", "type", "title", "examples"};
         final var queryParser = new MultiFieldQueryParser(columns, ANALYZER);
         final var htmlFormatter = new SimpleHTMLFormatter("<mark>", "</mark>");
 
@@ -150,10 +141,15 @@ public class LuceneServiceImpl implements LuceneService {
     }
 
     private void commitAndCloseWriter() throws IOException {
+        if (writer == null) {
+            log.warn("Writer is null, so its impossible to commit and close");
+            return;
+        }
+
         try {
             writer.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Commit writer has failed", e);
             writer.rollback();
         } finally {
             writer.close();

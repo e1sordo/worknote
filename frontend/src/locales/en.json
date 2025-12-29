@@ -1,6 +1,7 @@
 {
     "navbar": {
         "home": "Home",
+        "weekly": "Weekly",
         "overview": "Overview",
         "settings": "Settings",
         "logout": "Log out"
@@ -18,6 +19,23 @@
             "markWorking": "Mark as working",
             "markVacation": "Mark as vacation",
             "unmarkVacation": "Unmark vacation"
+        },
+        "nextVacation": {
+            "title": "Vacation",
+            "duration": "{days} days",
+            "countdown": {
+                "today": "today",
+                "tomorrow": "tomorrow",
+                "inDays": "in {days} days",
+                "ongoing": "ongoing {days}d"
+            },
+            "status": {
+                "confirmed": "confirmed",
+                "notConfirmedUrgent": "NOT CONFIRMED!",
+                "needsConfirmation": "confirm!",
+                "synced": "synced",
+                "notSynced": "not synced with Jira"
+            }
         }
     },
     "time": {
@@ -54,6 +72,43 @@
         "mostTimeConsumingTasks": "The most time-consuming tasks"
     },
     "settings": {
+        "predefinedWorknotes": {
+            "title": "Predefined worknotes",
+            "form": {
+                "task": {
+                    "label": "Find task",
+                    "placeholder": "SMRTSEARCH-13",
+                    "findButton": "Find",
+                    "notFound": "No task found",
+                    "worklogsNotFound": "No worklogs found"
+                }
+            }
+        },
+        "vacations": {
+            "title": "Vacations",
+            "create": "Create new vacation",
+            "edit": "Edit",
+            "startDate": "Start date",
+            "endDate": "End date",
+            "totalDays": "Total days",
+            "confirmed": "Confirmed",
+            "notConfirmed": "Not confirmed",
+            "synced": "Synced",
+            "notSynced": "Not synced",
+            "editVacation": "Edit vacation",
+            "createVacation": "Create vacation",
+            "cancel": "Cancel",
+            "save": "Save",
+            "relativeTime": "Relative time",
+            "startsIn": "Starts in {time}",
+            "endedAgo": "Ended {time} ago",
+            "nowOnVacation": "Currently on vacation",
+            "delete": "Delete",
+            "deleteConfirm": "Are you sure you want to delete this vacation?"
+        },
+        "projects": {
+            "title": "Project management"
+        },
         "tasks": {
             "title": "Task management",
             "form": {
@@ -69,8 +124,12 @@
                     "label": "ID"
                 },
                 "title": {
-                    "label": "Name",
-                    "placeholder": "Task name"
+                    "label": "Name (title)",
+                    "placeholder": "Task name or title"
+                },
+                "defaultValue": {
+                    "label": "Default worklog summary",
+                    "placeholder": "Add a default worklog summary for this task"
                 },
                 "examples": {
                     "label": "Examples",

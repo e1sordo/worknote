@@ -8,9 +8,9 @@
                 :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-light': day.isToday }">
                 {{ day.day }}<span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
-            <span v-if="dayInfo.sequenceNumber > 0" class="font-monospace fs-6"
+            <span class="font-monospace fs-6"
                 :class="{ 'text-light': day.isToday, 'text-muted': !day.isToday }">
-                #{{ dayInfo.sequenceNumber }}
+                {{ formatDayOfWeek(day.id) }}
             </span>
         </div>
 
@@ -48,6 +48,7 @@
 import ProgressBar from '@/components/ProgressBar.vue';
 import WorklogList from '@/components/WorklogList.vue';
 import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
     name: 'CalendarDay',
@@ -87,6 +88,12 @@ export default defineComponent({
     methods: {
         setActiveDayInfo(date) {
             this.$emit('selectActiveDay', date);
+        },
+        formatDayOfWeek(date) {
+            const { t, locale } = useI18n();
+            const opts = { weekday: 'long' };
+            const d = new Date(date);
+            return d.toLocaleDateString(locale.value, opts);
         }
     }
 });

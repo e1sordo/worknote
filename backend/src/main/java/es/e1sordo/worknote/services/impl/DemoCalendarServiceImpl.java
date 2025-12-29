@@ -23,23 +23,23 @@ import static java.util.Collections.emptyList;
 @Profile("demo")
 public class DemoCalendarServiceImpl implements CalendarService {
 
-    private static final JiraProjectEntity ABCDEF_PROJECT = new JiraProjectEntity("ABCDEF", "", "ABC");
-    private static final JiraProjectEntity XYZ_PROJECT = new JiraProjectEntity("XYZ", "", "XYZ");
+    private static final JiraProjectEntity ABCDEF_PROJECT = new JiraProjectEntity("ABCDEF", "", "ABC", true);
+    private static final JiraProjectEntity XYZ_PROJECT = new JiraProjectEntity("XYZ", "", "XYZ", true);
 
     private static final JiraTaskEntity TASK_DAILY = new JiraTaskEntity(
-            77L, 586, ABCDEF_PROJECT, JiraTaskType.PROCESS_MAINTENANCE, false, "Daily", "Daily, DSM", emptyList()
+            77L, 586, ABCDEF_PROJECT, JiraTaskType.PROCESS_MAINTENANCE, false, "Daily", null, "Daily, DSM", emptyList()
     );
     private static final JiraTaskEntity TASK_DEVELOPMENT_1 = new JiraTaskEntity(
-            78L, 1987, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature A", "Feature A", emptyList()
+            78L, 1987, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature A", null, "Feature A", emptyList()
     );
     private static final JiraTaskEntity TASK_DEVELOPMENT_2 = new JiraTaskEntity(
-            79L, 559, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature B", "Feature B", emptyList()
+            79L, 559, ABCDEF_PROJECT, JiraTaskType.DEVELOPMENT, false, "Feature B", null, "Feature B", emptyList()
     );
     private static final JiraTaskEntity TASK_STUDY = new JiraTaskEntity(
-            80L, 35, XYZ_PROJECT, JiraTaskType.TRAINING_AND_DEVELOPMENT, false, "Trainings", "Trainings", emptyList()
+            80L, 35, XYZ_PROJECT, JiraTaskType.TRAINING_AND_DEVELOPMENT, false, "Trainings", null, "Trainings", emptyList()
     );
     private static final JiraTaskEntity TASK_MEETINGS = new JiraTaskEntity(
-            81L, 511, ABCDEF_PROJECT, JiraTaskType.ORGANIZING_ACTIVITIES, false, "Activities", "Activities", emptyList()
+            81L, 511, ABCDEF_PROJECT, JiraTaskType.ORGANIZING_ACTIVITIES, false, "Activities", null, "Activities", emptyList()
     );
 
     private static final Map<Integer, DemoDay> DEMO_DATA = Map.of(
@@ -49,7 +49,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    77,
                     null,
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, null, false),
@@ -62,7 +61,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    76,
                     "Back to work! 💪💪💪",
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
@@ -76,7 +74,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     0,
                     "🏴󠁧󠁢󠁥󠁮󠁧󠁿Late Summer Bank Holiday",
                     null,
-                    null,
                     List.of()
             ),
             3, new DemoDay(
@@ -84,7 +81,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     true,
                     false,
                     0,
-                    null,
                     null,
                     null,
                     List.of()
@@ -95,7 +91,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    75,
                     null,
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 15, "Stand-up meeting", TASK_DAILY, 77877L, true),
@@ -109,7 +104,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    74,
                     "Jonathan went on vacation for 2 weeks 🏖️",
                     List.of(
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Finish online course on information security", TASK_STUDY, null, false)
@@ -121,7 +115,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    73,
                     "I got a 2-day corporate training appt 🥲",
                     List.of(
                             new WorklogEntity(2L, null, LocalTime.of(10, 0), 480, "Online course on information security", TASK_STUDY, 454565L, true)
@@ -133,7 +126,6 @@ public class DemoCalendarServiceImpl implements CalendarService {
                     false,
                     480,
                     null,
-                    72,
                     null,
                     List.of(
                             new WorklogEntity(1L, null, LocalTime.of(8, 30), 30, "Stand-up meeting", TASK_DAILY, 77877L, true),
@@ -148,12 +140,11 @@ public class DemoCalendarServiceImpl implements CalendarService {
                    boolean reducedWorkingDay,
                    int workingMinutes,
                    String additionalInfo,
-                   Integer sequenceNumber,
                    String summary,
                    List<WorklogEntity> worklogs) {
         public Pair<DayEntity, List<WorklogEntity>> forDay(LocalDate day) {
             return Pair.of(
-                    new DayEntity(day, nonWorkingDay, vacation, reducedWorkingDay, workingMinutes, additionalInfo, sequenceNumber, summary),
+                    new DayEntity(day, nonWorkingDay, vacation, reducedWorkingDay, workingMinutes, additionalInfo, summary),
                     worklogs
             );
         }
@@ -208,11 +199,14 @@ public class DemoCalendarServiceImpl implements CalendarService {
                         false,
                         List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).contains(date.getDayOfWeek()) ? 0 : 480,
                         null,
-                        null,
                         null
                 ),
                 emptyList()
         );
+    }
+
+    @Override
+    public void createDaysIfDoesNotExist(LocalDate tillDate) {
     }
 
     @Override
@@ -234,9 +228,5 @@ public class DemoCalendarServiceImpl implements CalendarService {
 
     @Override
     public void updateDayVacation(final LocalDate date, final boolean value) {
-    }
-
-    @Override
-    public void updateNewFirstWorkingDay(final LocalDate from) {
     }
 }

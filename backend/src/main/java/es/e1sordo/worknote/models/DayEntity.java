@@ -30,6 +30,5 @@ public class DayEntity {
     private boolean reducedWorkingDay;
     private int workingMinutes; // out of 8 hours, ex.....   0 if weekday
     private String additionalInfo;
-    private Integer workedSequenceNumber;
     private String summary;
 }

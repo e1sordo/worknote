@@ -6,6 +6,7 @@ public record UpsertTaskDto(int id, // jiraId
                             String code,
                             JiraTaskType type,
                             String title,
+                            String defaultValue,
                             String examples,
                             boolean closed) {
 }

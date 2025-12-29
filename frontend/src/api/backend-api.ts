@@ -24,9 +24,15 @@ export interface DayInfo {
     reducedWorkingDay: boolean;
     workingMinutes: number;
     additionalInfo: string;
-    sequenceNumber: number;
     summary: string;
     worklogs: Worklog[];
+}
+
+export interface Project {
+    code: string;
+    name: string;
+    shortCode: string;
+    active: boolean;
 }
 
 export interface Task {
@@ -36,6 +42,7 @@ export interface Task {
     shortCode: string;
     type: string;
     title: string;
+    defaultValue: string;
     examples: string;
     closed: boolean;
 }
@@ -65,6 +72,15 @@ export interface TimeDistributionDto {
     periodEnd: string;
 }
 
+export interface Vacation {
+    id: number;
+    totalDays: number;
+    startDate: string;
+    endDate: string;
+    confirmed: boolean;
+    synced: boolean;
+}
+
 export default {
     heartbeat(): Promise<AxiosResponse<void>> {
         return axiosApi.get('/heartbeat');
@@ -79,8 +95,11 @@ export default {
     },
 
     // calendar
-    weeks(): Promise<AxiosResponse<DayInfo[]>> {
-        return axiosApi.get(`/calendar/weeks`);
+    weeks(needsToLoad: number): Promise<AxiosResponse<DayInfo[]>> {
+        return axiosApi.get(`/calendar/weeks?needsToLoad=${needsToLoad}`);
+    },
+    futureWeeks(needsToLoad: number): Promise<AxiosResponse<DayInfo[]>> {
+        return axiosApi.get(`/calendar/future-weeks?needsToLoad=${needsToLoad}`);
     },
     day(date: Date): Promise<AxiosResponse<DayInfo>> {
         return axiosApi.get(`/calendar/day?date=${date}`);
@@ -98,12 +117,26 @@ export default {
         return axiosApi.patch(`/calendar/day/${date}/vacation`, { value });
     },
 
+    // projects
+    projects(): Promise<AxiosResponse<Project[]>> {
+        return axiosApi.get('/projects');
+    },
+    upsertProject(body: Project): Promise<AxiosResponse<Project>> {
+        return axiosApi.post('/projects', body);
+    },
+
     // tasks
     searchTasks(query: string): Promise<AxiosResponse<Task[]>> {
         return axiosApi.get(`/tasks/search?query=${query}`);
     },
+    getTaskByCode(code: string): Promise<AxiosResponse<Task>> {
+        return axiosApi.get(`/tasks/${code}`);
+    },
     tasks(): Promise<AxiosResponse<TaskWithUsage[]>> {
         return axiosApi.get('/tasks');
+    },
+    activeTasks(): Promise<AxiosResponse<TaskWithUsage[]>> {
+        return axiosApi.get('/tasks/active');
     },
     upsertTask(body: Task): Promise<AxiosResponse<Task>> {
         return axiosApi.post('/tasks', body);
@@ -113,7 +146,13 @@ export default {
     },
 
     // worklogs
-    createWorklog(date: string, time: string, minutes: number, summary: string, task: string): Promise<AxiosResponse<Worklog>> {
+    createWorklog(
+        date: string,
+        time: string,
+        minutes: number,
+        summary: string,
+        task: string
+    ): Promise<AxiosResponse<Worklog>> {
         return axiosApi.post(`/worklogs`, {
             date: date,
             startTime: time,
@@ -134,6 +173,20 @@ export default {
         return axiosApi.get(`/analytics/time-distribution`);
     },
 
+    // vacations
+    vacations(): Promise<AxiosResponse<Vacation[]>> {
+        return axiosApi.get('/vacations');
+    },
+    nextVacation(): Promise<AxiosResponse<Vacation>> {
+        return axiosApi.get('/vacations/next');
+    },
+    upsertVacation(body: Vacation): Promise<AxiosResponse<Vacation>> {
+        return axiosApi.post('/vacations', body);
+    },
+    deleteVacation(id: number): Promise<AxiosResponse<void>> {
+        return axiosApi.delete(`/vacations/${id}`);
+    },
+
     // security
     getUser(userId: number): Promise<AxiosResponse<User>> {
         return axiosApi.get(`/user/` + userId);
@@ -146,4 +199,4 @@ export default {
             }
         });
     }
-}
+};

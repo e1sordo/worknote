@@ -9,7 +9,6 @@ public record DayDto(String date,
                      int workingMinutes, // out of 8 hours, ex.
                      String additionalInfo,
 
-                     Integer sequenceNumber,
                      String summary,
                      List<WorklogDto> worklogs) {
 }

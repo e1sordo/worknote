@@ -1,7 +1,7 @@
 # Just using the build artifact and then removing the build-container
-FROM openjdk:19-alpine
+FROM openjdk:19-slim
 
-MAINTAINER e1sordo
+LABEL maintainer="e1sordo"
 
 # Add Spring Boot app.jar to Container
 COPY backend/target/backend-1.0.0.jar app.jar
