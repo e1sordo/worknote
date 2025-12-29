@@ -96,24 +96,19 @@
             api.weeks(4)
                 .then(response => {
                     this.daysMap = Object.fromEntries(response.data.map(day => [day.date, day]));
-                    // this.calendarAttributes.push({
-                    //   key: day.getTime(),
-                    //   dates: day,
-                    //   class: 'bg-indigo-500 text-whitee'
-                    // });
+                    return api.futureWeeks(2);
                 })
-                .then(() => {
+                .then(response => {
                     if (this.getWeekendsFlagFromStorage() === false) {
                         this.toggleWeekends();
                     }
                     this.setDayStyles();
                     this.setOrderStyle();
-                });
 
-            // Загружаем следующие недели асинхронно
-            api.futureWeeks(2).then(response => {
-                this.futureDaysMap = Object.fromEntries(response.data.map(day => [day.date, day]));
-            });
+                    this.futureDaysMap = Object.fromEntries(
+                        response.data.map(day => [day.date, day])
+                    );
+                });
 
             // Загружаем отпуск асинхронно
             api.nextVacation().then(res => {

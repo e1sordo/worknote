@@ -97,6 +97,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     @Override
     public List<Pair<DayEntity, List<WorklogEntity>>> getDays(final LocalDate from, final LocalDate to) {
+        log.info("Get days from {} to {}", from, to);
         createDaysIfDoesNotExist(to);
 
         final Map<LocalDate, DayEntity> days = dayRepository.findByDateBetween(from, to).stream()

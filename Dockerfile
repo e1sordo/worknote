@@ -1,5 +1,5 @@
 # Just using the build artifact and then removing the build-container
-FROM openjdk:19-slim
+FROM eclipse-temurin:21-jre
 
 LABEL maintainer="e1sordo"
 
