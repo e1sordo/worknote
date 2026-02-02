@@ -2,8 +2,8 @@
     <div
         class="modal fade"
         id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
+        data-bs-backdrop="true"
+        data-bs-keyboard="true"
         tabindex="-1"
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
