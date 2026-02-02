@@ -1,10 +1,10 @@
 <template>
-    <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden"
+    <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden rounded-3"
         :class="{ 'bg-gradient bg-danger': day.isToday, 'bg-gradient bg-success': dayInfo.nonWorkingDay, 'opacity-50': !isPastDay }"
         type="button" @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 
         <div class="flex day-label-header mb-1 mx-3">
-            <span class="day-label fs-1"
+             <span class="day-label fs-1 fw-bold"
                 :class="{ 'text-secondary': isPastDay && !day.isToday, 'text-muted': !isPastDay, 'text-light': day.isToday }">
                 {{ day.day }}<span v-if="dayInfo.reducedWorkingDay">*</span>
             </span>
@@ -34,7 +34,7 @@
             </div>
 
             <div v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0" class="px-3 pb-3"
-                :class="{ 'vc-day-body bg-body rounded-3 h-100 pt-3': day.isToday }">
+                :class="{ 'bg-body rounded-3 h-100 pt-3': day.isToday }">
                 <progress-bar :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly"
                     :total="dayInfo.workingMinutes" :isPast="isPastDay" :isToday="day.isToday" />
 
@@ -102,5 +102,11 @@ export default defineComponent({
 <style>
 .day-core.bg-gradient.bg-success {
     --bs-bg-opacity: 0.3;
+}
+
+.day-label-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

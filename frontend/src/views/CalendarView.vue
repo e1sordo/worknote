@@ -36,34 +36,25 @@
             />
         </div>
 
-        <v-calendar
-            class="custom-calendar max-w-full"
-            :masks="masks"
-            expanded
-            :max-date="endOfWeek"
-            trim-weeks
-            disable-page-swipe
-            is-expanded
-            view="weekly"
-            :rows="5"
-            :locale="$i18n.locale"
-            firstDayOfWeek="2"
+        <custom-calendar
+            :days="daysList"
+            :hide-weekends="!showWeekends"
         >
-            <template v-slot:day-content="{ day }">
+            <template v-slot:day-content="{ day, dayInfo }">
                 <calendar-day
-                    v-if="daysMap[day.id]"
                     :day="day"
-                    :dayInfo="daysMap[day.id]"
+                    :dayInfo="dayInfo"
                     @selectActiveDay="handleActiveDaySelect"
                 />
             </template>
-        </v-calendar>
+        </custom-calendar>
     </div>
 </template>
 
 <script lang="ts">
     import api, { DayInfo, Worklog, Vacation } from '@/api/backend-api';
     import CalendarDay from '@/components/CalendarDay.vue';
+    import CustomCalendar from '@/components/CustomCalendar.vue';
     import CalendarFutureDays from '@/components/CalendarFutureDays.vue';
     import NextVacationWidget from '@/components/NextVacationWidget.vue';
     import FullDayModal from '@/components/FullDayModal.vue';
@@ -79,6 +70,7 @@
         components: {
             FullDayModal,
             CalendarDay,
+            CustomCalendar,
             CalendarFutureDays,
             NextVacationWidget
         },
@@ -86,25 +78,24 @@
         data() {
             return {
                 daysMap: {} as DayInfoMap,
+                daysList: [] as DayInfo[],
                 futureDaysMap: {} as DayInfoMap,
                 vacation: null as Vacation | null,
                 daysUntilVacation: 0,
-                vacationNeedsConfirmation: false
+                vacationNeedsConfirmation: false,
+                showWeekends: true
             };
         },
         beforeMount() {
             api.weeks(4)
                 .then(response => {
+                    this.daysList = response.data;
                     this.daysMap = Object.fromEntries(response.data.map(day => [day.date, day]));
                     return api.futureWeeks(2);
                 })
                 .then(response => {
-                    if (this.getWeekendsFlagFromStorage() === false) {
-                        this.toggleWeekends();
-                    }
-                    this.setDayStyles();
-                    this.setOrderStyle();
-
+                    this.showWeekends = this.getWeekendsFlagFromStorage();
+                    
                     this.futureDaysMap = Object.fromEntries(
                         response.data.map(day => [day.date, day])
                     );
@@ -122,11 +113,7 @@
         },
         setup() {
             const activeDayInfo = ref();
-            const endOfWeek = moment().endOf('week').add(12, 'hour').toDate();
-
-            const masks = ref({ weekdays: 'WWWW' });
-
-            return { activeDayInfo, endOfWeek, masks };
+            return { activeDayInfo };
         },
         methods: {
             getDayInfo(date: string): DayInfo {
@@ -165,51 +152,13 @@
                 const dayInfo = this.getDayInfo(date);
                 dayInfo.vacation = newValue;
             },
-            setOrderStyle() {
-                const parentClass = 'vc-pane-layout';
-                const parentElement = document.querySelector(`.${parentClass}`);
-
-                if (parentElement) {
-                    const childElements = Array.from(parentElement.children);
-                    const reversedChildElements = childElements.reverse();
-
-                    reversedChildElements.forEach((child, index) => {
-                        child.setAttribute('style', `order: ${index + 1};`);
-                    });
-                }
-            },
-            setDayStyles() {
-                const vcDayElements = document.querySelectorAll('.vc-day');
-                vcDayElements.forEach(element => {
-                    element.classList.add(
-                        'vc-day-body',
-                        'bg-body',
-                        'shadow-sm',
-                        'mx-xl-3',
-                        'mx-lg-2',
-                        'my-2',
-                        'rounded'
-                    );
-                });
-            },
             handleClick() {
-                this.saveWeekedsFlagToStorage(!this.getWeekendsFlagFromStorage());
-                this.toggleWeekends();
-            },
-            toggleWeekends() {
-                const vcWeekElements = document.querySelectorAll('.vc-week');
-                vcWeekElements.forEach(element => {
-                    element.classList.toggle('hidden-weekends');
-                });
-
-                const vcWeekdaysElements = document.querySelectorAll('.vc-weekdays');
-                vcWeekdaysElements.forEach(element => {
-                    element.classList.toggle('hidden-weekends');
-                });
+                this.showWeekends = !this.showWeekends;
+                this.saveWeekedsFlagToStorage(this.showWeekends);
             },
             getWeekendsFlagFromStorage() {
                 const savedValue = localStorage.getItem('showWeekends');
-                return savedValue === 'true';
+                return savedValue !== 'false'; // Default true
             },
             saveWeekedsFlagToStorage(value: Boolean) {
                 localStorage.setItem('showWeekends', value.toString());
@@ -219,8 +168,6 @@
 </script>
 
 <style lang="scss">
-    @import 'v-calendar/dist/style.css';
-
     .text-whitee {
         color: black !important;
     }
@@ -235,89 +182,5 @@
 
     [data-bs-theme='dark'] {
         --bs-highlight-bg: rgb(107, 114, 10);
-    }
-
-    .custom-calendar.vc-container {
-        --vc-bg: rgba(255, 255, 255, 0);
-        --vc-border: rgba(255, 255, 255, 0);
-        --day-border: 1px solid #d3dbe3;
-        --day-border-highlight: 1px solid #b8c2cc;
-        --day-width: 90px;
-        --day-height: 90px;
-        --weekday-bg: #f8fafc;
-        --weekday-border: 1px solid #eaeaea;
-        border-radius: 0;
-        width: 100%;
-
-        & .vc-bordered {
-            border: 0;
-        }
-
-        & .vc-header {
-            padding: 0 20px;
-            margin-top: 0;
-            height: 60px;
-        }
-
-        & .vc-title {
-            color: rgb(126, 126, 126);
-            background: rgba(161, 181, 149, 0.3);
-            text-transform: capitalize;
-            opacity: 0.8;
-        }
-
-        & .vc-weeks {
-            padding: 0;
-        }
-
-        & .vc-weekdays {
-            display: none;
-        }
-
-        & .vc-weekday {
-            padding: 5px 0;
-        }
-
-        & .day-label-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        & .day-label {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        & .vc-day {
-            background: var(--bs-body-bg);
-            text-align: left;
-            min-height: var(--day-height);
-            min-width: var(--day-width);
-            overflow: hidden;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .vc-day-body {
-                background-color: rgb(16, 26, 34) !important;
-            }
-        }
-
-        & .vc-day-dots {
-            margin-bottom: 5px;
-        }
-
-        & .day-core {
-            height: 100%;
-        }
-    }
-
-    .hidden-weekends {
-        grid-template-columns: repeat(5, 1fr) !important;
-        grid-auto-flow: dense;
-    }
-
-    .hidden-weekends > *:nth-child(n + 6) {
-        display: none;
     }
 </style>
