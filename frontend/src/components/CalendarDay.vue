@@ -1,5 +1,5 @@
 <template>
-    <div v-if="dayInfo" class="day-core flex flex-col h-full z-10 overflow-hidden rounded-3"
+    <div v-if="dayInfo" class="day-core flex flex-col h-100 z-10 overflow-hidden rounded-3"
         :class="{ 'bg-gradient bg-danger': day.isToday, 'bg-gradient bg-success': dayInfo.nonWorkingDay, 'opacity-50': !isPastDay }"
         type="button" @click="setActiveDayInfo(day.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 

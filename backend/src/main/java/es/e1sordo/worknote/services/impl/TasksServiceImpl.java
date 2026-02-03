@@ -221,11 +221,6 @@ public class TasksServiceImpl implements TasksService {
         return findByTaskIdAndProject(taskId, projectsService.findByCode(projectCode).orElseThrow());
     }
 
-    @Override
-    public Optional<JiraProjectEntity> findActiveProject() {
-        return repository.findFirstByOrderByIdDesc().map(JiraTaskEntity::getProject);
-    }
-
     @SneakyThrows
     private String extractHighlights(String field, Supplier<String> getter, Analyzer analyzer,
                                      Highlighter highlighter) {

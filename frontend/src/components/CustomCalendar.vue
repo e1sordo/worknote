@@ -124,7 +124,7 @@ export default defineComponent({
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 30px; /* Space between weeks */
+    gap: 10px; /* Space between weeks */
     font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -137,7 +137,7 @@ export default defineComponent({
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     width: 100%;
-    gap: 15px; /* Spacing between cards */
+    gap: 5px; /* Spacing between cards */
 }
 
 .week-grid.hide-weekends {

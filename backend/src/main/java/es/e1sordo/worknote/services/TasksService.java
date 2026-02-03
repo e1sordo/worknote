@@ -22,6 +22,4 @@ public interface TasksService {
     Optional<JiraTaskEntity> findByCode(String code);
 
     JiraTaskEntity upsert(UpsertTaskDto request);
-
-    Optional<JiraProjectEntity> findActiveProject();
 }

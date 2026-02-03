@@ -167,17 +167,19 @@
                                 const jiraKeyNumberMatch = newValue.trim().match(/^\d*(\.\d+)?$/);
                                 if (jiraKeyNumberMatch && jiraKeyNumberMatch[0]) {
                                     try {
-                                        const activeProjectResponse = await backendApi.activeProjectCode();
-                                        const activeProjectCode = activeProjectResponse.data;
+                                        const activeProjectCodesResponse = await backendApi.activeProjectCodes();
+                                        const activeProjectCodes = activeProjectCodesResponse.data;
 
-                                        const jiraKey = activeProjectCode + '-' + jiraKeyNumberMatch[0];
+                                        for (const activeProjectCode of activeProjectCodes) {
+                                            const jiraKey = activeProjectCode + '-' + jiraKeyNumberMatch[0];
 
-                                        const response = await clientApi.getIssue(jiraKey);
-                                        if (response.data) {
-                                            const jiraIssue = response.data;
-                                            autocompleteSuggestions.value.push(
-                                                mapJiraTaskToSuggestion(jiraKey, jiraIssue)
-                                            );
+                                            const response = await clientApi.getIssue(jiraKey);
+                                            if (response.data) {
+                                                const jiraIssue = response.data;
+                                                autocompleteSuggestions.value.push(
+                                                    mapJiraTaskToSuggestion(jiraKey, jiraIssue)
+                                                );
+                                            }
                                         }
                                     } catch (error) {
                                         console.error(error);

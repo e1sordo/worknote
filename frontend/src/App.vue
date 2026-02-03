@@ -3,6 +3,7 @@
   <nav>
     <router-link to="/">{{ $t("navbar.home") }}</router-link> |
     <router-link to="/overview">{{ $t("navbar.overview") }}</router-link> |
+    <router-link to="/weekly">{{ $t("navbar.weekly") }}</router-link> |
     <router-link to="/settings">{{ $t("navbar.settings") }}</router-link> |
     <a href="/logout" class="link-secondary">{{ $t("navbar.logout") }}</a>
   </nav>
@@ -29,7 +30,7 @@
   font-weight: 800;
   outline: none;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #355ccf 0%, #00aede 25%, #1dba41 50%, #00aede 75%, #355ccf 100%);
+  background: linear-gradient(135deg, #cf3566 0%, #de005d 25%, #a11dba 50%, #de005d 75%, #cf3566 100%);
   background-size: 400%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -53,6 +54,6 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #b94242;
 }
 </style>

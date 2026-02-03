@@ -121,6 +121,9 @@ export default {
     projects(): Promise<AxiosResponse<Project[]>> {
         return axiosApi.get('/projects');
     },
+    activeProjectCodes(): Promise<AxiosResponse<string[]>> {
+        return axiosApi.get('/projects/active-codes');
+    },
     upsertProject(body: Project): Promise<AxiosResponse<Project>> {
         return axiosApi.post('/projects', body);
     },
@@ -140,9 +143,6 @@ export default {
     },
     upsertTask(body: Task): Promise<AxiosResponse<Task>> {
         return axiosApi.post('/tasks', body);
-    },
-    activeProjectCode(): Promise<AxiosResponse<String>> {
-        return axiosApi.get('/tasks/active-project-code');
     },
 
     // worklogs

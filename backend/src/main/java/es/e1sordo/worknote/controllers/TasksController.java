@@ -5,9 +5,7 @@ import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.TaskWithUsageDto;
 import es.e1sordo.worknote.dto.UpsertTaskDto;
 import es.e1sordo.worknote.mapping.Mappings;
-import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
-import es.e1sordo.worknote.services.PredefinedWorklogService;
 import es.e1sordo.worknote.services.TasksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 public class TasksController {
 
     private final TasksService service;
-    private final PredefinedWorklogService predefinedWorklogService;
 
     @GetMapping("/search")
     public ResponseEntity<List<TaskDto>> getAllByQuery(@RequestParam String query) {
@@ -80,13 +77,6 @@ public class TasksController {
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/active-project-code")
-    public String getActiveProjectCode() {
-        return service.findActiveProject()
-                .map(JiraProjectEntity::getCode)
-                .orElse("");
     }
 
     @PostMapping
