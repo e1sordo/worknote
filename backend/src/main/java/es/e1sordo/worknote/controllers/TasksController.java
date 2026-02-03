@@ -47,8 +47,7 @@ public class TasksController {
                     isBlank(highlightedTitle) ? entity.getTitle() : highlightedTitle,
                     entity.getDefaultValue(),
                     isBlank(highlightedExamples) ? entity.getExamples() : highlightedExamples,
-                    entity.isClosed(),
-                    List.of()
+                    entity.isClosed()
             );
         }).toList();
 
@@ -73,7 +72,7 @@ public class TasksController {
         if (task.isPresent()) {
 //            final List<PredefinedWorklogEntity> predefinedWorklogs = predefinedWorklogService
 //                    .getAllPredefinedWorklogsByTaskId(task.get().getId());
-            final var response = Mappings.mapToDto(task.get(), new ArrayList<>());
+            final var response = Mappings.mapToDto(task.get());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();

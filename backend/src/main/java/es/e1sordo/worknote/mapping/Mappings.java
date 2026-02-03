@@ -2,7 +2,6 @@ package es.e1sordo.worknote.mapping;
 
 import es.e1sordo.worknote.dto.AppSettingDto;
 import es.e1sordo.worknote.dto.DayDto;
-import es.e1sordo.worknote.dto.PredefinedWorklogDto;
 import es.e1sordo.worknote.dto.ProjectDto;
 import es.e1sordo.worknote.dto.TaskDto;
 import es.e1sordo.worknote.dto.TaskWithUsageDto;
@@ -12,7 +11,6 @@ import es.e1sordo.worknote.models.AppSettingEntity;
 import es.e1sordo.worknote.models.DayEntity;
 import es.e1sordo.worknote.models.JiraProjectEntity;
 import es.e1sordo.worknote.models.JiraTaskEntity;
-import es.e1sordo.worknote.models.PredefinedWorklogEntity;
 import es.e1sordo.worknote.models.VacationEntity;
 import es.e1sordo.worknote.models.WorklogEntity;
 import es.e1sordo.worknote.utils.Pair;
@@ -52,31 +50,7 @@ public final class Mappings {
                 entity.getTitle(),
                 entity.getDefaultValue(),
                 entity.getExamples(),
-                entity.isClosed(),
-                List.of());
-    }
-
-    public static TaskDto mapToDto(final JiraTaskEntity entity,
-                                   final List<PredefinedWorklogEntity> predefinedWorklogs) {
-        return new TaskDto(
-                entity.getId(),
-                entity.getJiraId(),
-                entity.getProject().getCode(),
-                entity.getProject().getShortCode(),
-                entity.getType(),
-                entity.getTitle(),
-                entity.getDefaultValue(),
-                entity.getExamples(),
-                entity.isClosed(),
-                predefinedWorklogs.stream().map(Mappings::mapToDto).toList());
-    }
-
-    public static PredefinedWorklogDto mapToDto(final PredefinedWorklogEntity entity) {
-        return new PredefinedWorklogDto(
-                entity.getId(),
-                entity.getStartTime(),
-                entity.getDurationInMinutes(),
-                entity.getSummary());
+                entity.isClosed());
     }
 
     public static ProjectDto mapToDto(final JiraProjectEntity entity) {
