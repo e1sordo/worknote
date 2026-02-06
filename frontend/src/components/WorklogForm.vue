@@ -173,13 +173,18 @@
                                         for (const activeProjectCode of activeProjectCodes) {
                                             const jiraKey = activeProjectCode + '-' + jiraKeyNumberMatch[0];
 
-                                            const response = await clientApi.getIssue(jiraKey);
-                                            if (response.data) {
-                                                const jiraIssue = response.data;
-                                                autocompleteSuggestions.value.push(
-                                                    mapJiraTaskToSuggestion(jiraKey, jiraIssue)
-                                                );
+                                            try {
+                                                const response = await clientApi.getIssue(jiraKey);
+                                                if (response.data) {
+                                                    const jiraIssue = response.data;
+                                                    autocompleteSuggestions.value.push(
+                                                        mapJiraTaskToSuggestion(jiraKey, jiraIssue)
+                                                    );
+                                                }
+                                            } catch (error) {
+                                                // ignore 404 or other errors for specific Jira keys
                                             }
+
                                         }
                                     } catch (error) {
                                         console.error(error);

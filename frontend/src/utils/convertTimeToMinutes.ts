@@ -8,7 +8,7 @@ export function convertTimeToMinutes(timeString: string): number {
         return (hoursMatch && (60 * parseInt(hoursMatch[1], 10)) || 0) + (minutesMatch && parseInt(minutesMatch[1], 10) || 0);
     } else if (!isNaN(parseInt(trimmedString, 10))) {
         const numericValue = parseInt(trimmedString, 10);
-        if (numericValue < 9) {
+        if (numericValue < 15) {
             return numericValue * 60; // Hours
         } else {
             return numericValue; // Minutes
