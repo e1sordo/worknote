@@ -45,6 +45,11 @@ export const taskTypeMeta: TaskTypeMeta = {
         icon: '🤒',
         bgColor: 'rgb(61, 42, 42)',
         textColor: '#ffffff'
+    },
+    DUTY: {
+        icon: '🛡️',
+        bgColor: 'rgba(97, 60, 5, 1)',
+        textColor: 'rgba(255, 255, 255, 1)'
     }
 };
 

@@ -33,9 +33,9 @@
                 </div>
             </div>
 
-            <div v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0" class="px-3 pb-3"
-                :class="{ 'bg-body rounded-3 h-100 pt-3': day.isToday }">
-                <progress-bar :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly"
+            <div class="px-3 pb-3" :class="{ 'bg-body rounded-3 h-100 pt-3': day.isToday }">
+                <progress-bar v-if="isPastDay && !dayInfo.vacation && dayInfo.workingMinutes > 0" 
+                    :synchronized="durationOfSynced" :loggedHereOnly="durationOfLoggedOnly"
                     :total="dayInfo.workingMinutes" :isPast="isPastDay" :isToday="day.isToday" />
 
                 <worklog-list :data="sortedWorklogs" />

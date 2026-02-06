@@ -7,5 +7,6 @@ public enum JiraTaskType {
     CLUBS_AND_EVENTS,
     ORGANIZING_ACTIVITIES,
     INTERVIEWS,
-    ABSENCES
+    ABSENCES,
+    DUTY
 }
