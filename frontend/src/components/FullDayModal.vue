@@ -203,14 +203,14 @@
             durationOfSynced() {
                 return [...this.dayInfo.worklogs]
                     .filter(wl => wl.synced)
-                    .filter(wl => wl.taskType !== 'DUTY')
+                    .filter(wl => wl.task.type !== 'DUTY')
                     .map(wl => wl.durationInMinutes)
                     .reduce((prev, next) => prev + next, 0);
             },
             durationOfLoggedOnly() {
                 return [...this.dayInfo.worklogs]
                     .filter(wl => !wl.synced)
-                    .filter(wl => wl.taskType !== 'DUTY')
+                    .filter(wl => wl.task.type !== 'DUTY')
                     .map(wl => wl.durationInMinutes)
                     .reduce((prev, next) => prev + next, 0);
             }

@@ -71,12 +71,15 @@ export default defineComponent({
         },
         durationOfSynced() {
             return [...this.dayInfo.worklogs]
+                .filter(wl => wl.task.type !== 'DUTY')
                 .filter(wl => wl.synced)
                 .map(wl => wl.durationInMinutes)
                 .reduce((prev, next) => prev + next, 0)
         },
         durationOfLoggedOnly() {
+            console.log(this.dayInfo.worklogs)
             return [...this.dayInfo.worklogs]
+                .filter(wl => wl.task.type !== 'DUTY')
                 .filter(wl => !wl.synced)
                 .map(wl => wl.durationInMinutes)
                 .reduce((prev, next) => prev + next, 0)
